@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 /**
  * ReporteController implements the CRUD actions for Reporte model.
  */
-class ReporteController extends ActiveController
+class ReporteController extends ApiController
 {
     public $modelClass='app\models\Reporte';
 

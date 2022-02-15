@@ -13,6 +13,7 @@ use yii\filters\VerbFilter;
  */
 class ComentarioController extends ActiveController
 {
+    public $modelClass = 'app\models\Comentario';
     /**
      * @inheritDoc
      */
@@ -114,6 +115,11 @@ class ComentarioController extends ActiveController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionH(Type $var = null)
+    {
+        # code...
     }
 
     /**

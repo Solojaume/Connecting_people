@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 /**
  * ReviewController implements the CRUD actions for Review model.
  */
-class ReviewController extends ActiveController
+class ReviewController extends ApiController
 {
     public $modelClass='app\models\Review';
 

@@ -1,6 +1,6 @@
 <?php
 return  [
-    
+    '<controller:[\w-]+>/<action:[\w-]+>'=>'appMain/<controller>/<action>',
     ['class' => 'yii\rest\UrlRule',
         'pluralize'=>false,
         'controller' => ['imagen','mach','mensajes','puntuaciones-review','reporte'],

@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 /**
  * MensajesController implements the CRUD actions for Mensajes model.
  */
-class MensajesController extends ActiveController
+class MensajesController extends ApiController
 {
     public $modelClass='app\models\Mensajes';
 

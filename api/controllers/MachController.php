@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 /**
  * MachController implements the CRUD actions for Mach model.
  */
-class MachController extends ActiveController
+class MachController extends ApiController
 {
     public $modelClass='app\models\Mach';
 

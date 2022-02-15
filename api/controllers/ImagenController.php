@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 /**
  * ImagenController implements the CRUD actions for Imagen model.
  */
-class ImagenController extends ActiveController
+class ImagenController extends ApiController
 {
     public $modelClass='app\models\Imagen';
 

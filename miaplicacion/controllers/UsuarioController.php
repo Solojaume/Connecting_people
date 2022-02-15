@@ -7,6 +7,7 @@ use app\models\UsuarioSearch;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\auth\HttpBearerAuth;
 
 /**
  * UsuarioController implements the CRUD actions for Usuario model.
@@ -26,17 +27,18 @@ class UsuarioController extends ActiveController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'login'=>['POST'],
                     ],
                 ],
+                'authenticator' => [//token
+                    'class' => HttpBearerAuth::className(),
+                    'except' => ['login'],
+                ]
             ]
         );
-    }
+    } 
+  
 
-    /**
-     * Lists all Usuario models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $searchModel = new UsuarioSearch();
@@ -131,5 +133,38 @@ class UsuarioController extends ActiveController
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    
+    public function actionLogin(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+          // Si se envían los datos en formato raw dentro de la petición http, se recogen así:
+          //$params=json_decode(file_get_contents("php://input"), false);
+          //@$email=$params->email;
+         // @$password=$params->password;
+          // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
+          $email=$_POST['email'];
+          $password=$_POST['password'];
+
+          if($u=Usuario::findOne(['email'=>$email]))
+            /*if($u->password==password_hash($password,CRYPT_SHA256)) {//o crypt, según esté en la BD
+     
+                  return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
+              }*/
+            if($u->password==$password) {//Esto es para comprobar la contraseña en texto plano
+
+                return ['token'=>$u->token,'id'=>$u->id,'email'=>$u->email];
+            }
+     
+          return ['error'=>'No existe usuario con el email:'.$email .' o contraseña incorrecta'];
+        }
+    }
+    /**
+     * Lists all Usuario models.
+     *
+     * @return string
+     */
+    public function actionActivate(){
+
     }
 }

@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 /**
  * AspectoController implements the CRUD actions for Aspecto model.
  */
-class AspectoController extends ActiveController
+class AspectoController extends ApiController
 {
     /**
      * @inheritDoc
@@ -37,14 +37,14 @@ class AspectoController extends ActiveController
      * @return string
      */
     public function actionIndex()
-    {
-        $searchModel = new AspectoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+    { 
+        $id=$_POST["a"];
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            return $searchModel::findOne(["id",$id]);
+        }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+
+       
     }
 
     /**

@@ -33,9 +33,15 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return 'usuario';
     }
+
     //Encontrar usuario por token
     public static function findIdentityByAccessToken($token, $type = null) {
         return self::findOne(['token' => $token]);
+    }
+    
+    //Encontrar usuario por token de recuperación
+    public static function findIdentityByRecoveryToken($token){
+        return self::findOne(['token_recuperar_pass'=>$token]);
     }
     public static function findIdentity($id)
     {
@@ -56,6 +62,23 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         return $this->password;
+    }
+    
+    public function validateCaducityDateAuthToken()
+    {
+        $date = new DataTime($this->cad_token);
+        $now = new DataTime();
+        $date = $date->getTimestamp();
+        $now = $now->getTimestamp();
+        return $date<$now;
+    }  
+    public function validateCaducityDateRecoveryToken()
+    {
+        $date = new DataTime($this->cad_token_recuperar_pass);
+        $now = new DataTime();
+        $date = $date->getTimestamp();
+        $now = $now->getTimestamp();
+        return $date<$now;
     }
 
     /**
@@ -111,7 +134,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getImagens()
+    public function getImagenes()
     {
         return $this->hasMany(Imagen::className(), ['imagen_usuario_id' => 'id']);
     }
