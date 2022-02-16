@@ -20,7 +20,7 @@ class UsuarioController extends ActiveController
      */
     public function behaviors()
     {
-        return array_merge(
+            return array_merge(
             parent::behaviors(),
             [
                 'verbs' => [
@@ -37,6 +37,7 @@ class UsuarioController extends ActiveController
             ]
         );
     } 
+    
 
     public function init()
     {
@@ -174,6 +175,7 @@ class UsuarioController extends ActiveController
     public function actionActivate(){
         return ["mensaje"=> "Actualizado"];
     }
+    
     private static function generateToken(){
         //Generar token random parte1                                                                                     
         $token=bin2hex(openssl_random_pseudo_bytes(32));

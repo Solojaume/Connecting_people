@@ -175,7 +175,7 @@ class UsuarioController extends ApiController
                   return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
               }*/
             if($u->password==$password) {//Esto es para comprobar la contraseña en texto plano
-
+                $u->token=self::generateToken();
                 return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
             }
      
