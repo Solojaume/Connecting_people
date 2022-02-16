@@ -50,6 +50,12 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        Yii::debug('start calculating average revenue');
+        //die();
+        /*
+        $u=static::findOne(['token' => $token]);
+        var_dump($u);
+        */
         return static::findOne(['token' => $token]);
     }
     public function getAuthKey()
