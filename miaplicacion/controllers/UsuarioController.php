@@ -159,7 +159,6 @@ class UsuarioController extends ActiveController
               }*/
             if($u->password==$password) {//Esto es para comprobar la contraseña en texto plano
                 $u->token=self::generateToken();
-                var_dump($u->save());
                 $u->save();
                 return ['token'=>$u->token,'id'=>$u->id,'email'=>$u->email];
             }
