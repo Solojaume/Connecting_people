@@ -14,7 +14,7 @@ use Yii;
  *
  * @property Comentario[] $comentarios
  */
-class Usuario extends \yii\db\ActiveRecord
+class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -31,7 +31,7 @@ class Usuario extends \yii\db\ActiveRecord
     {
         return [
             [['email', 'password', 'token'], 'required'],
-            [['password', 'token'], 'integer'],
+            [['password', 'token'], 'string','max'=>64],
             [['email'], 'string', 'max' => 30],
         ];
     }
@@ -47,6 +47,33 @@ class Usuario extends \yii\db\ActiveRecord
             'password' => 'Password',
             'token' => 'Token',
         ];
+    }
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['token' => $token]);
+    }
+    public function getAuthKey()
+    {
+        return $this->password;
+    }
+  
+  
+
+    /**
+     * @param string $authKey
+     * @return bool|null if auth key is valid for current user
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

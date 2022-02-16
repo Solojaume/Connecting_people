@@ -37,7 +37,13 @@ class UsuarioController extends ActiveController
             ]
         );
     } 
-  
+
+    public function init()
+    {
+        parent::init();
+        \Yii::$app->user->enableSession = false;
+    }
+
 
     public function actionIndex()
     {
@@ -143,8 +149,8 @@ class UsuarioController extends ActiveController
           //@$email=$params->email;
          // @$password=$params->password;
           // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
-          $email=$_POST['email'];
-          $password=$_POST['password'];
+          $email=$_POST['email']??" ";
+          $password=$_POST['password']??" ";
 
           if($u=Usuario::findOne(['email'=>$email]))
             /*if($u->password==password_hash($password,CRYPT_SHA256)) {//o crypt, según esté en la BD
@@ -152,7 +158,9 @@ class UsuarioController extends ActiveController
                   return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
               }*/
             if($u->password==$password) {//Esto es para comprobar la contraseña en texto plano
-
+                $u->token=self::generateToken();
+                var_dump($u->save());
+                $u->save();
                 return ['token'=>$u->token,'id'=>$u->id,'email'=>$u->email];
             }
      
@@ -160,11 +168,20 @@ class UsuarioController extends ActiveController
         }
     }
     /**
-     * Lists all Usuario models.
+     * Activa los usuario que no han sido activados
      *
      * @return string
      */
     public function actionActivate(){
-
+        return ["mensaje"=> "Actualizado"];
+    }
+    private static function generateToken(){
+        //Generar token random parte1                                                                                     
+        $token=bin2hex(openssl_random_pseudo_bytes(32));
+        //Generar token random parte2
+        $token2=bin2hex(openssl_random_pseudo_bytes(32));
+        //Concatenamos token1 y token2 y la haseamos
+        $token=password_hash($token.$token2."",PASSWORD_DEFAULT);
+        return $token;
     }
 }
