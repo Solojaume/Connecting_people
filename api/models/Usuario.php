@@ -65,20 +65,29 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     }
     
     public function validateCaducityDateAuthToken()
-    {
-        $date = new DataTime($this->cad_token);
-        $now = new DataTime();
-        $date = $date->getTimestamp();
-        $now = $now->getTimestamp();
-        return $date<$now;
+    {   
+        //date_default_timezone_set('UTC');
+        $date = strtotime($this->cad_token);
+        $now = strtotime(date("Y-m-d H:i:s"));
+        //echo "NOW:$now";
+        //echo " Date:$date";
+        return $now<$date;
     }  
     public function validateCaducityDateRecoveryToken()
     {
-        $date = new DataTime($this->cad_token_recuperar_pass);
-        $now = new DataTime();
-        $date = $date->getTimestamp();
-        $now = $now->getTimestamp();
-        return $date<$now;
+        //date_default_timezone_set('UTC ');
+        $date = strtotime($this->cad_token_recuperar_pass);
+        $now = strtotime(date("Y-m-d H:i:s"));
+        return $now<$date;
+    }
+    public function validateAuthToken($token){
+        $con=$this->token==$token;
+        $con2=$this->validateCaducityDateAuthToken()==true;
+        //var_dump($con2);
+        return $con && $con2;
+    }
+    public function validateRecoveryToken($token){
+        return ($this->token_recuperar_pass===$token)&&($this->validateCaducityDateRecoveryToken()==true);
     }
 
     /**
@@ -96,14 +105,14 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['id', 'email', 'password', 'nombre'], 'required'],
+            [[ 'email', 'password', 'nombre'], 'required'],
             [['id', 'rol', 'activo'], 'integer'],
             [['timestamp_nacimiento', 'cad_token', 'cad_token_recuperar_pass'], 'safe'],
             [['email'], 'string', 'max' => 100],
-            [['password'], 'string', 'max' => 110],
+            [['password'], 'string', 'max' => 64],
             [['nombre'], 'string', 'max' => 11],
-            [['token'], 'string', 'max' => 60],
-            [['token_recuperar_pass'], 'string', 'max' => 32],
+            [['token'], 'string', 'max' => 100],
+            [['token_recuperar_pass'], 'string', 'max' => 100],
             [['email'], 'unique'],
             [['id'], 'unique'],
         ];
@@ -127,6 +136,19 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             'cad_token_recuperar_pass' => 'Cad Token Recuperar Pass',
             'activo' => 'Activo',
         ];
+    }
+    public function beforeSave($insert){
+        if ($this->isNewRecord) {
+            $now=\app\controllers\UsuarioController::generarCadToken("+ 30 minutes");
+            $this->cad_token_recuperar_pass = $now;
+            $this->token_recuperar_pass = \app\controllers\UsuarioController::generateToken();
+            $this->password=\app\controllers\UsuarioController::sha256($this->password);
+            $this->id = count(Usuario::find()->asArray()->all());
+            $this->rol=0;//0 es usuario registrado 1 es admin
+            $this->activo=0;
+        }
+        return parent::beforeSave($insert);
+        //return ["status"=>"ok","mensaje"=>"Ha sido activado satisfactoriamente"];
     }
 
     /**
