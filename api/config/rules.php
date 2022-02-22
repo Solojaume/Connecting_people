@@ -1,6 +1,6 @@
 <?php
 return  [
-    '<controller:[\w-]+>/<action:[\w-]+>'=>'appMain/<controller>/<action>',
+    '<controller:[\w-]+>/<action:[\w-]+>'=>'<controller>/<action>',
     ['class' => 'yii\rest\UrlRule',
         'pluralize'=>false,
         'controller' => ['imagen','mach','mensajes','puntuaciones-review','reporte'],
@@ -16,8 +16,9 @@ return  [
     ['class' => 'yii\rest\UrlRule',
         'controller' => ['usuario'],
         'pluralize'=>false,
-        'extraPatterns'=>['POST login'=>'login',
-        'OPTIONS authenticate'=>'login',
+        'extraPatterns'=>[
+            'POST login'=>'login',
+            'OPTIONS authenticate'=>'login',
         ]
     ]
 ];    
