@@ -234,13 +234,17 @@ class UsuarioController extends ApiController
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
             $email=$_POST['email']??" ";
             $password=$_POST['password']?? " ";
-
             if($u=Usuario::findOne(['email'=>$email])){
           
                 /*if($u->password==sha256($password) {//o crypt, según esté en la BD
      
                     return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
                 }*/
+                //echo "Pass cifrada: ".self::sha256($password);
+                //echo "\n Pass guardada: ".$u->password;
+                //echo"\n Pass plana: $password"; 
+                //die();
+
                 if($u->password==$password || $u->password==self::sha256($password)) {//Esto es para comprobar la contraseña en texto plano o cifrada
                     if($u->activo===1){
                         $u->token = self::generateToken();
@@ -268,8 +272,9 @@ class UsuarioController extends ApiController
                
                 }
      
-            return ['error'=>'No existe usuario con el email:'.$email .'o contraseña incorrecta'];
+                 return ['error'=>'No existe usuario con el email:'.$email .'o contraseña incorrecta'];
             }
+            return['error'=>'Petición incorrecta, introduzca email y contraseña'];
         }
     }
     //Este metodo sirve para generar todos los token 
@@ -291,8 +296,6 @@ class UsuarioController extends ApiController
     }
 
     public function actionActivate(){
-        
-   
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["token_activacion"])){
             $t_a=$_GET["token_activacion"];
             $u = Usuario::findIdentityByRecoveryToken($t_a);
@@ -307,7 +310,7 @@ class UsuarioController extends ApiController
         return ["error"=> "Petición incorrecta, solicite otro enlace de activación"];
     }
 
-    protected static function getUserWhithAuthToken(Type $var = null)
+    public static function getUserWhithAuthToken($type = "array")
     {
         //Devuelve el usuario del token que se encuentre en la cabecera de la petición
         $token_auth = \Yii::$app->request->headers->get("authorization");
@@ -315,8 +318,10 @@ class UsuarioController extends ApiController
         $token_auth = str_replace('Bearer ', '', $token_auth);
         //var_dump($token_auth);
         $u=Usuario::findIdentityByAccessToken($token_auth);
-        
-        return ["usuario"=>$u,"token"=>$token_auth];
+        if($type==="array"){
+            return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+        }
+        return $u;
     }
     public static function sha256($pass1 = null)
     {
@@ -339,9 +344,9 @@ class UsuarioController extends ApiController
             
             $p=$_POST["password"]??" ";
             $p1=$_POST["password1"]??" ";
-            $u =   Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
+            $u =  Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
             //var_dump($u);
-            $con0 = $s_a !== " " && $email !==" " ? true:false;
+            $con0 = $s_a !== " " && $email !==" " && Usuario::findOne(["email"=>$email])==true;
             $api_usurio="http://localhost/connectingpeople/api/web/usuario";
             
             // var_dump($s_a);
@@ -360,24 +365,27 @@ class UsuarioController extends ApiController
                         return ["status"=>"ok",
                         "url"=>$api_usurio.$action."&&token_activacion=".$u->token_recuperar_pass];//Quitar esto cuando se envien correos
                        //return ["status"=>"ok","mensaje"=>"Ha sido recuperado satisfactoriamente"];
+                    }else{
+                        return ["error"=>"No se encontrado email"];
                     }
                     //var_dump("Con: $con0");
                     break;
                 case 'recovery':
                 case 1:
                     //var_dump($u);
+                    //var_dump(isset($u));
                     //die();
-                    if($t_a===" "||isset($u)||$u===null){
+                    if($t_a===" "||!isset($u)||$u===null){
                         return ["error","Error peticion invalida"];
                     }
+
                     $con1 = $s_a !== " " && $u->validateRecoveryToken($t_a) ? true:false;
                     if(isset($_GET["token_activacion"])){
                         $t_a=$_GET["token_activacion"];
-
                     
                         if (isset($u)&&$con1===true && $p1 === $p){
                             $u->password=self::sha256($p1);
-                            $u->cad_token_recuperar_pass=null;
+                            $u->cad_token_recuperar_pass="0000-00-00";
                             $u->token_recuperar_pass=null;
                             $u->save();
                             echo "reccc";
@@ -385,7 +393,7 @@ class UsuarioController extends ApiController
                         }else if($p1!==$p){
                             return ["error"=>"Comprueve que la contraseñas sean iguales"];
                         }
-                        return ["error"];
+                        return ["error"=>"Algo fue mal"];
 
                         //echo"a";
                     }

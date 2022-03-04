@@ -11,6 +11,14 @@ return  [
     ],
     ['class' => 'yii\rest\UrlRule',
         'pluralize'=>false,
+        'controller' => ['mensajes'],
+        'extraPatterns'=>[
+            'POST enviar'=>'enviar',
+            'OPTIONS enviar'=> 'enviar'
+        ]
+    ],
+    ['class' => 'yii\rest\UrlRule',
+        'pluralize'=>false,
         'controller' => ['review'],
     ],
     ['class' => 'yii\rest\UrlRule',

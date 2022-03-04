@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/specify": "^2.0",
+        "codeception/verify": "^2.2"
+    }
+}

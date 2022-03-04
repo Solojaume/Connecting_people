@@ -7,6 +7,8 @@ use app\models\MensajesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Mach;
+use yii\data\ActiveDataProvider;
 
 /**
  * MensajesController implements the CRUD actions for Mensajes model.
@@ -27,10 +29,25 @@ class MensajesController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'get-mensajes' => ['POST'],
+                        'get-mensajes-no-recividos' => ['POST'],
+                        'get-mensajes-by-match' => ['POST'],
+                        'enviar' => ['POST'],
+                        'contar-nuevos-mensajes' => ['POST'],
+                        'get-mensajes-by-match' => ['POST']
                     ],
                 ],
             ]
         );
+    }
+    public function actions()
+    {
+        $actions = parent::actions();
+        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+        unset($actions['delete'], $actions['create'], $actions['update']);
+        // Redefinimos el método que prepara los datos en el index
+        $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+        return $actions;
     }
 
     /**
@@ -62,47 +79,6 @@ class MensajesController extends ApiController
         ]);
     }
 
-    /**
-     * Creates a new Mensajes model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Mensajes();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'mensajes_id' => $model->mensajes_id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Mensajes model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $mensajes_id Mensajes ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($mensajes_id)
-    {
-        $model = $this->findModel($mensajes_id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'mensajes_id' => $model->mensajes_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
 
     /**
      * Deletes an existing Mensajes model.
@@ -116,6 +92,117 @@ class MensajesController extends ApiController
         $this->findModel($mensajes_id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetMensajesByMatch()
+    {
+        
+        
+        $id = isset($_POST["match_id"]) ? $_POST["match_id"] : " ";
+        $match = isset($_POST["match_id"]) ? \app\models\Mach::findOne(["match_id"=>$id]):" ";
+        $u=self::getUserWhithAuthToken();
+        //var_dump($match);
+        //die();
+        if(isset($u["error"])){
+            return $u["error"];
+        }else if($men = Mensajes::getMensajesByMatch($match->match_id)){
+            //Modificamos los mensajes que no se hubieran entregado hasta ahora, para que su estado salga como entregados
+            $models=[];
+            foreach ($men as $key) {
+                // var_dump($men);
+                // var_dump($key);
+                //  die();
+                $model= Mensajes::findOne($key["mensajes_id"]);
+                if($model->entregado===0)
+                    $model->entregado=1;
+                if($model->save());
+                    $models[]=$model;
+            }
+            return $models;
+        }
+        return ["Mensajes",null];
+    }
+
+    public function actionGetMensajes(){
+        $u=self::getUserWhithAuthToken();
+        if(isset($u["error"])){
+            return $u["error"];
+        }else if($men = Mensajes::getMensajesByUserId($u["id"])){
+            //Modificamos los mensajes que no se hubieran entregado hasta ahora, para que su estado salga como entregados
+            $models=[];
+            foreach ($men as $key) {
+                // var_dump($men);
+                // var_dump($key);
+                //  die();
+                $model= Mensajes::findOne($key["mensajes_id"]);
+                if($model->entregado===0)
+                    $model->entregado=1;
+                if($model->save());
+                    $models[]=$model;
+            }
+            return $models;
+        }
+        return ["Mensajes",null];
+    }
+    public function actionGetMensajesNoRecividos(){
+        $u=self::getUserWhithAuthToken();
+        if(isset($u["error"])){
+            return $u["error"];
+        }else if($men = Mensajes::getNoRecivedMensajesByUserId($u["id"])){
+            $men= new ActiveDataProvider(['query'=>$men]);
+            //Modificamos los mensajes que no se hubieran entregado hasta ahora, para que su estado salga como entregados
+            $models=[];
+            try {
+                foreach ($men as $key) {
+                    // var_dump($men);
+                    // var_dump($key);
+                    //  die();
+                    $model= Mensajes::findOne($key["mensajes_id"]);
+                    if($model->entregado===0)
+                        $model->entregado=1;
+                    if($model->save());
+                        $models[]=$model;
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                return ["mensajes"=>null];
+            }
+            return $models;
+        }
+        return ["mensajes"=>null];
+    }
+    
+    public function actionEnviar(){
+        $u=self::getUserWhithAuthToken();
+        //var_dump($u);
+        if(isset($u["error"])===false){
+            $model = new Mensajes();
+            if ($this->request->isPost) {
+                //echo"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+                //die();
+                //var_dump($model->load($this->request->post(),''));
+                if ($model->load($this->request->post(),'')&&$model->save()) {
+                     
+                    //echo"uss entre en el segundo";
+                    //var_dump($model);
+                    //die();
+                    return $model;
+                }
+            } else {
+                $model->loadDefaultValues();
+            }
+        }
+        else
+        {
+            return $u["error"];
+        };
+    }
+    public function actionContarNuevosMensajes(){
+        $u=self::getUserWhithAuthToken();
+        if(!isset($u['error'])){
+            return Mensajes::getCountNoRecivedMensagesByUserId($u["id"]);
+        }
+        return $u;
     }
 
     /**

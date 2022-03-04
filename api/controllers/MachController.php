@@ -26,6 +26,9 @@ class MachController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'get_new_match_users_list' => ['POST'], 
+                        'get-matches'=> ['POST'],
+                        'like-dislike'=>['POST']
                     ],
                 ],
             ]
@@ -60,6 +63,7 @@ class MachController extends ApiController
             'model' => $this->findModel($match_id),
         ]);
     }
+
 
     /**
      * Creates a new Mach model.
@@ -132,4 +136,46 @@ class MachController extends ApiController
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
+    public function actionGet_new_match_users_list(){
+        $m= new Mach();
+        $m= $m->getUsersNoMostrados();
+        $c=0;
+        //var_dump($m);
+        //$m=array_unique($m,"SORT_NUMERIC");
+        
+        //die();
+        //var_dump(Mach::getUsersNoMostrados("test",0));
+        //var_dump(Mach::getUsersNoMostrados("test",1));
+        //var_dump(Mach::getUsersNoMostrados("test",3));
+        //var_dump(count(Mach::getUsersNoMostrados("test",1)[0]));
+        return $m;
+    }
+    
+    public function actionGetMatches(){
+        $u=UsuarioController::getUserWhithAuthToken()["id"];
+        return Mach::getUserMatches($u);
+    }
+
+    public function actionLikeDislike(){
+        $u=UsuarioController::getUserWhithAuthToken("o");
+        $post=$_POST["usuario_id"]??" ";
+        $estado=isset($_POST["estado"])?$_POST["estado"]:" ";
+        $u2=isset($post)?\app\models\Usuario::findOne(["id"=>$post]):" ";
+        $m=new Mach();
+        $m->match_id_usu1=$u->id;
+        $m->match_id_usu2=$u2->id;
+        $m->match_estado_u1=$estado;
+        $m->match_estado_u2=0;
+       
+        if($m=Mach::findOne(["match_id_usu1"=>$u2->id,"match_id_usu2"=>$u->id])){
+            $now = date("Y-m-d H:i:s");
+            $now = date("Y-m-d H:i:s",strtotime($now)); 
+            $m->match_estado_u2=$estado;
+            $m->match_fecha=$now;
+        }
+       if( $m->save()&&$u->validateAuthToken($u->token)){return ["status"=>"Se guardo correctamente"];}
+       else{return["error"=>"Session caducada"];}
+    }
 }
+     
