@@ -6,6 +6,7 @@ use app\models\Imagen;
 use app\models\ImagenSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ImagenController implements the CRUD actions for Imagen model.
@@ -26,6 +27,8 @@ class ImagenController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'getImagen'=>['POST'],
+                        'subirImagen'=>['POST']
                     ],
                 ],
             ]
@@ -117,7 +120,38 @@ class ImagenController extends ApiController
         return $this->redirect(['index']);
     }
 
-    /**
+    //Este metodo sirbe para obtener las imagenes de usuario
+    public function actionGetImagen(){
+        $u=self::getUserWhithAuthToken();
+        $usu= isset($_POST["id_usu"])?$_POST["id_usu"]:$u["id"];
+        $im= new Imagen();
+        return $im->getImagenUsuario();
+    }
+
+    public function actionSubirImagen(){
+        $model= new Imagen();
+        $model->imagen_src = UploadedFile::getInstance($model, 'imagen_src');  
+        if($model->load(\Yii::$app->request->post(),'')) {
+        
+           
+           // var_dump($model->imagen_src);
+           // die();
+            $cod = uniqid();
+            $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
+            
+            $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
+
+            if ($model->save()) {            
+            return $this->redirect(['view', 'id' => $model->id]);
+            }    
+        }
+    }
+     
+    public function actionDeleteImagen(){
+        return "";
+    }
+
+    /**                                             
      * Finds the Imagen model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $imagen_id Imagen ID

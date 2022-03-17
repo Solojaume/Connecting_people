@@ -27,6 +27,7 @@ class ReporteController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'getReportes'=>['POST']
                     ],
                 ],
             ]
@@ -71,52 +72,50 @@ class ReporteController extends ApiController
     {
         $model = new Reporte();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'reporte_id' => $model->reporte_id]);
+        $u=self::getUserWhithAuthToken("objeto");
+        $motivo=isset($_POST["motivo_id"]) ? $_POST["motivo_id"] : null;
+        $usuario=isset($_POST["usuario"]) ? $_POST["usuario"] : null;
+        $match=isset($_POST["match"]) && !$usuario==null? Mach::find()->where("match_id = ".$_POST['match']. " && (match_id_usu1=".$usuario."||match_id_usu2=".$usuario.")")->asArray()->all():null;
+        $resolucion = isset($_POST["resolucion"]) ? $_POST["resolucion"] : null;
+        /*var_dump($resolucion);
+        echo"reporte:";
+        var_dump($reporte);
+        die();*/
+        if(isset($u['error'])){
+            return $u['error'];
+        } else if (($u->rol==0 && $u->hasRol(0) && $reporte->load(\Yii::$app->request->post(),''))||($u->rol==1 && $u->hasRol(1) && $reporte->load(\Yii::$app->request->post(),''))) {
+             
+            switch ($resolucion) {
+                case 'culpable':
+                    $u=new Usuario();
+                    $u->activo=0;
+                    $u->cad_token_recuperar_pass=null;
+                    $u->token_recuperar_pass=null;
+                    $u->save();
+                   
+                    $reporte->save();
+                    break;
+                   
+                default:
+                    $u=new Usuario();
+                    $u->activo=0;
+                    $u->cad_token_recuperar_pass=null;
+                    $u->token_recuperar_pass=null;
+                    $u->save();
+                    $reporte->save();
+                    break;
             }
-        } else {
-            $model->loadDefaultValues();
+
+               return ["status"=> "Se guardo correctamente"];
+        }else if($u->hasRol(0)){
+            return ["error"=>"No tienes permisos para realizar esta acción"];
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return ["error"=>"No se pueden dejar vacias la resolucion y/o el reporte"];
     }
 
-    /**
-     * Updates an existing Reporte model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $reporte_id Reporte ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($reporte_id)
-    {
-        $model = $this->findModel($reporte_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'reporte_id' => $model->reporte_id]);
-        }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Reporte model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $reporte_id Reporte ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($reporte_id)
-    {
-        $this->findModel($reporte_id)->delete();
-
-        return $this->redirect(['index']);
-    }
+   
 
     /**
      * Finds the Reporte model based on its primary key value.
@@ -132,5 +131,71 @@ class ReporteController extends ApiController
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+     
+    public function actionGetReportes()
+    {
+        if ($this->request->isPost) {
+            $u=self::getUserWhithAuthToken("objeto");
+            if(isset($u['error'])){
+                return $u['error'];
+            } else if ($u->rol==1&&$u->hasRol(1)) {
+               $r= new Reporte();
+               try {
+                    $rep=$r->getReportes();
+                } catch (\Throwable $th) {
+                    return ["error"=>"No hay reportes"];
+                }
+                
+              
+                $rep=$rep[array_rand($rep)];//Faltan añadir los mensajes del match
+                $men= new \app\models\Mensajes();
+                $rep=["reporte"=>$rep,"mensajes"=>$men->getMensajesByMatch($rep["reporte_match_id"])];
+               return $rep;
+            }
+            
+        }
+        else
+            return ["error"=>"Algo ha salido mal"];
+    }
+
+    public function actionSetResolucion()
+    {
+        if ($this->request->isPost) {
+            
+            $u=self::getUserWhithAuthToken("objeto");
+            $reporte=isset($_POST["reporte_id"]) ? Reporte::find()->where("reporte_id=".$_POST["reporte_id"])->asArray()->all() : null;
+            $resolucion = isset($_POST["resolucion"]) ? $_POST["resolucion"] : null;
+            /*var_dump($resolucion);
+            echo"reporte:";
+            var_dump($reporte);
+            die();*/
+            if(isset($u['error'])){
+                return $u['error'];
+            } else if ($u->rol==1 && $u->hasRol(1) && !$reporte==null && !$resolucion==null) {
+               
+                switch ($resolucion) {
+                    case 'culpable':
+                        $u=new Usuario();
+                        $u->activo=0;
+                        $u->cad_token_recuperar_pass=null;
+                        $u->token_recuperar_pass=null;
+                        $u->save();
+                        $reporte->reporte_resolucion=$resolucion;
+                        $reporte->save();
+                        break;
+                    
+                    default:
+                        $reporte->reporte_resolucion=$resolucion;
+                        $reporte->save();
+                        break;
+                }
+
+               return ["status"=> "Se guardo correctamente"];
+            }else if($u->hasRol(0)){
+                return ["error"=>"No tienes permisos para realizar esta acción"];
+            }
+            return ["error"=>"No se pueden dejar vacias la resolucion y/o el reporte"];
+        }
     }
 }

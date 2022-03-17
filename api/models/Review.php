@@ -30,12 +30,20 @@ class Review extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['review_id', 'review_descripcion', 'review_usuario_id'], 'required'],
+            [['review_descripcion', 'review_usuario_id'], 'required'],
             [['review_id', 'review_usuario_id'], 'integer'],
             [['review_descripcion'], 'string', 'max' => 11],
             [['review_id'], 'unique'],
             [['review_usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['review_usuario_id' => 'id']],
         ];
+    }
+    
+    public function beforeSave($insert = null)
+    {
+        if ($this->isNewRecord) {
+            $this->review_id=count(Review::find()->asArray()->all());
+        }
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -60,6 +68,15 @@ class Review extends \yii\db\ActiveRecord
         return $this->hasMany(PuntuacionesReview::className(), ['puntuaciones_review_review_id' => 'review_id']);
     }
 
+    /**
+     * Gets reviews que se han realidado sobre ul usuario que se pase por post
+     * 
+     */
+    public function getReviewByUserID($usuario)
+    {
+        return self::find("review_usuario_id=$usuario")->asArray()->all();
+    }
+    
     /**
      * Gets query for [[ReviewUsuario]].
      *

@@ -3,7 +3,15 @@ return  [
     '<controller:[\w-]+>/<action:[\w-]+>'=>'<controller>/<action>',
     ['class' => 'yii\rest\UrlRule',
         'pluralize'=>false,
-        'controller' => ['imagen','mach','mensajes','puntuaciones-review','reporte'],
+        'controller' => ['imagen','mach','puntuaciones-review','reporte'],
+    ],
+    ['class' => 'yii\rest\UrlRule',
+        'pluralize'=>false,
+        'controller' => ['puntuaciones-review'],
+        'extraPatterns'=>[
+            'POST puntuaciones-review'=>'puntuaciones-review',
+            'OBTIONS puntuaciones-review'=>'puntuaciones-review',
+        ]
     ],
     ['class' => 'yii\rest\UrlRule',
         'pluralize'=>false,

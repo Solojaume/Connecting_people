@@ -30,10 +30,11 @@ class Imagen extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['imagen_id', 'imagen_usuario_id', 'imagen_src'], 'required'],
+            [['imagen_usuario_id', 'imagen_src'], 'required'],
             [['imagen_id', 'imagen_usuario_id'], 'integer'],
             [['imagen_timestamp'], 'safe'],
-            [['imagen_src'], 'string', 'max' => 50],
+            //[['imagen_src'], 'string', 'max' => 50],
+            [['imagen_src'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
             [['imagen_id'], 'unique'],
             [['imagen_usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['imagen_usuario_id' => 'id']],
         ];
@@ -59,6 +60,6 @@ class Imagen extends \yii\db\ActiveRecord
      */
     public function getImagenUsuario()
     {
-        return $this->hasOne(Usuario::className(), ['id' => 'imagen_usuario_id']);
+        return $this->hasOne(Usuario::className(), ['id' => 'imagen_usuario_id'])->queryAll();
     }
 }

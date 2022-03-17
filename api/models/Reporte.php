@@ -31,8 +31,9 @@ class Reporte extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['reporte_id', 'reporte_motivo_id', 'reporte_usuario_id', 'reporte_match_id', 'reporte_resolucion'], 'required'],
-            [['reporte_id', 'reporte_motivo_id', 'reporte_usuario_id', 'reporte_match_id'], 'integer'],
+            [['reporte_motivo_id', 'reporte_usuario_id', 'reporte_match_id', 'reporte_resolucion'], 'required'],
+            [['reporte_id', 'reporte_usuario_id', 'reporte_match_id'], 'integer'],
+            [['reporte_motivo_id'],'string','max' => 11],
             [['reporte_resolucion'], 'string', 'max' => 110],
             [['reporte_id'], 'unique'],
             [['reporte_match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Mach::className(), 'targetAttribute' => ['reporte_match_id' => 'match_id']],
@@ -61,5 +62,18 @@ class Reporte extends \yii\db\ActiveRecord
     public function getReporteMatch()
     {
         return $this->hasOne(Mach::className(), ['match_id' => 'reporte_match_id']);
+    }
+    public function beforeSave( $insert = null)
+    {
+        if ($this->isNewRecord) {
+            $this->reporte_id=count(Reporte::find()->asArray()->all())+1;
+            
+        }
+        return parent::beforeSave($insert);
+    }
+    
+    public function getReportes()
+    {
+       return self::find('reporte_resolucion=ninguno')->asArray()->all();
     }
 }

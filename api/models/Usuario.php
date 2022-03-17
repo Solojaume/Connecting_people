@@ -55,6 +55,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->id;
     }
+    
 
     /**
      * @return string|null current user auth key
@@ -88,6 +89,19 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     }
     public function validateRecoveryToken($token){
         return ($this->token_recuperar_pass===$token)&&($this->validateCaducityDateRecoveryToken()==true);
+    }
+
+    public function getRolUsuario(){//sirve para mostrar "administrador" en vez de "1", etc
+        if ($this->rol == 1) {
+            return "Administrador";
+        }else if($this->rol == 0){
+            return "Usuario";
+        }
+    }
+    
+    //Sirve para comparar el rol del usuario con el pasado por parametro
+    public function hasRol($role){
+        return $this->rol == $role;
     }
 
     /**

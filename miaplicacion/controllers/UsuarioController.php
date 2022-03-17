@@ -28,6 +28,7 @@ class UsuarioController extends ActiveController
                     'actions' => [
                         'delete' => ['POST'],
                         'login'=>['POST'],
+                        'create'=>['POST']
                     ],
                 ],
                 'authenticator' => [//token
@@ -80,8 +81,19 @@ class UsuarioController extends ActiveController
         $model = new Usuario();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post(),"") ) {
+                echo"  g ";
+                //var_dump($model->imagen_src);
+                //die();
+                $model->imagen_src = UploadedFile::getInstance($model, 'imagen_src');  
+                // var_dump($model->imagen_src);
+                // die();
+                $cod = uniqid();
+                $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
+            
+                 $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
+                if( $model->save())
+                    return [""=>"correcto"];
             }
         } else {
             $model->loadDefaultValues();

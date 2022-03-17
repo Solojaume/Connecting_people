@@ -24,7 +24,8 @@ class AspectoController extends ApiController
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                        'deleteAspecto' => ['POST'],
+                        'updateAspecto' => ['POST']
                     ],
                 ],
             ]
@@ -42,22 +43,6 @@ class AspectoController extends ApiController
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return $searchModel::findOne(["id",$id]);
         }
-
-
-       
-    }
-
-    /**
-     * Displays a single Aspecto model.
-     * @param int $aspecto_id Aspecto ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($aspecto_id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($aspecto_id),
-        ]);
     }
 
     /**
@@ -73,16 +58,18 @@ class AspectoController extends ApiController
         $model = new Aspecto();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'aspecto_id' => $model->aspecto_id]);
+            $u=self::getUserWhithAuthToken();
+            if(isset($u['error'])){
+                return $u['error'];
+            }
+            else if ($model->load($this->request->post()) && $model->save() && $u->hasRol(1)) {
+                return ["status"=>"Se ha guardado corretamente el nuevo Aspecto"];
+            }else if ($u->rol===0 && $u->hasRol(0)) {
+                return ["error"=>"El usuario no tiene permisos para realizar esta acción"];
             }
         } else {
             $model->loadDefaultValues();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -92,17 +79,32 @@ class AspectoController extends ApiController
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($aspecto_id)
+    public function actionUpdateAspecto()
     {
-        $model = $this->findModel($aspecto_id);
+        $aspecto_id=isset($_POST["aspecto_id"])?$_POST["aspecto_id"]:null;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'aspecto_id' => $model->aspecto_id]);
+        if ($this->request->isPost) {
+            $u=self::getUserWhithAuthToken("object");
+           
+            if(isset($u['error'])){
+                return $u['error'];
+            }
+            else if ( $u->hasRol(1)) {
+                if ($aspecto_id===null) {
+                    return ["error"=>"Aspecto no encontrado"];
+                }else{
+                    $model = $this->findModel($aspecto_id);
+                }
+
+                if ($model->load($this->request->post(),"") && $model->save()) {
+                    return ["status"=>"Se ha guardado corretamente los cambios Aspecto"];
+                }
+            }else if ($u->rol===0 && $u->hasRol(0)) {
+                return ["error"=>"El usuario no tiene permisos para realizar esta acción"];
+            }
+        } else {
+            $model->loadDefaultValues();
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -112,11 +114,50 @@ class AspectoController extends ApiController
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($aspecto_id)
+    public function actionDeleteAspecto()
     {
-        $this->findModel($aspecto_id)->delete();
+        $aspecto_id=isset($_POST["aspecto_id"])?$_POST["aspecto_id"]:null;
 
-        return $this->redirect(['index']);
+        if ($this->request->isPost) {
+            $u=self::getUserWhithAuthToken("o");
+           
+            if(isset($u['error'])){
+                return $u['error'];
+            }
+            else if ( $u->hasRol(1)) {
+                if ($aspecto_id===null) {
+                    return ["error"=>"Aspecto no encontrado"];
+                }else{
+                    try {
+                        $model = $this->findModel($aspecto_id)->delete();
+                        return ["status"=>"Se ha eliminado corretamente el Aspecto"];
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                        return ["error"=>"El aspecto en cuestion no existe"];
+                    }
+                    
+                    
+                }
+           
+            }else if ($u->rol===0 && $u->hasRol(0)) {
+                return ["error"=>"El usuario no tiene permisos para realizar esta acción"];
+            }
+        }
+
+    }
+
+    public function actionGetAspectos(Type $var = null)
+    {
+        if ($this->request->isPost) {
+            $u=self::getUserWhithAuthToken();
+           
+            if(isset($u['error'])){
+                return $u['error'];
+            }
+            else {
+                return Aspecto::getTodosAspectos();                
+            }
+        }
     }
 
     /**

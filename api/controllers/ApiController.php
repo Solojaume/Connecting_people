@@ -47,7 +47,12 @@ class ApiController extends \yii\rest\ActiveController
 
         return $behaviors;
     }
-    public static function getUserWhithAuthToken()
+    private static function sha256($pass1 = null)
+    {
+        return hash("sha256",$pass1);
+    }
+
+    public static function getUserWhithAuthToken($type = "array")
     {
         //Devuelve el usuario del token que se encuentre en la cabecera de la petición
         $token_auth = \Yii::$app->request->headers->get("authorization");
@@ -56,8 +61,11 @@ class ApiController extends \yii\rest\ActiveController
         //var_dump($token_auth);
         $u=\app\models\Usuario::findIdentityByAccessToken($token_auth);
         $validacion=$u->validateAuthToken($token_auth);
-        if($validacion===true){
-            return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+        if($validacion==true){
+             if ($type === "array") {
+                return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id,"rol"=>$u->rol];
+            }
+            return $u;
         }
         return ["error"=> "Sesion caducada, inicia sesion de nuevo"];
     }

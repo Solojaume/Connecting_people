@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\puntuacionesReview;
+use app\models\PuntuacionesReview;
 use app\models\PuntuacionesReviewSearch;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
@@ -14,6 +14,15 @@ use yii\filters\VerbFilter;
 class PuntuacionesReviewController extends ApiController
 {
     public $modelClass='app\models\PuntuacionesReview';
+    
+    public function actions() {
+        $actions = parent::actions();
+        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+        unset($actions['delete'],$actions['update'],$actions['view']);
+        // Redefinimos el método que prepara los datos en el index
+       // $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+        return $actions;
+    }
 
     /**
      * @inheritDoc
@@ -26,7 +35,8 @@ class PuntuacionesReviewController extends ApiController
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                       // 'delete' => ['POST'],
+                       'createR' => ['POST']
                     ],
                 ],
             ]
@@ -48,18 +58,32 @@ class PuntuacionesReviewController extends ApiController
             'dataProvider' => $dataProvider,
         ]);
     }
+    static function getPuntuaciones($review){
+        $p = new PuntuacionesReview();
+        
+        if($p=$p->getPuntuacionesReview($review)){
+            for ($i=0; $i < count($p) ; $i++) { 
+                $pr=PuntuacionesReview::findOne("puntuaciones_review_id".$p[$i]["puntuaciones_review_id"]);
+                //var_dump($pr->getPuntuacionReviewAspecto()->asArray()->all()[0]['aspecto_nombre']);
+                //die();
+                $p[$i]["puntuaciones_review_aspecto_id"] = $pr->getPuntuacionReviewAspecto()->asArray()->all()[0]['aspecto_nombre'];
+            }
+            return $p;
+        }
+        return null;
+    }
 
-    /**
-     * Displays a single puntuacionesReview model.
-     * @param int $puntuaciones_review_id Puntuaciones Review ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($puntuaciones_review_id)
+    static function getMediaPuntuaciones( $review = null)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($puntuaciones_review_id),
-        ]);
+        $m = new PuntuacionesReview();
+        $sumaPuntuaciones = 0;
+        $cantidad = $m->getCountPuntuaciones($review);
+        $punt = $m->getPuntuacionesReview();
+        unset($m);
+        for ($i=0; $i < count($punt); $i++) { 
+            $sumaPuntuaciones=$sumaPuntuaciones+$punt[$i]["puntuaciones_review_puntuacion"];
+        }
+        return $sumaPuntuaciones/$cantidad;
     }
 
     /**
@@ -67,13 +91,21 @@ class PuntuacionesReviewController extends ApiController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreateR()
     {
-        $model = new puntuacionesReview();
-
+        $model = new PuntuacionesReview();
+        //var_dump($model->load($punt,""));
+        //die();
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'puntuaciones_review_id' => $model->puntuaciones_review_id]);
+            $u=self::getUserWhithAuthToken();
+            if(isset($u['error'])){
+                return $u['error'];
+            }
+            // var_dump($model->load($this->request->isPost));
+            if ($model->load($this->request->post(),'') && $model->save()) {
+                return ["status"=>"Se guardo correctamente"];
+            }else{
+                return false;
             }
         } else {
             $model->loadDefaultValues();
@@ -84,39 +116,6 @@ class PuntuacionesReviewController extends ApiController
         ]);
     }
 
-    /**
-     * Updates an existing puntuacionesReview model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $puntuaciones_review_id Puntuaciones Review ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($puntuaciones_review_id)
-    {
-        $model = $this->findModel($puntuaciones_review_id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'puntuaciones_review_id' => $model->puntuaciones_review_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing puntuacionesReview model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $puntuaciones_review_id Puntuaciones Review ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($puntuaciones_review_id)
-    {
-        $this->findModel($puntuaciones_review_id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the puntuacionesReview model based on its primary key value.

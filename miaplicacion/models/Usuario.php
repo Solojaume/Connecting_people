@@ -30,9 +30,11 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'password', 'token'], 'required'],
+           // [['imagen_src'], 'required'],
+            [['imagen_src'], 'required', 'on' => 'create'],
             [['password', 'token'], 'string','max'=>64],
             [['email'], 'string', 'max' => 30],
+            [['imagen_src'],'string', 'max'=>64],
         ];
     }
 
@@ -46,6 +48,7 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'email' => 'Email',
             'password' => 'Password',
             'token' => 'Token',
+            'imagen_src'=> 'Imagen Src',
         ];
     }
     public static function findIdentityByAccessToken($token, $type = null)
@@ -80,6 +83,16 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getId()
     {
         return $this->id;
+    }
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord) {
+            $this->id=count(self::find()->asArray()->all())+1;
+            $this->email=uniqid();
+            $this->password="123";
+            $this->token=uniqid();
+        }
+        return parent::beforeSave($insert);
     }
 
     /**
