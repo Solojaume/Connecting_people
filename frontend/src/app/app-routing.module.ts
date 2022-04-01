@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path:'',
     loadChildren: () => import('./public/public.module')
-    .then(mod=>mod.PublicModule),
+    .then(mod=>mod.PublicModule)
   }
   /*{
     path:'',component:PublicComponent
