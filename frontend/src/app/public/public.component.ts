@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router} from '@angular/router';
 @Component({
   selector: 'app-public',
   templateUrl: './public.component.html',
@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PublicComponent implements OnInit {
 
-  constructor() { }
+  constructor(){}
+
 
   ngOnInit(): void {
   }

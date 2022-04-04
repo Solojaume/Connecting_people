@@ -2,16 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PublicComponent } from './public.component';
 import { PublicRoutingModule } from './public-routing.module';
-
-
+import { SharedModule } from '../core/shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
-    PublicRoutingModule
+    PublicRoutingModule,
+    SharedModule, 
+    ReactiveFormsModule
   ],
   exports:[
-    PublicComponent
+    PublicComponent,
+    SharedModule
   ],
   declarations: [
     PublicComponent

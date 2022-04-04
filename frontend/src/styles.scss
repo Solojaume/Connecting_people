@@ -1,19 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
-//Colors
+@import "~bootstrap/dist/css/bootstrap.css";
 
+//Colors
+$primary:#BD00F5;
+$secondary:#18F584;
+$terciario:#F5A000;
+$cuaternario:#FA0DA5;
+$q:#00A4AD;
+$white:#fff;
+$lightgray:#ccc;
+$gray:#999;
+$darkgrey:#333;
+$verydarkgrey:#222;
+$black:#000;
+$cuaternario-l:#FA0DA590;
 @mixin background($theme: #BD00F5) {
-  background: $theme;
+    background: $theme;
 }
+@mixin color($color:white){
+    color:$color;
+}
+@mixin theme($background:#BD00F5, $color:white) {
+    color:$color;
+    background: $background;
+}
+
+//background
 .bg-primary{
     @include background;
 }
 .bg-secondary{
     @include background($theme:$secondary)
 }
-
-@mixin color($color:white){
-  color:$color;
+.bg-terciario{
+    @include background($theme:$terciario)
 }
+.bg-cuaternario{
+    @include background($theme:$cuaternario)
+}
+.bg-quintal{
+    @include background($theme:$q)
+}
+
+//Color stiles
 .color-white{
     @include color();
 }
@@ -23,10 +52,8 @@
 .color-secondary{
     @include color($color:$secondary);
 }
-
 .margin-0{
     margin: 0;
-    margin: auto;
 }
 
 
