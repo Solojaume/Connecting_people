@@ -7,13 +7,17 @@ const routes: Routes = [
     path: '', component:PublicComponent,children:[
       {
       path:'',loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule)
+      },  
+      {
+        path:'login',loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule)
+      },
+      {
+        path:'register',loadChildren:()=>import('./register/register.module').then(m=>m.RegisterModule)
       }
     ]
   },
   
-  {
-    path:'login',loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule)
-  }
+
 ];
 
 @NgModule({

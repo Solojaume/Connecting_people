@@ -15,16 +15,9 @@ export class LoginComponent implements OnInit {
     password: new FormControl('')
   });
 
-  submit() {/*'
-  Nombre=${this.formularioContacto.value.nombre}
-                Mail=${this.formularioContacto.value.mail}
-                Mensaje=${this.formularioContacto.value.mensaje}'
-  */
-    /*
-    this.datos=
-    [['mail',${this.formularioContacto.value.nombre}],
-    ['password',${this.formularioContacto.value.nombre}]];*/
-    this.datos=`Mail=${this.formularioLogin.value.mail}
+  submit() {
+    this.datos=`
+    Mail=${this.formularioLogin.value.mail}
     Password=${this.formularioLogin.value.password}
     `;
     console.log(this.formularioLogin.value.nombre);
