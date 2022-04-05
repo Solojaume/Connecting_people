@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-recuperate',
@@ -7,10 +7,13 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./recuperate.component.scss']
 })
 export class RecuperateComponent implements OnInit {
-
-  constructor() { }
+  token!:string;
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe((parametros: ParamMap)=>{
+      this.token=parametros.get("token")!;
+    })
   }
 
 
