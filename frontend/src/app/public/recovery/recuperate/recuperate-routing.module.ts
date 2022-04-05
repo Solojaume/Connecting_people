@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RecuperateComponent } from './recuperate.component';
 //redirectTo:'./recovery-screan'
 const routes: Routes = [
-  {path:'',component:RecuperateComponent},
+  {path:':token',component:RecuperateComponent},
 
 ];
 
