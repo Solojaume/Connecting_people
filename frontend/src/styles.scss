@@ -56,4 +56,22 @@ $cuaternario-l:#FA0DA590;
     margin: 0;
 }
 
+//button
+
+@mixin btn($back,$c:#fff){
+    color: $c;
+    background-color: $back;
+    border-color: $back;
+  }
+  
+  .btn-primary, .btn-primary:hover{
+    @include btn($primary,$white);
+  }
+   
+  .btn-terciario,.btn-terciario:hover{
+    @include btn($terciario,$white);
+  }
+  
+
+
 

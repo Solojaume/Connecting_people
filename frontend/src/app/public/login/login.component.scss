@@ -1,13 +1,4 @@
-.form-signin {
- 
-  align-items: center;
-  width: 100%;
-  max-width: 430px;
-  padding: 15px;
-  margin: auto;
-  .checkbox {
-    font-weight: 400;
-  }
+
 
   .form-floating:focus-within {
     z-index: 2;
@@ -24,4 +15,4 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
-}
+

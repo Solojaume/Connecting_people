@@ -20,3 +20,21 @@ app-login{
     padding-top: 40px;
     padding-bottom: 40px;
 }
+.form-signin {
+ 
+    align-items: center;
+    width: 100%;
+    max-width: 430px;
+    padding: 15px;
+    margin: auto;
+    .checkbox {
+      font-weight: 400;
+    }
+    .btn-transparent{
+        color:black;
+    }
+    .btn-transparent:hover{
+        color:black;
+        border-color:black;
+    }
+}

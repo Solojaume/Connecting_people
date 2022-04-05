@@ -1,0 +1,11 @@
+<p>generate works!</p>
+<form [formGroup]="formularioRecovery" (ngSubmit)="submit()">
+    <h1> Recuperar cuenta</h1>
+    <div class="mb-1 form-floating">
+        <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Correo electrónico</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-terciario" name="login" id="login" type="submit">Recuperar cuenta</button>
+    <button class="w-100 btn btn-lg btn-transparent" name="register" type="button">Ir a login</button>
+    
+</form>
