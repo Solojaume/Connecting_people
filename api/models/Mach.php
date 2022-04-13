@@ -58,7 +58,7 @@ class Mach extends \yii\db\ActiveRecord
             'match_fecha' => 'Match Fecha',
         ];
     }
-    public static function gestUerMatches($uid)
+    public static function getUserMatches($uid)
     {
         $m=Yii::$app->db->createCommand(
             "SELECT * from mach where match_id_usu1=$uid AND match_estado_u1=1 AND match_estado_u2=1 or match_id_usu2=$uid AND match_estado_u1=1 AND match_estado_u2=1"
