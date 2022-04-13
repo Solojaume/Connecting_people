@@ -1,0 +1,7 @@
+<div class="row  ms-1 white-text">
+    <div *ngFor="let in of counter(max) ;let i = index" class="col">
+        <i *ngIf="puntuacion>in;" class="bi bi-star-fill"></i>
+        <i *ngIf="condicion(in)" class="bi bi-star "></i>
+    </div>
+   
+</div>

@@ -1,0 +1,24 @@
+<div class="d-flex align-items-center ">
+    <div class="flex-grow-1 rounded bg-primary bg-opacity-10 ">
+        <div class="row m-1">
+            <span class="white-text">Puntuación total:</span>
+        </div>
+             
+        <app-stars [puntuacion]="datos.punt" [max]="datos.max"></app-stars>
+        <app-comentario [comentario]="datos.comentario"></app-comentario>
+        <div *ngIf="ver_mas==true && ver_menos==false">
+            <app-puntuaciones-review [puntuaciones]="datos.puntuaciones_review"></app-puntuaciones-review>
+        </div>
+         
+        
+        <div class="row m-1 secondary-text">
+            
+            <div *ngIf="ver_mas==false && ver_menos==true">
+                <span (click)="mas()" id="mas">Ver más</span>
+            </div>
+            <div *ngIf="ver_mas==true && ver_menos==false">
+                <span (click)="menos()" id="menos">Ver menos</span>
+            </div>
+        </div>
+    </div>
+</div>

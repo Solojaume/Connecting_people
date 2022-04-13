@@ -1,0 +1,8 @@
+<div *ngFor="let pu of puntuaciones">
+   
+    <div class="row m-1">
+        <span class="white-text">Puntuación {{pu.aspecto}}:</span>
+    </div>
+    <app-stars [puntuacion]="pu.punt_asp" [max]="pu.max"></app-stars>
+        
+</div>

@@ -1,0 +1,28 @@
+/*@import url('../../../node_modules/bootstrap/scss/mixins/_breakpoints.scss');
+@include media-breakpoint-down(sm){
+    div{
+        &#intranet{
+            min-height:500px;
+        }
+    }
+}
+@include media-breakpoint-down(md){
+    div{
+        &#intranet{
+            min-height:700px;
+        }
+    }
+}
+@include media-breakpoint-down(lg){
+    div{
+        &#intranet{
+            min-height:700px;
+        }
+    }
+}
+*/
+div{
+    &#intranet{
+       min-height:450px;
+    }
+}

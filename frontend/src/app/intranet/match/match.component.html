@@ -1,1 +1,44 @@
-<p>match works!</p>
+<script src="./asets/js/intranet.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<main class="content" id="body">
+    <div class="container p-0">
+		<div class="card">
+			<div class="row g-0">
+				
+				<div class="col-12 col-lg-7 col-xl-8">
+					<div class="py-2 px-4 border-bottom d-none d-lg-block">
+						<div class="d-flex ">
+							<div class="align-items-center text-end">
+								<div class="row align-items-center">
+									
+									<div class="col-12">
+										<img [src]="usuarios[contUser].imagenes" class="img-fluid" id="image" alt="...">
+									</div>
+									<div class="col-12 align-items-end text-end ms-1">
+										<button (click)="dislike()" class="btn btn-danger col-2">Dislike</button>
+										<strong class="col-2" id="Name">Nombr: {{usuarios[contUser].nombre}}, </strong>
+										<strong class="col-1" id="Edad"> Edad: {{usuarios[contUser].timestamp_nacimiento}} </strong>
+										<button (click)="like()" class="btn btn-success col-2">Like</button>
+									</div>
+								</div>
+							</div>				
+						</div>
+					</div>
+
+					
+
+				</div>
+				<div class="col-12 col-lg-5 col-xl-4 border-letf">
+
+					<div class="px-4 d-none d-md-block">
+						<app-reviews [reviews]="usuarios[contUser].reviews"></app-reviews>
+					</div>
+
+					
+
+					<hr class="d-block d-lg-none mt-1 mb-0">
+				</div>
+			</div>
+		</div>
+	</div>
+</main>

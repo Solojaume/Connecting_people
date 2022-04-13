@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatchComponent } from './match.component';
-import { MatchRoutingModule } from './match-routing.module';
+import { ChatComponent } from './chat.component';
+import { ChatRoutingModule } from './chat-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
 
 
 
 @NgModule({
   declarations: [
-    MatchComponent
+    ChatComponent
   ],
   imports: [
     CommonModule,
-    MatchRoutingModule,
+    ChatRoutingModule,
     SharedModule
   ],
   exports:[
-    MatchComponent
+    ChatComponent
   ]
 })
-export class MatchModule { }
+export class ChatModule { }

@@ -22,7 +22,8 @@ export class LoginComponent implements OnInit {
     `;
     console.log(this.formularioLogin.value.nombre);
   }
- 
+  
+  
 
   ngOnInit(): void {
   }

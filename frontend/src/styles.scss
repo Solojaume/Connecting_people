@@ -15,7 +15,7 @@ $verydarkgrey:#222;
 $black:#000;
 $cuaternario-l:#FA0DA590;
 @mixin background($theme: #BD00F5) {
-    background: $theme;
+    background: $theme !important;
 }
 @mixin color($color:white){
     color:$color;
@@ -43,7 +43,7 @@ $cuaternario-l:#FA0DA590;
 }
 
 //Color stiles
-.color-white{
+.color-white, .white-text{
     @include color();
 }
 .color-primary{
@@ -55,7 +55,9 @@ $cuaternario-l:#FA0DA590;
 .margin-0{
     margin: 0;
 }
-
+.light-text-color{
+    @include color($color:$lightgray)
+}
 //button
 
 @mixin btn($back,$c:#fff){

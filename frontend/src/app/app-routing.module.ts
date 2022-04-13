@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PublicComponent } from './public/public.component';
 const routes: Routes = [
   {
     path:'',
     loadChildren: () => import('./public/public.module')
     .then(mod=>mod.PublicModule)
-  }
+  },
+  {
+    path:'home',
+    loadChildren: () => import('./intranet/intranet.module').then(mod=>mod.IntranetModule)
+  },
+  {
+    path:'intranet',
+    loadChildren: () => import('./intranet/intranet.module').then(mod=>mod.IntranetModule)
+  },
+  {path:'chat',redirectTo:'/intranet/chat'},
+ 
   /*{
     path:'',component:PublicComponent
   }*/
