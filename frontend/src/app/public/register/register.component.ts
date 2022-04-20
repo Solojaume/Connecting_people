@@ -15,6 +15,22 @@ export class RegisterComponent implements OnInit {
     nombre:new FormControl(''),
     fecha_na:new FormControl(''),
   });
+
+  //Objetos Button
+  buttonRegistrame={
+    nombre: "Registrarme",
+    link: " ",
+    classCSS:"btn-terciario",
+    type: "submit"
+  };  
+
+  buttonIrLogin={
+    nombre: "Ir a login",
+    link: "/",
+    classCSS:"btn-vacio-primary color-quintal",
+    type: "button"
+  }
+
   submit(){
     this.datos=[['email',this.formularioRegistro.value.email],
     ['pass1',this.formularioRegistro.value.pass1],
@@ -23,8 +39,10 @@ export class RegisterComponent implements OnInit {
     ['fecha_na',this.formularioRegistro.value.pass1],
   ];
      
-      
+   
   }
+
+  
   constructor() { }
 
   ngOnInit(): void {
