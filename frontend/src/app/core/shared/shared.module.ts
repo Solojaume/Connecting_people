@@ -5,6 +5,7 @@ import { ReviewModule } from './components/review/review.module';
 import { ReviewsModule } from './components/reviews/reviews.module';
 import { ImagenesComponent } from './components/imagenes/imagenes.component';
 import { MensajeModule } from './components/mensaje/mensaje.module';
+import { ButtonsModule } from './components/buttons/buttons.module';
 
 
 
@@ -20,13 +21,14 @@ import { MensajeModule } from './components/mensaje/mensaje.module';
     ReviewModule,
     ReviewsModule, 
     MensajeModule,
+    ButtonsModule
   ],
   exports:[
     ReviewModule,
     ReviewsModule,
     ReactiveFormsModule,
     MensajeModule,
-  
+    ButtonsModule
   ],
   providers:[]
 })

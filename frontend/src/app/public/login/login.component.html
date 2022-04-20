@@ -16,8 +16,8 @@
       <input type="checkbox" value="remember-me"> Recuérdame
     </label>
   </div>
-  <button class="w-100 btn btn-lg btn-terciario" name="login" id="login" type="submit">Logeame</button>
-  <button class="w-100 btn btn-lg btn-transparent" name="register" id="register" type="button" >Registro</button>
-
+  <app-buttons [button]="buttonLogueame"></app-buttons>
+  <app-buttons [button]="buttonRegistrame"></app-buttons>
+  <app-buttons class="color-quintal" [button]="buttoneRecuperar"></app-buttons>
 </form>
 <br>{{datos}}
