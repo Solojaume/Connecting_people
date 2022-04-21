@@ -32,14 +32,14 @@ export class LoginComponent implements OnInit {
   buttonRegistrame= {
     nombre: "Registrame",
     link: "/register",
-    classCSS:"btn-vacio-primary",
+    classCSS:"btn-vacio-terciario ",
     type: "button"
   };
 
   buttoneRecuperar= {
-    nombre: "Recuperar",
+    nombre: "Recuperar cuenta",
     link: "/recovery",
-    classCSS:"btn-vacio-primary color-quintal",
+    classCSS:"btn-vacio-primary color-secondary mt-2",
     type: "button"
   };
   ngOnInit(): void {
