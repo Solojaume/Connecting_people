@@ -18,7 +18,7 @@ $cuaternario-l:#FA0DA590;
     background: $theme !important;
 }
 @mixin color($color:white){
-    color:$color;
+    color:$color !important;
 }
 @mixin theme($background:#BD00F5, $color:white) {
     color:$color;
@@ -52,6 +52,9 @@ $cuaternario-l:#FA0DA590;
 .color-secondary{
     @include color($color:$secondary);
 }
+.color-quintal{
+    @include color($color:$q);
+}
 .margin-0{
     margin: 0;
 }
@@ -65,14 +68,28 @@ $cuaternario-l:#FA0DA590;
     background-color: $back;
     border-color: $back;
   }
+@mixin btn-modular($bc:#fff,$back,$c:#fff){
+    color: $c;
+    background-color: $back;
+    border-color: $bc;
+}
   
-  .btn-primary, .btn-primary:hover{
+.btn-primary, .btn-primary:hover{
     @include btn($primary,$white);
-  }
+}
    
-  .btn-terciario,.btn-terciario:hover{
+.btn-terciario,.btn-terciario:hover{
     @include btn($terciario,$white);
-  }
+}
+
+.btn-vacio-primary{
+    @include btn($primary,$white);
+    &:hover{
+        @include btn-modular($bc:$cuaternario,$back:$primary,$c:$white);
+
+    }
+}
+
   
 
 

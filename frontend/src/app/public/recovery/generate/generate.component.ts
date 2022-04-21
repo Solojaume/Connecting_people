@@ -7,7 +7,20 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./generate.component.scss']
 })
 export class GenerateComponent implements OnInit {
+    //Objetos Button
+  buttonRecuperar={
+    nombre: "Recuperar",
+    link: " ",
+    classCSS:"btn-terciario",
+    type: "submit"
+  };  
 
+  buttonIrLogin={
+    nombre: "Ir a login",
+    link: "/",
+    classCSS:"btn-vacio-primary color-quintal",
+    type: "button"
+  }
   constructor() { }
 
   ngOnInit(): void {

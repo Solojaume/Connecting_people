@@ -22,9 +22,26 @@ export class LoginComponent implements OnInit {
     `;
     console.log(this.formularioLogin.value.nombre);
   }
+  buttonLogueame={
+    nombre: "Logueame",
+    link: " ",
+    classCSS:"btn-terciario",
+    type: "submit"
+  };
   
-  
+  buttonRegistrame= {
+    nombre: "Registrame",
+    link: "/register",
+    classCSS:"btn-vacio-primary",
+    type: "button"
+  };
 
+  buttoneRecuperar= {
+    nombre: "Recuperar",
+    link: "/recovery",
+    classCSS:"btn-vacio-primary color-quintal",
+    type: "button"
+  };
   ngOnInit(): void {
   }
 
