@@ -43,8 +43,9 @@ $cuaternario-l:#FA0DA590;
 }
 
 //Color stiles
-.color-white, .white-text{
+.color-white, .white-text .color-secondary-hover:hover{
     @include color();
+    
 }
 .color-primary{
     @include color($color:$primary);
@@ -79,16 +80,27 @@ $cuaternario-l:#FA0DA590;
 }
    
 .btn-terciario,.btn-terciario:hover{
-    @include btn($terciario,$white);
+    @include btn($terciario,$lightgray);
+    &:hover{
+        @include btn($terciario,$white);
+    }
+}
+
+.btn-vacio-terciario{
+    @include btn-modular($bc:$terciario,$back:$primary,$c:$lightgray);
+    &:hover{
+        @include btn-modular($bc:$terciario,$back:$primary,$c:$white);
+    }
 }
 
 .btn-vacio-primary{
     @include btn($primary,$white);
     &:hover{
-        @include btn-modular($bc:$cuaternario,$back:$primary,$c:$white);
+        @include btn-modular($bc:$secondary,$back:$primary,$c:$white);
 
     }
 }
+
 
   
 

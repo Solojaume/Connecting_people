@@ -18,7 +18,7 @@ export class GenerateComponent implements OnInit {
   buttonIrLogin={
     nombre: "Ir a login",
     link: "/",
-    classCSS:"btn-vacio-primary color-quintal",
+    classCSS:"btn-vacio-primary color-secondary mt-2",
     type: "button"
   }
   constructor() { }
