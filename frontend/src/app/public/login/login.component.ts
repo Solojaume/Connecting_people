@@ -29,14 +29,14 @@ export class LoginComponent implements OnInit {
     type: "submit"
   };
   
-  buttonRegistrame={
+  buttonRegistrame= {
     nombre: "Registrame",
     link: "/register",
     classCSS:"btn-vacio-primary",
     type: "button"
   };
 
-  buttoneRecuperar={
+  buttoneRecuperar= {
     nombre: "Recuperar",
     link: "/recovery",
     classCSS:"btn-vacio-primary color-quintal",
