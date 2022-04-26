@@ -251,7 +251,7 @@ class UsuarioController extends ApiController
                         $now = static::generarCadToken("+ 24 hour");
                         $u->cad_token = $now;
                         $u->save();
-                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre];
+                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
                     }else{
                         //Sirve para desactivar el token
                         $generate_activacion_token=true;
