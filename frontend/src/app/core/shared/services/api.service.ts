@@ -20,7 +20,7 @@ export class ApiService {
     //headers = headers.set('Accept-Encoding',['gzip', 'deflate', 'br']);
    // headers = headers.set('Content-Length','104');
     //console.log(headers);
-    let rest =this.http.post<UsuarioAPP>(this.apiBase+"usuario/login",{email:email1, password:password1},{headers:headers});
+    let rest =this.http.post<UsuarioAPP>(this.apiBase+"usuario/login",{email:email1, password:password1},{headers:headers}).pipe();
     //console.log(rest);
     return rest;
   }

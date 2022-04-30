@@ -1,24 +1,23 @@
 import { Time } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { Timestamp } from "rxjs";
+import { Model } from "./model.model";
 
-export class MensajeModel {
-    /*
-    "mensajes_id": 2,
-    "mensajes_match_id": 0,
-    "mensaje_contenido": "Hola",
-    "timestamp": "2022-04-11 18:26:19",
-    "entregado": 1,
-    "mensajes_usuario_id": 0
-    */
+@Injectable({
+    providedIn: 'root'
+})
+
+export class MensajeModel  {
     mensajes_id!:number;
     mensajes_match_id!:number;
     mensajes_contenido!:string;
     timestamp!:any;
     entregado!:number;
     mensajes_usuario_id!:number;
-    constructor(args=[],men_id:number=0,men_match_id=0,m_cont="g",time="2000-04-11", entregado=0,m_u_id=0) {
+    constructor(args:any[]=[],men_id:number=0,men_match_id=0,m_cont="",time="2000-04-11", entregado=0,m_u_id=0) {
         if(args.length==6){
             for (let index = 0; index < args.length; index++) {
+
                switch (index) {
                    case 0:
                         this.mensajes_id = men_id;
@@ -48,6 +47,7 @@ export class MensajeModel {
             }
 
         }else if(args.length==5){
+           
             for (let index = 0; index < args.length; index++) {
                switch (index) {
                    case 0:
@@ -73,6 +73,7 @@ export class MensajeModel {
                } 
             }
         }else{
+           
             this.mensajes_id=men_id;
             this.mensajes_match_id = men_match_id;
             this.mensajes_contenido = m_cont;
