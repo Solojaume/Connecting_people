@@ -232,8 +232,30 @@ class UsuarioController extends ApiController
             //@$email=$params->email;
             // @$password=$params->password;
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
-            $email=$_POST['email']??" ";
-            $password=$_POST['password']?? " ";
+            $p=\Yii::$app->request->headers;
+            //return ["error"=>$_POST];
+            if(isset($_POST['email'])&&isset($_POST['password'])){
+                $email=$_POST['email']??" ";
+                $password=$_POST['password'] ?? " ";
+            }else{
+                foreach ($_POST as $key => $value) {
+                    var_dump($_POST);
+                    var_dump(json_decode($key));
+                    $json=json_decode($key);
+                    //$json=json_decode($json);
+                    //var_dump($json);
+                    //die();
+                    /*foreach ($json as $key1 => $value){
+
+                    }*/
+                    /*$email=$json.email;
+                    $password=$json.password;*/
+                    return[$json];
+                   //return {"error"=>"Email $email Pass: $password"};
+                }
+            }
+            
+            
             if($u=Usuario::findOne(['email'=>$email])){
           
                 /*if($u->password==sha256($password) {//o crypt, según esté en la BD
@@ -251,7 +273,7 @@ class UsuarioController extends ApiController
                         $now = static::generarCadToken("+ 24 hour");
                         $u->cad_token = $now;
                         $u->save();
-                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
+                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol,'error'=>" "];
                     }else{
                         //Sirve para desactivar el token
                         $generate_activacion_token=true;
@@ -267,14 +289,14 @@ class UsuarioController extends ApiController
                             $u->save();
                         }
                     
-                        return ["error"=>"Haz click el enlace que encontraras en tu correo electronico, si no lo encuentras solicite otro"];
+                        return ['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,"error"=>"Haz click el enlace que encontraras en tu correo electronico, si no lo encuentras solicite otro"];
                     }
                
                 }
      
-                 return ['error'=>'No existe usuario con el email:'.$email .'o contraseña incorrecta'];
+                 return ['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,'error'=>'No existe usuario con el email:'.$email .'o contraseña incorrecta'];
             }
-            return['error'=>'Petición incorrecta, introduzca email y contraseña'];
+            return['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,'error'=>'Petición incorrecta, introduzca email y contraseña'];
         }
     }
     //Este metodo sirve para generar todos los token 
@@ -388,7 +410,7 @@ class UsuarioController extends ApiController
                             $u->cad_token_recuperar_pass="0000-00-00";
                             $u->token_recuperar_pass=null;
                             $u->save();
-                            echo "reccc";
+                            //echo "reccc";
                             return ["status"=>"ok","mensaje"=>"Ha sido cambiado satisfactoriamente"];
                         }else if($p1!==$p){
                             return ["error"=>"Comprueve que la contraseñas sean iguales"];
