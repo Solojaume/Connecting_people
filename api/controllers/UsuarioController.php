@@ -19,6 +19,11 @@ class UsuarioController extends ApiController
     /**
      * @inheritDoc
      */
+    public function beforeAction($a)
+    {
+        header('Access-Control-Allow-Origin: *');
+        return parent::beforeAction($a);
+    }
     public function behaviors()
     {
         return array_merge(

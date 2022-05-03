@@ -15,19 +15,14 @@ class ApiController extends \yii\rest\ActiveController
     public $authenable = true;//en los controladores que no queramos el token se pone en false
     public $modelClass="d";
 
-    public function beforeAction($a)
-    {
-        header('Access-Control-Allow-Origin: *');
-        return parent::beforeAction($a);
-    }
-
+    
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
         unset($behaviors['authenticator']);
         $behaviors['corsFilter'] = [
-            'class' => Cors::className(),
+            'class' => \yii\filters\Cors::className(),
             'cors' => [
                 'Origin' => ['localhost:*/*'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS', 'DELETE'],
