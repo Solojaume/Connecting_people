@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { PublicModule } from './public/public.module';
+import { authInterceptorProviders } from './core/shared/_helpers/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { PublicModule } from './public/public.module';
     AppRoutingModule,
     CoreModule
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

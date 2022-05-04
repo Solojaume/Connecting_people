@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
 
 @Component({
   selector: 'app-match',
@@ -78,11 +79,13 @@ export class MatchComponent implements OnInit {
 
 
 
-  constructor() { }
+  constructor(private token:TokenStorageService) { }
 
   ngOnInit(): void {
     this.contUser=0;
-
+    let to=this.token.getToken();
+    let us=this.token.getUser();
+    console.log();
   }
  //Recive por parametro si ha sido like o no 
  //Si es like recive true si no false

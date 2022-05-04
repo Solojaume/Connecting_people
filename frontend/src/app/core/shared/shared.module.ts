@@ -6,14 +6,12 @@ import { ReviewsModule } from './components/reviews/reviews.module';
 import { ImagenesComponent } from './components/imagenes/imagenes.component';
 import { MensajeModule } from './components/mensaje/mensaje.module';
 import { ButtonsModule } from './components/buttons/buttons.module';
-
-
+import { ServicesModule } from './services/services.module';
 
 
 @NgModule({
   declarations: [
-  
-    ImagenesComponent
+      ImagenesComponent
   ],
   imports: [
     CommonModule,
@@ -21,14 +19,16 @@ import { ButtonsModule } from './components/buttons/buttons.module';
     ReviewModule,
     ReviewsModule, 
     MensajeModule,
-    ButtonsModule
+    ButtonsModule,
+    ServicesModule
   ],
   exports:[
     ReviewModule,
     ReviewsModule,
     ReactiveFormsModule,
     MensajeModule,
-    ButtonsModule
+    ButtonsModule,   
+    ServicesModule
   ],
   providers:[]
 })

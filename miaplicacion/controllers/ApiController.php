@@ -60,13 +60,13 @@ class ApiController extends \yii\rest\ActiveController
         $token_auth = str_replace('Bearer ', '', $token_auth);
         //var_dump($token_auth);
         $u=\app\models\Usuario::findIdentityByAccessToken($token_auth);
-        $validacion=$u->validateAuthToken($token_auth);
-        if($validacion==true){
+       // $validacion=$u->validateAuthToken($token_auth);
+        /*if($validacion==true){
              if ($type === "array") {
                 return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id,"rol"=>$u->rol];
             }
             return $u;
-        }
+        }*/
         return ["error"=> "Sesion caducada, inicia sesion de nuevo"];
     }
 }
