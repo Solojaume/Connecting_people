@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers:[
-    ApiService
+    AuthService
   ]
 })
 export class ServicesModule { }
