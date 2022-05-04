@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Model } from "../model.model";
 
 
 export interface UsuarioAPP {
