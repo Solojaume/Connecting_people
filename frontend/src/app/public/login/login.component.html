@@ -20,9 +20,6 @@
   <app-buttons [button]="buttonRegistrame"></app-buttons>
   <app-buttons class="color-quintal" [button]="buttoneRecuperar"></app-buttons>
 </form>
-<div *ngIf="usuario.error">
-  {{usuario.error}}
-</div> 
-<div *ngIf="usuario.nombre">
-  {{usuario.nombre}}
-</div> 
+<div *ngIf="error">
+  {{error}}
+</div>  

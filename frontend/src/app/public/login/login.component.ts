@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UsuarioAPP } from 'src/app/core/models/usuario/usuario-app.model';
-import { ApiService } from 'src/app/core/shared/services/api.service';
+import { AuthService } from 'src/app/core/shared/services/auth.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -9,21 +11,18 @@ import { ApiService } from 'src/app/core/shared/services/api.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  datos!:any;
-  usuario:UsuarioAPP= <UsuarioAPP>{id:-1,nombre:"", token:"",rol:0};
-  us!:UsuarioAPP;
-  error:{error:string}={error:""};
-  constructor(private apiService:ApiService) { 
+
+  error:string="";
+  constructor(private apiService:AuthService,
+     private token:TokenStorageService,
+    private router:Router ) { 
   }
   formularioLogin = new FormGroup({
     mail: new FormControl(''),
     password: new FormControl('')
   });
 
-  usuarioApp(usuario:UsuarioAPP){
-    this.usuario=usuario;
-
-  }
+ 
 
   submit() {
     let mail = this.formularioLogin.value.mail;
@@ -31,11 +30,18 @@ export class LoginComponent implements OnInit {
 
     this.apiService.usuarioLogin(password,mail).subscribe(usuario=> { 
       //console.log(usuario);
-      this.usuario=usuario;
+      if(usuario.error){
+        this.error=usuario.error;
+      }else{
+        this.token.saveToken(usuario.token);
+        this.token.saveUser(usuario);
+        this.router.navigateByUrl("/home");
+
+      }
+      
       });
     //this.datos=JSON.stringify(this.us);
     //console.log(this.us); 
-    console.log(this.usuario);
   }
   buttonLogueame={
     nombre: "Logueame",
