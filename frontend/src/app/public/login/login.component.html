@@ -1,6 +1,6 @@
 
 <form id="login-form text-center" [formGroup]="formularioLogin" (ngSubmit)="submit()">
-  <h1 class="h3 mb-3 fw-normal white-text">Por favor, logeate</h1>
+  <h1 class="h3 mb-3 fw-normal color-white">Por favor, logeate</h1>
 
   <div class="form-floating">
     <input type="email" formControlName="mail" class="form-control" id="floatingInput" placeholder="name@example.com">
@@ -12,7 +12,7 @@
   </div>
 
   <div class="checkbox mb-3">
-    <label class="white-text">
+    <label class="color-white">
       <input type="checkbox" value="remember-me"> Recuérdame
     </label>
   </div>
@@ -20,4 +20,6 @@
   <app-buttons [button]="buttonRegistrame"></app-buttons>
   <app-buttons class="color-quintal" [button]="buttoneRecuperar"></app-buttons>
 </form>
-<br>{{datos}}
+<div *ngIf="error">
+  {{error}}
+</div>  
