@@ -254,7 +254,7 @@ class UsuarioController extends ApiController
                         $now = static::generarCadToken("+ 24 hour");
                         $u->cad_token = $now;
                         $u->save();
-                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol,'error'=>" "];
+                        return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
                     }else{
                         //Sirve para desactivar el token
                         $generate_activacion_token=true;
@@ -270,14 +270,14 @@ class UsuarioController extends ApiController
                             $u->save();
                         }
                     
-                        return ['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,"error"=>"Haz click el enlace que encontraras en tu correo electronico, si no lo encuentras solicite otro"];
+                        return ["error"=>"Haz click el enlace que encontraras en tu correo electronico, si no lo encuentras solicite otro"];
                     }
                
                 }
      
-                 return ['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,'error'=>'No existe usuario con el email:'.$email .'o contraseña incorrecta'];
+                 return ['error'=>'No existe usuario con el email: '.$email .' o se ha introducido una contraseña incorrecta'];
             }
-            return['token'=>" ",'id'=>-1 ,'nombre'=>" ",'rol'=>-1,'error'=>'Petición incorrecta, introduzca email y contraseña'];
+            return['error'=>'Petición incorrecta, introduzca email y contraseña'];
         }
     }
     //Este metodo sirve para generar todos los token 
