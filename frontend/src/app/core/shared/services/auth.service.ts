@@ -6,7 +6,7 @@ import { UsuarioAPP } from '../../models/usuario/usuario-app.model';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class AuthService {
   private apiBase!:string;
   constructor(private http:HttpClient) {
     this.apiBase = "http://localhost/connectingpeople/api/web/"
