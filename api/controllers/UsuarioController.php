@@ -228,32 +228,13 @@ class UsuarioController extends ApiController
     public function actionLogin(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Si se envían los datos en formato raw dentro de la petición http, se recogen así:
-            //$params=json_decode(file_get_contents("php://input"), false);
-            //@$email=$params->email;
-            // @$password=$params->password;
+            $params=json_decode(file_get_contents("php://input"), false);
+            @$email=$params->email;
+            @$password=$params->password;
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
-            $p=\Yii::$app->request->headers;
-            //return ["error"=>$_POST];
-            if(isset($_POST['email'])&&isset($_POST['password'])){
-                $email=$_POST['email']??" ";
-                $password=$_POST['password'] ?? " ";
-            }else{
-                foreach ($_POST as $key => $value) {
-                    var_dump($_POST);
-                    var_dump(json_decode($key));
-                    $json=json_decode($key);
-                    //$json=json_decode($json);
-                    //var_dump($json);
-                    //die();
-                    /*foreach ($json as $key1 => $value){
-
-                    }*/
-                    /*$email=$json.email;
-                    $password=$json.password;*/
-                    return[$json];
-                   //return {"error"=>"Email $email Pass: $password"};
-                }
-            }
+            //$email=$_POST['email'] ?? " ";
+            //$password=$_POST['password'] ?? " ";
+            
             
             
             if($u=Usuario::findOne(['email'=>$email])){
