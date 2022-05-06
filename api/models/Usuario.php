@@ -155,7 +155,9 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         if ($this->isNewRecord) {
             $now=\app\controllers\UsuarioController::generarCadToken("+ 30 minutes");
             $this->cad_token_recuperar_pass = $now;
+            //Se genera el token que permite recuperar la contraseeña en este caso se usa para activar la cuenta
             $this->token_recuperar_pass = \app\controllers\UsuarioController::generateToken();
+            //Se cifra la contraseña
             $this->password=\app\controllers\UsuarioController::sha256($this->password);
             $this->id = count(Usuario::find()->asArray()->all());
             $this->rol=0;//0 es usuario registrado 1 es admin
