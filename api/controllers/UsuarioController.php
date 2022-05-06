@@ -16,7 +16,7 @@ use yii\data\ActiveDataProvider;
  */
 class UsuarioController extends ApiController
 { 
-    public $urlFrontend="o<3+zñ";
+    public $urlFrontend="http://localhost:4200/";
     public $modelClass='app\models\Usuario';
     /**
      * @inheritDoc
@@ -136,7 +136,9 @@ class UsuarioController extends ApiController
                 //return ["error"=>$model->password,"status"=>"-"];
 
                 if($model->save()){
-                    return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
+
+                   // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
+                   
                     return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
                 }else{
                     return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email"];
@@ -383,12 +385,12 @@ class UsuarioController extends ApiController
         return $now;
     }
 
-    public function actionRecuperar(Type $var = null)
+    public function actionRecuperar(any $var = null)
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";
             $t_a=$_GET["token_activacion"] ?? " ";
-            $s_a=$_GET["sub_action"] ?? " ";
+            $s_a=$_GET["sub_action"] ?$var->sub_action: " ";
             $email=$_GET["email"] ?? " ";
             
             $p=$_POST["password"]??" ";
@@ -396,7 +398,7 @@ class UsuarioController extends ApiController
             $u =  Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
             //var_dump($u);
             $con0 = $s_a !== " " && $email !==" " && Usuario::findOne(["email"=>$email])==true;
-            $api_usurio="http://localhost/connectingpeople/api/web/usuario";
+            $api_usurio=$var->url??"http://localhost/connectingpeople/api/web/usuario";
             
             // var_dump($s_a);
             switch ($s_a) {
