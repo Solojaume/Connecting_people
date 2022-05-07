@@ -102,19 +102,19 @@ class UsuarioController extends ApiController
             //return $post;
             //Comprovamos que los campos que vamos a utilizar existan en el post
             if(!isset($params->email)){
-                return ["error"=>"El email no puede estar bacio"];
+                return ["error"=>["text"=>"El email no puede estar bacio","errorType"=>"email"]];
             }
             if(!isset($params->password)){
-                return ["error"=>"El password no puede estar bacio"];
+                return ["error"=>["text"=>"El password no puede estar bacio","errorType"=>"password"]];
             }
             if(!isset($params->pass2)){
-                return ["error"=>"La repetición de password no puede estar bacio"];
+                return ["error"=>["text"=>"La repetición de password no puede estar bacio","errorType"=>"password2"]];
             }
             if(!isset($params->nombre)){
-                return ["error"=>"El nombre no puede estar bacio"];
+                return ["error"=>["nombre"=>"El nombre no puede estar bacio","errormType"=>"nombre"]];
             }
             if(!isset($params->fecha_na)){
-                return ["error"=>"El fecha nacimiento no puede estar bacio"];
+                return ["error"=>["text"=>"El fecha nacimiento no puede estar bacio","errorType"=>"fecha"]];
             }
             
             //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
@@ -138,13 +138,13 @@ class UsuarioController extends ApiController
                 if($model->save()){
 
                    // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
-                   
+                   // return actionRecuperar(["sub_action"=>"generate",]);
                     return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
                 }else{
-                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email"];
+                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email","errorType"=>"general"];
                 }
             } else if(!$cond){
-                return ["error" => "Las contraseñas no coinciden"];
+                return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
             }
         } else {
             echo "ddd";
@@ -385,7 +385,7 @@ class UsuarioController extends ApiController
         return $now;
     }
 
-    public function actionRecuperar(any $var = null)
+    public function actionRecuperar(    $var = null)
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";

@@ -4,43 +4,57 @@
 
   <div class="form-floating">
     <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-    <label for="floatingInput">Correo electrónico</label>
+    <label for="floatingInput">
+      <span class="color-red" *ngIf="errorType=='email'">*</span>
+      Correo electrónico
+    </label>
   </div>
   <div class="form-floating">
     <input type="password" formControlName="pass1" class="form-control" id="floatingPassword" placeholder="Password">
-    <label for="floatingPassword">Contraseña
+    <label for="floatingPassword">
+      <span class="color-red" *ngIf="errorType=='password'">*</span>
+      Contraseña
       <span>(mínimo 6 caracteres)</span>
     </label>
   </div>
   <div class="form-floating">
     <input type="password" formControlName="pass2" class="form-control" id="floatingPassword2" placeholder="Password">
-    <label for="floatingPassword2">Confirmar Contraseña
-      <span>(requerido)</span>
+    <label for="floatingPassword2">
+      <span class="color-red" *ngIf="errorType=='password2'">*</span>
+      Confirmar Contraseña
+      <span>(requerido)</span>r
     </label>
   </div>
   <div class="form-floating">
     <input type="text" formControlName="nombre" class="form-control" id="floatingName" placeholder="Password">
-    <label for="floatingName">Nombre <span>(requerido)</span> </label>
+    <label for="floatingName">
+      <span class="color-red" *ngIf="errorType=='nombre'">*</span>
+      Nombre <span>(requerido)</span> </label>
   </div>
   <div class="form-floating">
     <input type="text" formControlName="fecha_na" class="form-control" id="floatingData" placeholder="text">
-    <label for="floatingData"> Fecha Nacimiento
+    <label for="floatingData">
+      <span class="color-red" *ngIf="errorType=='fecha'">*</span>
+      Fecha Nacimiento
       <span>(requerido)</span>
     </label>
   </div>
   <div class="checkbox mb-3">
+    <span class="color-red" *ngIf="errorType=='aceptTerms'">* </span>
     <label class="color-white">
-      <input type="checkbox" value="acepto"> He leído y acepto los términos y condiciones
+      <input class="form-check-input" type="checkbox" value="acepto" formControlName="aceptTerms"> He leído y acepto los términos y condiciones
     </label>
   </div>
- 
+
+  
   <app-buttons [button]="buttonRegistrame"></app-buttons>
   <app-buttons class="color-quintal" [button]="buttonIrLogin"></app-buttons>
 
 </form>
 
 
-<div class="" *ngIf="error">
+<div class="color-white" *ngIf="error">
+  <span class="color-red" *ngIf="errorType==''">*</span>
   {{error}}
 </div>  
 <div class="" *ngIf="mensaje">

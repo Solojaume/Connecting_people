@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
+
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -8,7 +10,9 @@ import { AuthService } from 'src/app/core/shared/services/auth.service';
 })
 export class RegisterComponent implements OnInit {
   datos!:[any[],any[],any[],any[],any[]];
+  //error:{text:any,errorType:any}={text:"",errorType:""};
   error!:string;
+  errorType!:string;
   mensaje!:string;
 
   formularioRegistro = new FormGroup ({
@@ -17,6 +21,7 @@ export class RegisterComponent implements OnInit {
     pass2: new FormControl(''),
     nombre:new FormControl(''),
     fecha_na:new FormControl(''),
+    aceptTerms:new FormControl(false,Validators.requiredTrue)
   });
 
   //Objetos Button
@@ -35,19 +40,31 @@ export class RegisterComponent implements OnInit {
   }
 
   submit(){
+   // this.error={text:"",errorType:""};
     let email = this.formularioRegistro.value.email;
     let password = this.formularioRegistro.value.pass1;
     let pass2 = this.formularioRegistro.value.pass2;
     let nombre = this.formularioRegistro.value.nombre;
     let fecha_na =this.formularioRegistro.value.fecha_na;
-    this.auth.usuarioRegistro(email,password,pass2,nombre,fecha_na).subscribe(usuario=> { 
-      //console.log(usuario);
-      if(usuario.error){
-        this.error=usuario.error;
-      }else if(usuario.mensaje){
-        this.error = usuario.mensaje;
-      }
-    });
+    let aceptTerms=this.formularioRegistro.value.aceptTerms;
+    if(aceptTerms==true){
+      this.auth.usuarioRegistro(email,password,pass2,nombre,fecha_na).subscribe(usuario=> { 
+        //console.log(usuario);
+        if(usuario.error){
+          let error1=JSON.parse(usuario.error);
+          this.error=usuario.error;
+          this.errorType=usuario.errorType;
+        }else if(usuario.mensaje){
+          //this.error.text = usuario.mensaje;
+        }
+        console.log(usuario.error);
+      });
+    }
+    else{
+      //this.error={text:"Tienes que aceptar los terminos y condiciones",errorType:"aceptTerms"};
+
+    }
+    
   }
 
   
