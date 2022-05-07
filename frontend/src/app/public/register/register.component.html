@@ -39,5 +39,10 @@
 
 </form>
 
-<br>
-<div>{{datos}}</div>
+
+<div class="" *ngIf="error">
+  {{error}}
+</div>  
+<div class="" *ngIf="mensaje">
+  {{mensaje}}
+</div>

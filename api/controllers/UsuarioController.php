@@ -8,17 +8,33 @@ use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\auth\HttpBearerAuth;
+use yii\data\ActiveDataProvider;
 
 
 /**
  * UsuarioController implements the CRUD actions for Usuario model.
  */
 class UsuarioController extends ApiController
-{
+{ 
+    public $urlFrontend="http://localhost:4200/";
     public $modelClass='app\models\Usuario';
     /**
      * @inheritDoc
      */
+    public function actions() {
+        $actions = parent::actions();
+        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+        unset($actions['view'], $actions['create'],$actions['update']);
+        // Redefinimos el método que prepara los datos en el index
+        $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+        return $actions;
+    }
+    public function indexProvider() {
+        $uid=Yii::$app->user->identity->id;
+        return new ActiveDataProvider ([
+            'query' => Apuntes::find()->where('usuarios_id='.$uid )->orderBy('id')
+        ]);
+    }
     public function behaviors()
     {
         return array_merge(
@@ -67,12 +83,7 @@ class UsuarioController extends ApiController
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+  
 
     /**
      * Creates a new Usuario model.
@@ -82,21 +93,58 @@ class UsuarioController extends ApiController
     public function actionCreate()
     {
         $model = new Usuario();
-        echo"guey";
+        //echo"guey";
+        $params=json_decode(file_get_contents("php://input"), false);
+        //return $params;
+
         if ($this->request->isPost) {
-            echo"f";
+            $post=$this->request->post();
+            //return $post;
+            //Comprovamos que los campos que vamos a utilizar existan en el post
+            if(!isset($params->email)){
+                return ["error"=>"El email no puede estar bacio"];
+            }
+            if(!isset($params->password)){
+                return ["error"=>"El password no puede estar bacio"];
+            }
+            if(!isset($params->pass2)){
+                return ["error"=>"La repetición de password no puede estar bacio"];
+            }
+            if(!isset($params->nombre)){
+                return ["error"=>"El nombre no puede estar bacio"];
+            }
+            if(!isset($params->fecha_na)){
+                return ["error"=>"El fecha nacimiento no puede estar bacio"];
+            }
+            
+            //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
+            $email=$params->email;
+            $password=$params->password;
+            $password2= $params->pass2;
+            $fecha_na = $params->fecha_na;
+            $nombre = $params->nombre;
+           
             //Comprovamos que las contraseñas sean iguales
-            //var_dump
-            //$con
-            if ($model->load($this->request->post())) {
-                $model->cad_token_recuperar_pass=self::generarCadToken("+ 30 minutes");
-                $model->token_recuperar_pass = static::generateToken();
-                $model->password=static::sha256($model->password);
-                echo "holis";
-                die();
+            $cond=$password==$password2;
+            
+            if ($cond && $email && $fecha_na && $nombre) {
+                $model->email=$email;
+                $model->nombre = $nombre;
+  
+                $model->password=$password;
+                $model->timestamp_nacimiento=$fecha_na;
+                //return ["error"=>$model->password,"status"=>"-"];
+
                 if($model->save()){
-                    return ["status"=>"ok","mensaje"=>"Se guardo correctamente, se ha enviado un email con un enlace de verificacion"];
+
+                   // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
+                   
+                    return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
+                }else{
+                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email"];
                 }
+            } else if(!$cond){
+                return ["error" => "Las contraseñas no coinciden"];
             }
         } else {
             echo "ddd";
@@ -337,12 +385,12 @@ class UsuarioController extends ApiController
         return $now;
     }
 
-    public function actionRecuperar(Type $var = null)
+    public function actionRecuperar(any $var = null)
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";
             $t_a=$_GET["token_activacion"] ?? " ";
-            $s_a=$_GET["sub_action"] ?? " ";
+            $s_a=$_GET["sub_action"] ?$var->sub_action: " ";
             $email=$_GET["email"] ?? " ";
             
             $p=$_POST["password"]??" ";
@@ -350,7 +398,7 @@ class UsuarioController extends ApiController
             $u =  Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
             //var_dump($u);
             $con0 = $s_a !== " " && $email !==" " && Usuario::findOne(["email"=>$email])==true;
-            $api_usurio="http://localhost/connectingpeople/api/web/usuario";
+            $api_usurio=$var->url??"http://localhost/connectingpeople/api/web/usuario";
             
             // var_dump($s_a);
             switch ($s_a) {

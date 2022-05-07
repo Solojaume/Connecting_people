@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
 
       }
       
-      });
+    });
     //this.datos=JSON.stringify(this.us);
     //console.log(this.us); 
   }
