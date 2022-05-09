@@ -95,13 +95,14 @@ class UsuarioController extends ApiController
         $model = new Usuario();
 
         $params=json_decode(file_get_contents("php://input"), false);
-        //return ["error"=> $params->pass2];
         if ($this->request->isPost) {
             $post=$this->request->post();
             //return $post;
             //Comprovamos que los campos que vamos a utilizar existan en el params
             if(!isset($params->email)|$params->email==""){
                 return ["error"=>"El email es un campo requerido","errorType"=>"email"];
+            }else if (static::is_valid_email($params->email)==false) {
+                return ["error"=>"El email no es valido, introduce un email valido","errorType"=>"email"];
             }
             if(!isset($params->password)|$params->password==""){
                 return ["error"=>"La contraseña es un campo requerido","errorType"=>"password"];
@@ -110,6 +111,8 @@ class UsuarioController extends ApiController
             }
             if(!isset($params->pass2)|$params->pass2==""){
                 return ["error"=>"La confirmación de contraseña es un campo requerido","errorType"=>"password2"];
+            }else if($params->password!=$params->pass2){
+                return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
             }
             if(!isset($params->nombre)|$params->nombre==""){
                 return ["error"=>"El nombre es un campo requerido","errorType"=>"nombre"];
@@ -273,6 +276,41 @@ class UsuarioController extends ApiController
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    /**
+     *
+     * Valida un email usando filter_var y comprobar las DNS. 
+     *  Devuelve true si es correcto o false en caso contrario
+     *
+     * @param    string  $str la dirección a validar
+     * @return   boolean
+     *
+     */
+    private static function is_valid_email($str)
+    {
+        $dns_correctos=["gmail.com","outlook.com","hotmail.es","hotmail.com","yahoo.com"];
+        $result = (false !== filter_var($str, FILTER_VALIDATE_EMAIL));
+        $count=0;
+        if ($result)
+        {
+            list($user, $domain) = explode('@', $str);
+            foreach ($dns_correctos as $key) {
+               if($domain!=$key){
+                    $count=$count+1;
+               }else{
+                   $count=0;
+                   break;
+               }
+            }
+            if($count>0){
+                return false;
+            }
+
+            $result = checkdnsrr($domain, 'MX');
+        }
+        
+        return $result;
     }
 
     //Esta funcion sirve para loguear
