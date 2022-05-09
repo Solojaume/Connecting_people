@@ -93,29 +93,31 @@ class UsuarioController extends ApiController
     public function actionCreate()
     {
         $model = new Usuario();
-        //echo"guey";
-        $params=json_decode(file_get_contents("php://input"), false);
-        //return $params;
 
+        $params=json_decode(file_get_contents("php://input"), false);
+        //return ["error"=> $params->pass2];
         if ($this->request->isPost) {
             $post=$this->request->post();
             //return $post;
-            //Comprovamos que los campos que vamos a utilizar existan en el post
-            if(!isset($params->email)){
-                return ["error"=>["text"=>"El email no puede estar bacio","errorType"=>"email"]];
+            //Comprovamos que los campos que vamos a utilizar existan en el params
+            if(!isset($params->email)|$params->email==""){
+                return ["error"=>"El email es un campo requerido","errorType"=>"email"];
             }
-            if(!isset($params->password)){
-                return ["error"=>["text"=>"El password no puede estar bacio","errorType"=>"password"]];
+            if(!isset($params->password)|$params->password==""){
+                return ["error"=>"La contraseña es un campo requerido","errorType"=>"password"];
+            }else if(strlen($params->password)<6){
+                return ["error"=>"La contraseña ha de tener mínimo 6 caracteres","errorType"=>"password"];
             }
-            if(!isset($params->pass2)){
-                return ["error"=>["text"=>"La repetición de password no puede estar bacio","errorType"=>"password2"]];
+            if(!isset($params->pass2)|$params->pass2==""){
+                return ["error"=>"La confirmación de contraseña es un campo requerido","errorType"=>"password2"];
             }
-            if(!isset($params->nombre)){
-                return ["error"=>["nombre"=>"El nombre no puede estar bacio","errormType"=>"nombre"]];
+            if(!isset($params->nombre)|$params->nombre==""){
+                return ["error"=>"El nombre es un campo requerido","errorType"=>"nombre"];
             }
-            if(!isset($params->fecha_na)){
-                return ["error"=>["text"=>"El fecha nacimiento no puede estar bacio","errorType"=>"fecha"]];
+            if(!isset($params->fecha_na)|$params->fecha_na==""){
+                return ["error"=>"La fecha nacimiento es un campo requerido","errorType"=>"fecha"];
             }
+            
             
             //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
             $email=$params->email;
@@ -149,6 +151,7 @@ class UsuarioController extends ApiController
         } else {
             echo "ddd";
             $model->loadDefaultValues();
+            return ["error"=>"Contacte con el soporte"];
         }
 
         /*return $this->render('create', [

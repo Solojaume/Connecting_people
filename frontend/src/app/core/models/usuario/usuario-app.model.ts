@@ -6,6 +6,5 @@ export interface UsuarioAPP {
     nombre:string;
     rol:number;
     token:string;
-    error:any;
-    errorType:any;
+    error:string;
 }
