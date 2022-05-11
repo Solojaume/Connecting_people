@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
-
-
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -14,6 +12,7 @@ export class RegisterComponent implements OnInit {
   error!:string;
   errorType!:string;
   mensaje!:string;
+  today!:Date;
 
   formularioRegistro = new FormGroup ({
     email: new FormControl(null,Validators.required),
@@ -75,6 +74,7 @@ export class RegisterComponent implements OnInit {
   constructor(private auth:AuthService) { }
 
   ngOnInit(): void {
+    this.today=new Date();
   }
 
 }

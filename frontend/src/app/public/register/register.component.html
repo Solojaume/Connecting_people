@@ -1,12 +1,10 @@
 <form id="register-form" [formGroup]="formularioRegistro" (ngSubmit)="submit()">
-
   <h1 class="h3 mb-3 fw-normal color-white">Por favor, regístrate</h1>
-
   <div class="form-floating">
     <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
     <label for="floatingInput">
       <span class="color-red" *ngIf="errorType=='email'">*</span>
-      Correo electrónico
+      Correo electrónico <span>(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
@@ -22,7 +20,7 @@
     <label for="floatingPassword2">
       <span class="color-red" *ngIf="errorType=='password2'">*</span>
       Confirmar Contraseña
-      <span>(requerido)</span>r
+      <span>(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
@@ -32,17 +30,20 @@
       Nombre <span>(requerido)</span> </label>
   </div>
   <div class="form-floating">
-    <input type="text" formControlName="fecha_na" class="form-control" id="floatingData" placeholder="text">
+    <input formControlName="fecha_na" class="form-control" id="floatingData" type="date" min="1900-01-01" [max]="today" 
+    placeholder="date">
     <label for="floatingData">
       <span class="color-red" *ngIf="errorType=='fecha'">*</span>
       Fecha Nacimiento
       <span>(requerido)</span>
     </label>
   </div>
+
+  
   <div class="checkbox mb-3">
     <span class="color-red" *ngIf="errorType=='aceptTerms'">* </span>
     <label class="color-white">
-      <input class="form-check-input" type="checkbox" value="acepto" formControlName="aceptTerms"> He leído y acepto los términos y condiciones
+      <input class="form-check-input" type="checkbox" value="acepto" formControlName="aceptTerms"> He leído y acepto los <a class="color-white" routerLink="/politicas"> términos y condiciones</a>
     </label>
   </div>
 
