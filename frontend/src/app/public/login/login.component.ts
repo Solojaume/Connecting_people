@@ -23,31 +23,43 @@ export class LoginComponent implements OnInit {
   }
  
   ngOnInit(): void {
-    let usuario=JSON.parse(this.cookieService.get("usuario"));
-    this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
-      usu => {
-        if(usu.error){
-          this.error=usu.error;
-          this.router.navigateByUrl("/");
-        }else{
-          let now= new Date();
-          let dias = 7;
-          this.cookieService.set('usuario',JSON.stringify(usuario),this.sumarDias(now, dias));
-          this.token.saveToken(usu.token);
-          this.token.saveUser(usu);
-          this.router.navigateByUrl("/home");
+    let usuario;
+    try {
+      usuario=JSON.parse(this.cookieService.get("usuario"))??"";
+    } catch (error) {
+      usuario={token:""};
+    }
+   
+   
+    if(usuario.token!="" && this.token.getUser() &&this.token.getToken()){
+      this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
+        usu => {
+          if(usu.error){
+            this.error=usu.error;
+            this.router.navigateByUrl("/");
+          }else{
+           
+            this.token.saveToken(usu.token);
+            this.token.saveUser(usu);
+            this.router.navigateByUrl("/home");
+          }
         }
-      }
-    );
+      );
+    } else if(usuario.token=="" &&!this.token.getUser() && !this.token.getToken()||!this.token.getUser() && !this.token.getToken()) {
+
+      this.router.navigateByUrl("/");
+    }
     if (this.token.getToken()&&this.token.getUser()) {
       let rol = this.token.getUser().roles;
       this.router.navigateByUrl("/home");
     }
+    if(this.token.getReload()=="false"||!this.token.getReload()) {
+      this.token.setReloadTrue();
+      this.router.navigateByUrl("/");
+    }else{
+      this.token.setReloadFalse();
+    }
   }
-
- 
-
- 
 
   formularioLogin = new FormGroup({
     mail: new FormControl(''),
@@ -67,7 +79,7 @@ export class LoginComponent implements OnInit {
     this.error='';
     let mail = this.formularioLogin.value.mail;
     let password = this.formularioLogin.value.password;
-       
+    let rememberMe = this.formularioLogin.value.rememberMe;   
     if(mail!=""&&password!=""){
       this.apiService.usuarioLogin(password,mail).subscribe(usuario=> { 
         //console.log(usuario);
@@ -76,7 +88,8 @@ export class LoginComponent implements OnInit {
         }else{
           let now= new Date();
           let dias = 7;
-          this.cookieService.set('usuario',JSON.stringify(usuario),this.sumarDias(now, dias));
+          if(rememberMe==true)
+            this.cookieService.set('usuario',JSON.stringify(usuario),this.sumarDias(now, dias));
           this.token.saveToken(usuario.token);
           this.token.saveUser(usuario);
           this.router.navigateByUrl("/home");
@@ -110,12 +123,12 @@ export class LoginComponent implements OnInit {
     type: "button"
   };
 
-  
-  
-  
-  ngOnDestroy(){ 
+  ngOnDestroy(){
     //this.subscribe.unsubscribe();
   }
+  
+  
+ 
  
 
 }

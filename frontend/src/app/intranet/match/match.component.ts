@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/core/shared/services/auth.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
 
 @Component({
@@ -79,13 +83,37 @@ export class MatchComponent implements OnInit {
 
 
 
-  constructor(private token:TokenStorageService) { }
+  constructor( private token:TokenStorageService, private router:Router, private cookieService:CookieService, private apiService:AuthService) { }
+  subscribe!:Subscription ;
+  error:string="";
+
 
   ngOnInit(): void {
     this.contUser=0;
     let to=this.token.getToken();
     let us=this.token.getUser();
     console.log();
+    this.token.setReloadFalse();
+    let usuario={token:""};
+    try {
+      usuario=JSON.parse(this.cookieService.get("usuario"))??"";
+    } catch (error) {
+      
+    }
+    if(usuario.token!="" && this.token.getUser() &&this.token.getToken()){
+      this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
+        usu => {
+          if(usu.error){
+            this.token.signOut();
+            this.cookieService.delete("usuario");
+            this.token.signOut();
+            this.router.navigateByUrl("/");
+          }
+        }
+      );
+    } else if(usuario.token=="" &&!this.token.getUser() && !this.token.getToken()||!this.token.getUser() && !this.token.getToken()) {
+      this.router.navigateByUrl("/");
+    }
   }
  //Recive por parametro si ha sido like o no 
  //Si es like recive true si no false

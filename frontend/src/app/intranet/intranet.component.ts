@@ -17,21 +17,7 @@ export class IntranetComponent implements OnInit {
   error:string="";
 
   ngOnInit(): void {
-    let usuario=JSON.parse(this.cookieService.get("usuario"));
-    if(usuario.token && this.token.getUser() &&this.token.getToken()){
-      this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
-        usu => {
-          if(usu.error){
-            this.token.signOut();
-            this.cookieService.delete("usuario");
-            this.token.signOut();
-            this.router.navigateByUrl("/");
-          }
-        }
-      );
-    } else if(!usuario.token && !this.token.getUser() && !this.token.getToken()) {
-      this.router.navigateByUrl("/");
-    }
+   
    
   }
 
