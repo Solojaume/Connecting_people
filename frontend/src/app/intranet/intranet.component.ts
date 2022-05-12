@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../core/shared/services/auth.service';
+import { TokenStorageService } from '../core/shared/services/token-storage.service';
 
 @Component({
   selector: 'app-intranet',
@@ -7,9 +12,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IntranetComponent implements OnInit {
 
-  constructor() { }
+  constructor( private token:TokenStorageService, private router:Router, private cookieService:CookieService, private apiService:AuthService) { }
+  subscribe!:Subscription ;
+  error:string="";
 
   ngOnInit(): void {
+    let usuario=JSON.parse(this.cookieService.get("usuario"));
+    if(usuario.token && this.token.getUser() &&this.token.getToken()){
+      this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
+        usu => {
+          if(usu.error){
+            this.token.signOut();
+            this.cookieService.delete("usuario");
+            this.token.signOut();
+            this.router.navigateByUrl("/");
+          }
+        }
+      );
+    } else if(!usuario.token && !this.token.getUser() && !this.token.getToken()) {
+      this.router.navigateByUrl("/");
+    }
+   
   }
 
+  logout(){
+    this.token.signOut();
+    this.cookieService.delete("usuario");
+    this.token.signOut();
+    this.router.navigateByUrl("/");
+  }
 }

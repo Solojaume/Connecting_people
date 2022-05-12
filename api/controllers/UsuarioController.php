@@ -48,12 +48,13 @@ class UsuarioController extends ApiController
                         'activate'=>['POST'],
                         'create'=>['POST'],
                         'cambiarContrasenya'=>['POST'],
-                        'recuperar'=>['GET','POST']
+                        'recuperar'=>['GET','POST'],
+                        'autenticate' => ['POST']
                     ],
                 ],  
                 'authenticator' => [//token
                     'class' => HttpBearerAuth::className(),
-                    'except' => ['login','create',"activate","recuperar"],
+                    'except' => ['login','create',"activate","recuperar",'autenticate'],
                 ]
             ]
         );
@@ -196,6 +197,7 @@ class UsuarioController extends ApiController
 
         return $this->redirect(['index']);
     }
+
     /*Cambia la contraseña cuanda se esta dentro del usuario
     *Si el token de validacion no es validado, se devolvera un error
     * Si el token esta caducado,se devolvera error */
@@ -262,6 +264,18 @@ class UsuarioController extends ApiController
         }
     }
     
+    public function actionAutenticate(){
+        $params=json_decode(file_get_contents("php://input"), false);
+        @$token=$params->token;
+        $u=\app\models\Usuario::findIdentityByAccessToken($token);
+        $validacion=$u->validateAuthToken($token);
+        if($validacion===true){
+            return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
+        }else{
+            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
+        }
+        
+    } 
     /**
      * Finds the Usuario model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -318,8 +332,8 @@ class UsuarioController extends ApiController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Si se envían los datos en formato raw dentro de la petición http, se recogen así:
             $params=json_decode(file_get_contents("php://input"), false);
-            @$email=$params->email;
-            @$password=$params->password;
+            @$email=$params->email??"";
+            @$password=$params->password??"";
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
             //$email=$_POST['email'] ?? " ";
             //$password=$_POST['password'] ?? " ";
