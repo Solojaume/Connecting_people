@@ -4,6 +4,10 @@ namespace app\controllers;
 
 use app\models\Usuario;
 use app\models\UsuarioSearch;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mime\Email;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -84,7 +88,7 @@ class UsuarioController extends ApiController
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-  
+    
 
     /**
      * Creates a new Usuario model.
@@ -142,7 +146,7 @@ class UsuarioController extends ApiController
                 //return ["error"=>$model->password,"status"=>"-"];
 
                 if($model->save()){
-
+                    $this->sendMail($model->email,"Activacion", "Localhost:4200");
                    // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
                    // return actionRecuperar(["sub_action"=>"generate",]);
                     return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
@@ -327,6 +331,27 @@ class UsuarioController extends ApiController
         return $result;
     }
 
+    private function sendMail($to,$subject,$text){
+        $eventDispatcher = new EventDispatcher();
+         
+        $MAILER_DSN="gmail://connectingpeoplesending@gmail.com:vvgrbszitsxpgpdn@default?verify_peer=0";
+        $transport = Transport::fromDsn($MAILER_DSN);
+        $mailer = new Mailer($transport, null, $eventDispatcher);
+        
+        $email = (new Email())
+        ->from('connectingpeoplesending@gmail.com')
+        ->to($to)
+        //->cc('cc@example.com')
+        //->bcc('bcc@example.com')
+        //->replyTo('fabien@example.com')
+        //->priority(Email::PRIORITY_HIGH)
+        ->subject($subject)
+        ->text("Si has recivido el email sin que te corresponda, eliminalo. Este es el link de connecting people: $text")
+        ->html('<p>'."Si has recivido el email sin que te corresponda, eliminalo.
+            <br> Este es el link de connecting people para $text".'</p>');
+
+         return $mailer->send($email);
+    }
     //Esta funcion sirve para loguear
     public function actionLogin(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -354,7 +379,7 @@ class UsuarioController extends ApiController
                 if($u->password==$password || $u->password==self::sha256($password)) {//Esto es para comprobar la contraseña en texto plano o cifrada
                     if($u->activo===1){
                         $u->token = self::generateToken();
-                        $now = static::generarCadToken("+ 24 hour");
+                        $now = static::generarCadToken("+ 168 hour");
                         $u->cad_token = $now;
                         $u->save();
                         return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];

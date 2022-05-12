@@ -38,6 +38,15 @@ export class TokenStorageService {
     window.sessionStorage.setItem(RELOAD_KEY, "false");
   }
 
+  public setCode(code:string){
+    window.sessionStorage.removeItem("code");
+    window.sessionStorage.setItem("code",code );
+  }
+
+  public getCode(){
+    window.sessionStorage.getItem("code");
+  }
+
   public getReload(): string | null {
     return window.sessionStorage.getItem(RELOAD_KEY);
   }

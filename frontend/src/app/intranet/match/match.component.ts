@@ -111,7 +111,12 @@ export class MatchComponent implements OnInit {
           }
         }
       );
-    } else if(usuario.token=="" &&!this.token.getUser() && !this.token.getToken()||!this.token.getUser() && !this.token.getToken()) {
+    } else if(usuario.token==""||!this.token.getUser() && !this.token.getToken()) {
+      this.token.signOut();
+      this.router.navigateByUrl("/");
+    }
+    if(!this.token.getUser() && !this.token.getToken()) {
+      this.token.signOut();
       this.router.navigateByUrl("/");
     }
   }

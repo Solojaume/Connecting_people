@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     }
    
    
-    if(usuario.token!="" && this.token.getUser() &&this.token.getToken()){
+    if(usuario.token!=""&&this.token.getUser()  ){
       this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
         usu => {
           if(usu.error){
@@ -48,12 +48,11 @@ export class LoginComponent implements OnInit {
     } else if(usuario.token=="" &&!this.token.getUser() && !this.token.getToken()||!this.token.getUser() && !this.token.getToken()) {
 
       this.router.navigateByUrl("/");
-    }
+    }else 
     if (this.token.getToken()&&this.token.getUser()) {
       let rol = this.token.getUser().roles;
       this.router.navigateByUrl("/home");
-    }
-    if(this.token.getReload()=="false"||!this.token.getReload()) {
+    }else if(this.token.getReload()=="false"||!this.token.getReload()) {
       this.token.setReloadTrue();
       this.router.navigateByUrl("/");
     }else{
@@ -90,11 +89,16 @@ export class LoginComponent implements OnInit {
           let dias = 7;
           if(rememberMe==true)
             this.cookieService.set('usuario',JSON.stringify(usuario),this.sumarDias(now, dias));
+          else{
+            this.cookieService.set('usuario',JSON.stringify(usuario));
+
+          }
+            
           this.token.saveToken(usuario.token);
           this.token.saveUser(usuario);
           this.router.navigateByUrl("/home");
         }
-        
+        console.log(this.cookieService.get("usuario"));
       });
     }else{
       this.error='No existe usuario con el email: '+mail +' o se ha introducido una contraseña incorrecta';
