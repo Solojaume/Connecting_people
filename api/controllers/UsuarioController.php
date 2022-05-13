@@ -126,7 +126,6 @@ class UsuarioController extends ApiController
                 return ["error"=>"La fecha nacimiento es un campo requerido","errorType"=>"fecha"];
             }
             
-            
             //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
             $email=$params->email;
             $password=$params->password;
@@ -146,10 +145,9 @@ class UsuarioController extends ApiController
                 //return ["error"=>$model->password,"status"=>"-"];
 
                 if($model->save()){
-                    $this->sendMail($model->email,"Activacion", "Localhost:4200");
-                   // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
-                   // return actionRecuperar(["sub_action"=>"generate",]);
-                    return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
+                    $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$model->email,"url"=>"http://localhost:4200"])["url"];
+                    $this->sendMail($model->email,"Activacion - Connecting People", $text);
+                    return ["mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
                 }else{
                     return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email","errorType"=>"general"];
                 }
@@ -465,20 +463,19 @@ class UsuarioController extends ApiController
         return $now;
     }
 
-    public function actionRecuperar(    $var = null)
+    public function actionRecuperar($var = null)
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";
             $t_a=$_GET["token_activacion"] ?? " ";
-            $s_a=$_GET["sub_action"] ?$var->sub_action: " ";
-            $email=$_GET["email"] ?? " ";
-            
+            $s_a=isset($_GET["sub_action"]) ?$_GET["sub_action"]:$var["sub_action"];
+            $email= isset($_GET["email"])?$_GET["email"]:$var["email"];
             $p=$_POST["password"]??" ";
             $p1=$_POST["password1"]??" ";
             $u =  Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
             //var_dump($u);
             $con0 = $s_a !== " " && $email !==" " && Usuario::findOne(["email"=>$email])==true;
-            $api_usurio=$var->url??"http://localhost/connectingpeople/api/web/usuario";
+            $api_usurio=$var["url"]??"http://localhost/connectingpeople/api/web/usuario";
             
             // var_dump($s_a);
             switch ($s_a) {
@@ -487,7 +484,10 @@ class UsuarioController extends ApiController
                     if ($con0===true) {
                         $u->cad_token_recuperar_pass=self::generarCadToken();
                         $u->token_recuperar_pass=self::generateToken();
-                        if($u->activo===0){
+                        if(isset($var["action"])){
+                            $action = $var["action"];
+                        }
+                        else if($u->activo==0){
                             $action="/activate";
                         }else{
                             $action="/recuperar?sub_action=recovery";
