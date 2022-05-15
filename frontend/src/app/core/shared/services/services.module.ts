@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { ActivateRecoveryService } from './activate-recovery.service';
 
 
 
@@ -17,6 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
   ],
   providers:[
     AuthService,
+    ActivateRecoveryService,
     CookieService 
   ]
 })

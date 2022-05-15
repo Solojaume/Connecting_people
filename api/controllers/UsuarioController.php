@@ -425,18 +425,27 @@ class UsuarioController extends ApiController
     }
 
     public function actionActivate(){
-        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["token_activacion"])){
-            $t_a=$_GET["token_activacion"];
+        $params=json_decode(file_get_contents("php://input"), false);
+       // return ["error"=>$params];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($params->token_activacion)){
+            
+            $t_a=$params->token_activacion;
             $u = Usuario::findIdentityByRecoveryToken($t_a);
-            if (isset($u)&&$u->validateRecoveryToken($t_a)&&!$u->token_recuperar_pass===null) {
+            //return $u->validateRecoveryToken($t_a);
+            if (isset($u)&&$u->validateRecoveryToken($t_a)&&!$u->token_recuperar_pass==null) {
                 $u->activo=1;
                 $u->cad_token_recuperar_pass=null;
                 $u->token_recuperar_pass=null;
                 $u->save();
                 return ["status"=>"ok","mensaje"=>"Ha sido activado satisfactoriamente"];
             }
+            else if(isset($u)){
+                $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$u->email,"url"=>"http://localhost:4200"])["url"];
+                $this->sendMail($u->email,"Activacion - Connecting People", $text);
+                return ["mensaje"=>"Se ha enviado un nuevo enlace de activación"];
+            }
         }
-        return ["error"=> "Petición incorrecta, solicite otro enlace de activación"];
+        return ["error"=> "Petición incorrecta, puede que ya se haya activado prueve a iniciar sesion"];
     }
 
     public static function getUserWhithAuthToken($type = "array")
@@ -494,7 +503,7 @@ class UsuarioController extends ApiController
                         }
                         if($u->save())
                         return ["status"=>"ok",
-                        "url"=>$api_usurio.$action."&&token_activacion=".$u->token_recuperar_pass];//Quitar esto cuando se envien correos
+                        "url"=>$api_usurio.$action."/".$u->token_recuperar_pass];//Quitar esto cuando se envien correos
                        //return ["status"=>"ok","mensaje"=>"Ha sido recuperado satisfactoriamente"];
                     }else{
                         return ["error"=>"No se encontrado email"];
