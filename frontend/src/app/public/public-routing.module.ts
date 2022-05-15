@@ -17,6 +17,10 @@ const routes: Routes = [
       {
         path:'recovery', 
         loadChildren:  () => import('./recovery/recovery.module').then(m=>m.RecoveryModule) 
+      },
+      {
+        path:'activate',
+        loadChildren: () => import('./activar/activar.module').then(m=>m.ActivarModule)
       }
     ]
   },
