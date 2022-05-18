@@ -10,10 +10,10 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
     const token = this.token.getToken();
-    authReq= authReq.clone({headers:authReq.headers.set('Content-type','application/x-www-form-urlencoded')});
+    authReq = authReq.clone({headers:authReq.headers.set('Content-type','application/x-www-form-urlencoded')});
     authReq= authReq.clone({headers:authReq.headers.set('Access-Control-Allow-Origin','*')});
     if (token != null) {
-      authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
+      authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token)});
     }
     return next.handle(authReq);
   }

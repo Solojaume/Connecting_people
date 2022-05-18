@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
+import { Match } from 'src/app/core/models/match.model';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
+import { MatchService } from 'src/app/core/shared/services/match.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
 
 @Component({
@@ -11,88 +13,78 @@ import { TokenStorageService } from 'src/app/core/shared/services/token-storage.
   styleUrls: ['./match.component.scss']
 })
 export class MatchComponent implements OnInit {
-  reviews=[
-    {
-      punt:3,max:5,comentario:'ki',puntuaciones_review:
-      [
-        {aspecto:'z',punt_asp:5,min:0,max:5},
-        {aspecto:'y',punt_asp:2,min:0,max:5}
-      ]
-    },
-    {
-      punt:4,max:5,comentario:'ki2',puntuaciones_review:
-      [
-        {aspecto:'j',punt_asp:5,min:0,max:5},
-        {aspecto:'h',punt_asp:2,min:0,max:5}
-      ]
-    }
-  ]
+ 
   contUser!:number;
-  usuarios=[
-    {
-        "id": "1",
-        "timestamp_nacimiento": "2022-04-11 12:16:59",
-        "nombre": "1",
-        "imagenes": ["https://cdn.pixabay.com/photo/2014/12/06/19/46/girl-559307_960_720.jpg"],
-        "reviews":  [
-          {
-            punt:3,max:5,comentario:'ki',puntuaciones_review:
-            [
-              {aspecto:'z',punt_asp:5,min:0,max:5},
-              {aspecto:'y',punt_asp:2,min:0,max:5}
-            ]
-          },
-          {
-            punt:4,max:5,comentario:'ki2',puntuaciones_review:
-            [
-              {aspecto:'j',punt_asp:5,min:0,max:5},
-              {aspecto:'h',punt_asp:2,min:0,max:5}
-            ]
-          }
-        ]
-    },
-    {
-        "id": "2",
-        "nombre": "2",
-        "timestamp_nacimiento": "2022-04-11 12:17:02",
-        "imagenes": ["https://empresas.blogthinkbig.com/wp-content/uploads/2019/11/Imagen3-245003649.jpg?w=800"],
-        "reviews": []
-    },
-    {
-        "id": "3",
-        "nombre": "3",
-        "timestamp_nacimiento": "2022-04-11 12:17:04",
-        "imagenes": [],
-        "reviews": []
-    },
-    {
-        "id": "4",
-        "nombre": "4",
-        "timestamp_nacimiento": "2022-04-11 12:17:06",
-        "imagenes": [],
-        "reviews": []
-    },
-    {
-        "id": "5",
-        "nombre": "5",
-        "timestamp_nacimiento": "2022-04-11 12:17:10",
-        "imagenes": [],
-        "reviews": []
-    }
-  ];
-
-
-
-  constructor( private token:TokenStorageService, private router:Router, private cookieService:CookieService, private apiService:AuthService) { }
+  constructor( private match:MatchService,
+    private token:TokenStorageService,
+    private router:Router,
+    private cookieService:CookieService, 
+    private apiService:AuthService) { }
   subscribe!:Subscription ;
-  error:string="";
+  error:string="No hay más usuarios que mostrarte, vuelve más tarde";
+  usuarios!:Match[];
+  imagen!:any;
+  nombre!:any;
+  timestamp_nacimiento!:any;
+  
+  subscriptionNewUsers(){
+    this.match.getNewMatchUsers().subscribe(
+      u =>
+      {
+        if(u.length>=1){
+          this.usuarios=u;
+          this.contUser=0;
+          this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
+          this.nombre = this.usuarios[this.contUser].nombre;
+          this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+          this.error="";
+        }else{
+          this.usuarios=[];
+          this.contUser=0;
+          this.imagen = "";
+          this.nombre = "";
+          this.timestamp_nacimiento = "";
+          this.error="No hay más usuarios que mostrarte, vuelve más tarde";
+        }
+        
+      }
+    );
+  }
 
+  likeDislikeS(estado:number){
+    this.subscribe=this.match.likeDislike(this.usuarios[this.contUser]["id"],estado).subscribe(s=>{
+      if(this.usuarios.length>1){
+        this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
+        this.nombre = this.usuarios[this.contUser].nombre;
+        this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+        this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
+       // this.contUser=this.contUser+1;
+        //console.log(this.contUser);
+        this.error="";
+      }else if(this.usuarios.length<=1){
+        this.subscriptionNewUsers();
+        this.contUser=0;
+        this.usuarios=[];
+          this.contUser=0;
+          this.imagen = "";
+          this.nombre = "";
+          this.timestamp_nacimiento = "";
+          this.error="No hay más usuarios que mostrarte, vuelve más tarde";
+      }
+      else{
+         this.contUser=0;
+         this.error="No hay más usuarios que mostrarte, vuelve más tarde";
+      }
+    });
+  }
 
   ngOnInit(): void {
+    this.subscriptionNewUsers();
     this.contUser=0;
+  
+    console.log(this.imagen);
     let to=this.token.getToken();
     let us=this.token.getUser();
-    console.log();
     this.token.setReloadFalse();
     let usuario={token:""};
     try {
@@ -120,28 +112,38 @@ export class MatchComponent implements OnInit {
       this.router.navigateByUrl("/");
     }
   }
+
  //Recive por parametro si ha sido like o no 
  //Si es like recive true si no false
-  likedislike(like:boolean){
+  likedislike(like:number){
+    if(this.usuarios.length==1){
+      this.subscriptionNewUsers();
+    }
+    this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
     
     console.log("ContUser:"+this.contUser);
-    if (like==true) {
-      console.log("like");
-    } else if (like==false) {
-      console.log("dislike");
-    }
-    if(this.usuarios.length>this.contUser+1){
-      this.contUser=this.contUser+1;
-    }else{
-      this.contUser=0;
-    }
+    this.likeDislikeS(like);
+    //this.subscribe.unsubscribe();
   }
   
   like(){
-    this.likedislike(true);
+    this.likeDislikeS(1);
   }
   dislike(){
-    this.likedislike(false);
+    this.likeDislikeS(2);
   }
   
+  con(){
+    return this.error==="";
+  }
+  //codigo sacado de http://www.etnassoft.com/2016/09/09/eliminar-un-elemento-de-un-array-en-javascript-metodos-mutables-e-inmutables/
+  removeItemFromArr ( arr:Match[], item:any ) {
+    var i = arr.indexOf( item );
+ 
+    if ( i !== -1 ) {
+        arr.splice( i, 1 );
+    } else{
+      this.usuarios=[];
+    }
+}
 }

@@ -4,6 +4,8 @@ import { AuthService } from './auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivateRecoveryService } from './activate-recovery.service';
+import { MatchService } from './match.service';
+import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 
 
 
@@ -19,7 +21,9 @@ import { ActivateRecoveryService } from './activate-recovery.service';
   providers:[
     AuthService,
     ActivateRecoveryService,
-    CookieService 
+    CookieService,
+    MatchService,
+    authInterceptorProviders
   ]
 })
 export class ServicesModule { }
