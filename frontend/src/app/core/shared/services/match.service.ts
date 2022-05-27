@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Match } from '../../models/match.model';
 
 @Injectable({
@@ -12,7 +13,7 @@ export class MatchService {
     this.apiBase = "http://localhost/connectingpeople/api/web/";
   }
 
-  getNewMatchUsers(){
+  getNewMatchUsers():Observable<Match[]>{
     return this.http.post<Match[]>(
       this.apiBase+"mach/get_new_match_users_list",JSON.stringify(
       {

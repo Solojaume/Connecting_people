@@ -16,6 +16,7 @@ export class ReviewComponent implements OnInit {
     this.ver_mas=false;
     this.ver_menos=true;
   }
+  
   mas():void{
     this.ver_mas=true;
     this.ver_menos=false;

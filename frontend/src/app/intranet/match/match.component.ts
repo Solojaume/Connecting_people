@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 import { Match } from 'src/app/core/models/match.model';
+import { Review } from 'src/app/core/models/review.model';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
 import { MatchService } from 'src/app/core/shared/services/match.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
@@ -26,7 +27,7 @@ export class MatchComponent implements OnInit {
   imagen!:any;
   nombre!:any;
   timestamp_nacimiento!:any;
-  
+  reviews!:Review[];
   subscriptionNewUsers(){
     this.match.getNewMatchUsers().subscribe(
       u =>
@@ -37,6 +38,7 @@ export class MatchComponent implements OnInit {
           this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
           this.nombre = this.usuarios[this.contUser].nombre;
           this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+          this.reviews = this.usuarios[this.contUser].reviews;
           this.error="";
         }else{
           this.usuarios=[];
@@ -44,11 +46,13 @@ export class MatchComponent implements OnInit {
           this.imagen = "";
           this.nombre = "";
           this.timestamp_nacimiento = "";
+          this.reviews = [];
           this.error="No hay más usuarios que mostrarte, vuelve más tarde";
         }
         
       }
     );
+    
   }
 
   likeDislikeS(estado:number){
@@ -57,6 +61,7 @@ export class MatchComponent implements OnInit {
         this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
         this.nombre = this.usuarios[this.contUser].nombre;
         this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+        this.reviews = this.usuarios[this.contUser].reviews;
         this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
        // this.contUser=this.contUser+1;
         //console.log(this.contUser);
@@ -79,7 +84,9 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+ 
     this.subscriptionNewUsers();
+   
     this.contUser=0;
   
     console.log(this.imagen);

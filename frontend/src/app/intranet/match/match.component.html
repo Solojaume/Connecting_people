@@ -29,7 +29,17 @@
 				<div class="col-12 col-lg-5 col-xl-4 border-letf" *ngIf="error==''">
 
 					<div class="px-4 d-none d-md-block" >
-						<app-reviews [reviews]="usuarios[contUser].reviews"  ></app-reviews>
+						<!-- 
+						<p class="h1">Reviews</p>
+						<div class="d-flex align-items-center color-white row">
+							<div *ngFor="let review of reviews" class="flex-grow-1 rounded bg-primary bg-opacity-10  mt-1">
+								<app-review [datos]="review" class="col-12 "></app-review>        
+							</div>
+							
+						</div>
+					-->
+					<app-reviews [reviews]="usuarios[contUser].reviews"></app-reviews>
+
 					</div>
 
 					<hr class="d-block d-lg-none mt-1 mb-0" > 

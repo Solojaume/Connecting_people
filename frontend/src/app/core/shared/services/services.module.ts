@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ActivateRecoveryService } from './activate-recovery.service';
 import { MatchService } from './match.service';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
+import {Subject, Observer, Observable} from 'rxjs';;
 
 
 

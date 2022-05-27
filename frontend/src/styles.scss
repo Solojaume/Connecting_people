@@ -18,8 +18,9 @@ $cuaternario-l:#FA0DA590;
     background: $theme !important;
 }
 @mixin color($color:white){
-    color:$color !important;
+    color:$color;
 }
+
 @mixin theme($background:#BD00F5, $color:white) {
     color:$color;
     background: $background;
@@ -56,6 +57,9 @@ $cuaternario-l:#FA0DA590;
 .color-quintal{
     @include color($color:$q);
 }
+.color-quintal-hover:hover{
+    @include color($color:$q);
+}
 .color-red{
     @include color($color:#ff0000);
 }
@@ -88,6 +92,7 @@ $cuaternario-l:#FA0DA590;
         @include btn($terciario,$white);
     }
 }
+
 
 .btn-vacio-terciario{
     @include btn-modular($bc:$terciario,$back:$primary,$c:$lightgray);

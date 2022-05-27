@@ -83,7 +83,12 @@ class PuntuacionesReviewController extends ApiController
         for ($i=0; $i < count($punt); $i++) { 
             $sumaPuntuaciones=$sumaPuntuaciones+$punt[$i]["puntuaciones_review_puntuacion"];
         }
-        return $sumaPuntuaciones/$cantidad;
+        if($cantidad>0){
+            return $sumaPuntuaciones/$cantidad;
+        }else{
+            return 0;
+        }
+       
     }
 
     /**
