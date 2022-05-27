@@ -108,6 +108,13 @@ $requirements = array(
         'by' => '<a href="http://www.yiiframework.com/doc-2.0/yii-caching-memcache.html">MemCache</a>',
         'memo' => extension_loaded('memcached') ? 'To use memcached set <a href="http://www.yiiframework.com/doc-2.0/yii-caching-memcache.html#$useMemcached-detail">MemCache::useMemcached</a> to <code>true</code>.' : ''
     ),
+    //php socket
+    array('name' => 'PHP socket extension',
+    'mandatory' => false,
+    'condition' => extension_loaded('php_sockets'),
+    'by' => 'Apache',
+    'memo' => 'Required for PHP Sockets conections.',
+    ),
     // CAPTCHA:
     array(
         'name' => 'GD PHP extension with FreeType support',
