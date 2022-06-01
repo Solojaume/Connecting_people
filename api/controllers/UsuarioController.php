@@ -461,16 +461,21 @@ class UsuarioController extends ApiController
 
     public static function getUserWhithAuthToken($type = "array",$token=null)
     {
-        //Devuelve el usuario del token que se encuentre en la cabecera de la petición
-        $token_auth = \Yii::$app->request->headers->get("authorization");
-        //var_dump($token_auth);
-        $token_auth =$token===null ?str_replace('Bearer ', '', $token_auth):$token;
-        //var_dump($token_auth);
-        $u=Usuario::findIdentityByAccessToken($token_auth);
-        if($type==="array"){
-            return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+        try {
+            //Devuelve el usuario del token que se encuentre en la cabecera de la petición
+            $token_auth = \Yii::$app->request->headers->get("authorization");
+            //var_dump($token_auth);
+            $token_auth =$token===null ?str_replace('Bearer ', '', $token_auth):$token;
+            //var_dump($token_auth);
+            $u=Usuario::findIdentityByAccessToken($token_auth);
+            if($type==="array"){
+                return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+            }
+            return $u;
+        } catch (\Throwable $th) {
+            return false;
+            //throw $th;
         }
-        return $u;
     }
     
     public static function sha256($pass1 = null)

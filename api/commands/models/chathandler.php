@@ -1,5 +1,8 @@
 <?php
 namespace app\commands\models;
+
+use app\controllers\UsuarioController;
+
 class ChatHandler {
 	function sendAll($message,$clientSocketArray) {
 		$messageLength = strlen($message);
@@ -71,23 +74,34 @@ class ChatHandler {
 	function newConnectionACK($client_ip_address) {
 		echo("new ACK \n");
 		$message = 'New client ' . $client_ip_address;
-		$messageArray = array('message'=>$message,'message_type'=>'chat-connection-ack');
+		$messageArray = array("chat_user"=>"system",'chat_message'=>$message,'message_type'=>'chat-connection-ack');
 		$ACK = $this->seal(json_encode($messageArray));
 		return $ACK;
 	}
 	
 	function connectionDisconnectACK($client_ip_address) {
 		$message = 'Client ' . $client_ip_address;
-		$messageArray = array('message'=>$message,'message_type'=>'chat-connection-ack');
+		$messageArray = array("chat_user"=>"system",'chat_message'=>$message,'message_type'=>'chat-connection-ack');
 		$ACK = $this->seal(json_encode($messageArray));
 		return $ACK;
 	}
 	
 	function createChatBoxMessage($chat_user,$chat_box_message) {
 		$message = $chat_user . ": <div class='chat-box-message'>" . $chat_box_message . "</div>";
-		$messageArray = array('message'=>$message,'message_type'=>'chat-box-html');
+		$messageArray = array("chat_user"=>"system",'message'=>$message,'message_type'=>'chat-box-html');
 		$chatMessage = $this->seal(json_encode($messageArray));
 		return $chatMessage;
+	}
+	
+	function auth($token){
+		$u=UsuarioController::getUserWhithAuthToken();
+		if($u==true){
+			$message=array("chat_user"=>"system",'message'=>"ok",'message_type'=>'auth');
+			return ["auth"=>$u,"message"=>$message];
+		}else{
+			$message=array("chat_user"=>"system",'message'=>"error",'message_type'=>'auth');
+			return ["auth"=>$u,"message"=>$message];
+		}
 	}
 }
 ?>
