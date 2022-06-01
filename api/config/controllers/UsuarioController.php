@@ -269,18 +269,7 @@ class UsuarioController extends ApiController
     public function actionAutenticate(){
         $params=json_decode(file_get_contents("php://input"), false);
         @$token=$params->token;
-        $u=null;
-        try {
-            if(isset($token))
-            $u=\app\models\Usuario::findIdentityByAccessToken($token);
-
-        } catch (\Throwable $th) {
-            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
-
-        }
-        if ($u==null) {
-            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
-        }     
+        $u=\app\models\Usuario::findIdentityByAccessToken($token);
         $validacion=$u->validateAuthToken($token);
         if($validacion===true){
             return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
@@ -368,11 +357,11 @@ class UsuarioController extends ApiController
             $params=json_decode(file_get_contents("php://input"), false);
             @$email=$params->email??"";
             @$password=$params->password??"";
-            //var_dump($params);
-           // die();
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
             //$email=$_POST['email'] ?? " ";
             //$password=$_POST['password'] ?? " ";
+            
+            
             
             if($u=Usuario::findOne(['email'=>$email])){
           
@@ -459,12 +448,12 @@ class UsuarioController extends ApiController
         return ["error"=> "Petición incorrecta, puede que ya se haya activado prueve a iniciar sesion"];
     }
 
-    public static function getUserWhithAuthToken($type = "array",$token=null)
+    public static function getUserWhithAuthToken($type = "array")
     {
         //Devuelve el usuario del token que se encuentre en la cabecera de la petición
         $token_auth = \Yii::$app->request->headers->get("authorization");
         //var_dump($token_auth);
-        $token_auth =$token===null ?str_replace('Bearer ', '', $token_auth):$token;
+        $token_auth = str_replace('Bearer ', '', $token_auth);
         //var_dump($token_auth);
         $u=Usuario::findIdentityByAccessToken($token_auth);
         if($type==="array"){
@@ -472,7 +461,6 @@ class UsuarioController extends ApiController
         }
         return $u;
     }
-    
     public static function sha256($pass1 = null)
     {
         return hash("sha256",$pass1);

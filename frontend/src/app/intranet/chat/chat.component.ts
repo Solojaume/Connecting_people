@@ -33,6 +33,7 @@ export class ChatComponent implements OnInit {
     const chatMessageDto = new ChatMessageDto(this.token.getUser().nombre, this.formularioEnvio.value.message, "Mensaje");
     this.webSocketService.sendMessage(chatMessageDto);
     this.formularioEnvio.value.message = "";
+    this.formularioEnvio.reset();
   }
 }
 
