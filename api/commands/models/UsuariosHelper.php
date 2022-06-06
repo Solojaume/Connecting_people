@@ -1,18 +1,21 @@
 <?php
 namespace app\commands\models;
-
+require_once("usuario_chat.php");
 use app\commands\models\Usuario_Chat;
 
 class UsuarioHelper{
     private $usuarios;
     
     public function __construct() {
-       $usuarios=[];
+       $this->usuarios=[];
+
     }
 
     public function addUsuario($socket)
     {
-        $this->usuarios[]= new Usuario_Chat($socket);
+        $usuario= new Usuario_Chat($socket);
+        
+        $this->usuarios[]=$usuario;
     }
     
     public function findWithSocket($socket)
@@ -28,7 +31,7 @@ class UsuarioHelper{
     public function findWithToken($token)
     {
         foreach ($this->usuarios as $key ) {
-            if($key->token==$token){
+            if($key->getToken()==$token){
              return $key;
             }
         }
@@ -53,6 +56,7 @@ class UsuarioHelper{
 
     public function updateUserWithSocket($socket,$u)
     {
+        echo "Update";
         $usuario=$this->findWithSocket($socket);
         $usuario->setUsuario($u);
         return $usuario;

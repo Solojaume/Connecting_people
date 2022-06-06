@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { ChatMessageDto } from '../../models/chat/chatMessageDto';
 import { Comunicacion } from '../../models/chat/comunicacion';
@@ -13,7 +14,7 @@ export class WebSocketService {
   webSocket!: WebSocket;
   chatMessages: ChatMessageDto[] = [];
 
-  constructor(private token:TokenStorageService, private cookies:CookieService) { }
+  constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) { }
 
   public openWebSocket(){
     this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
@@ -27,8 +28,20 @@ export class WebSocketService {
 
     this.webSocket.onmessage = (event) => {
       const chatMessageDto = JSON.parse(event.data);
-      console.log(chatMessageDto);
-      this.chatMessages.push(chatMessageDto);
+      switch (chatMessageDto.message_type) {
+        case "auth_error":
+          this.token.signOut();
+          this.cookies.deleteAll();
+          this.router.navigateByUrl("/");
+          break;
+        case "auth":
+          break;
+        default:
+          console.log(chatMessageDto);
+          this.chatMessages.push(chatMessageDto);
+          break;
+      }
+     
     };
 
     this.webSocket.onclose = (event) => {

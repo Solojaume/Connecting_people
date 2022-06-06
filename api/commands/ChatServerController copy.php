@@ -6,7 +6,7 @@ use consik\yii2websocket\WebSocketServer;
 use yii\console\Controller;
 use app\commands\models\ChatHandler;
 
-class ChatServerController extends Controller
+class ChatServer1Controller extends Controller
 {
    private $socket_working=false;
    public function actionStart($host="localhost",$port = 8080)
@@ -49,11 +49,12 @@ class ChatServerController extends Controller
                while(socket_recv($newSocketArrayResource, $socketData, 1024, 0) >= 1){
                   $socketMessage = $chatHandler->unseal($socketData);
                   $messageObj = json_decode($socketMessage);
-                  var_dump($messageObj);
+                  //var_dump($messageObj);
                   if(isset($messageObj->comand)&& isset($messageObj->objeto)){
                      switch ($messageObj->comand) {
                         case 'auth':
                            $message = $chatHandler->auth($messageObj->objeto);
+                           var_dump($message);
                            if($message["autenticacion"]){
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
                            }else{
@@ -61,7 +62,13 @@ class ChatServerController extends Controller
                            }
                               
                            break;
-                        
+                        case 'send':
+                           $messageObj=$messageObj->objeto;
+                           if(isset($messageObj->chat_user)&&isset($messageObj->chat_message)){
+                              $chat_box_message = $chatHandler->createChatBoxMessage($messageObj->chat_user, $messageObj->chat_message);
+                              $chatHandler->sendAll($chat_box_message,$clientSocketArray);
+                           }
+
                         default:
                             $chat_message = $chatHandler->$messageObj->comand($messageObj->objeto);
                            $chatHandler->sendAll($chat_message,$clientSocketArray);

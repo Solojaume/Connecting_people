@@ -1,7 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\commads\models;
 
+use app\models\Imagen;
+use app\models\Mach;
+use app\models\Review;
 use Yii;
 use yii\web\IdentityInterface;
 /**
@@ -24,7 +27,7 @@ use yii\web\IdentityInterface;
  * @property Mach[] $maches0
  * @property Review[] $reviews
  */
-class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
+class Usuario1 extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}

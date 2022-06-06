@@ -1,7 +1,9 @@
 <?php
 namespace app\commands\models;
 
+use app\commads\models\Usuario1 as ModelsUsuario1;
 use app\controllers\UsuarioController;
+use app\models\Usuario;
 
 class ChatHandler {
 	function sendAll($message,$clientSocketArray) {
@@ -86,22 +88,35 @@ class ChatHandler {
 		return $ACK;
 	}
 	
-	function createChatBoxMessage($chat_user,$chat_box_message) {
-		$message = $chat_user . ": <div class='chat-box-message'>" . $chat_box_message . "</div>";
-		$messageArray = array("chat_user"=>"system",'message'=>$message,'message_type'=>'chat-box-html');
+	public function createChatBoxMessage($chat_user,$chat_box_message) {
+		$messageArray = array("chat_user"=>"$chat_user",'chat_message'=>$chat_box_message,'message_type'=>'chat-message');
 		$chatMessage = $this->seal(json_encode($messageArray));
 		return $chatMessage;
 	}
 	
-	function auth($token){
-		$u=UsuarioController::getUserWhithAuthToken();
-		if($u==true){
-			$message=array("chat_user"=>"system",'message'=>"ok",'message_type'=>'auth');
-			return ["auth"=>$u,"message"=>$message];
+	public function auth($token){
+		$token_auth =$token;
+		
+        $u=Usuario::findIdentityByAccessToken($token_auth);
+		
+        $con=$u->token==$token;
+        $con2=$u->validateCaducityDateAuthToken()==true;
+       
+        if($con && $con2){
+            $u = ["usuario"=>$u->nombre,"token"=>$token_auth,"id"=>$u->id];
+        }
+		
+		if(isset($u["id"])&&isset($u["usuario"])&&isset($u["token"])){
+			//echo "true";
+			
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"ok",'message_type'=>'auth']));
+			//return $message;
+			return ["autenticacion"=>["usuario"=>$u["usuario"],"token"=>$u["token"],"id"=>$u["id"]],"message"=>$message];
 		}else{
-			$message=array("chat_user"=>"system",'message'=>"error",'message_type'=>'auth');
-			return ["auth"=>$u,"message"=>$message];
-		}
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"error",'message_type'=>'auth_error')));
+			return ["autenticacion"=>false,"message"=>$message];
+		} 
 	}
 }
+
 ?>
