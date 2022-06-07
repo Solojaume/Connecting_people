@@ -2,6 +2,7 @@
 namespace app\commands;
 require ("models/usuarioshelper.php");
 require ("models/chathandler.php");
+require_once("models/chat_Rooms.php");
 use app\daemons\ChatServer;
 use consik\yii2websocket\WebSocketServer;
 use yii\console\Controller;
@@ -51,17 +52,15 @@ class ChatServerController extends Controller
             $newSocketIndex = array_search($socketResource, $newSocketArray);
             unset($newSocketArray[$newSocketIndex]);
          }
-         //var_dump($newSocketArray);
+         
          foreach ($newSocketArray as $newSocketArrayResource) {	
             try {
                while(socket_recv($newSocketArrayResource, $socketData, 1024, 0) >= 1){
                   echo "Socket Data";
-                  var_dump( $chatHandler->unseal($socketData));
-                  
+                            
                   $socketMessage = $chatHandler->unseal($socketData);
                   $messageObj = json_decode($socketMessage);
-                  var_dump( $messageObj);
-                 //var_dump($messageObj);
+                  
                   
                   if(isset($messageObj->comand)&& isset($messageObj->objeto)){
                      switch ($messageObj->comand) {
@@ -69,17 +68,17 @@ class ChatServerController extends Controller
                           
                            //echo "Mensage";
                            
-                           $message = $chatHandler->auth($messageObj->objeto);
+                           $message = $chatHandler->auth($messageObj->objeto,$usuariosHelper,$newSocketArrayResource);
                           // echo "Mensage2\n";
                         
                            if($message["autenticacion"]==true){
-                              $u=$usuariosHelper->findWithSocket($newSocketArrayResource);
-                              $u->setUsuario($message["autenticacion"]);
+                              
                               //var_dump($u);
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
                               
                            }else{
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
+                             // $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
                            }
                               
                            break;
@@ -88,8 +87,6 @@ class ChatServerController extends Controller
                        
                            if(isset($messageObj->chat_user)&&isset($messageObj->chat_message)){
                               echo "find With Token";
-                            
-                             // var_dump($usuariosHelper->findWithToken($messageObj->chat_user));
                               $messageObj->chat_user=$usuariosHelper->findWithToken($messageObj->chat_user);
                              
 

@@ -38,10 +38,14 @@ class UsuarioHelper{
          return false;
      
     }
-    public function findWithId($token)
-    {
+    public function findWithId($id)
+    {  
         foreach ($this->usuarios as $key ) {
-            if($key->id==$token){
+            echo"Imprimiendo key";
+            var_dump($key->getId());
+            echo"Imprimiendo id";
+            var_dump($id);
+            if($key->getId()===$id){
              return $key;
             }
         }
@@ -53,6 +57,8 @@ class UsuarioHelper{
     {
         return $this->usuarios;
     }
+    
+    
 
     public function updateUserWithSocket($socket,$u)
     {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { ChatMessageDto } from '../../models/chat/chatMessageDto';
+import { ChatRoom } from '../../models/chat/chat_room';
 import { Comunicacion } from '../../models/chat/comunicacion';
 import { IChatModels } from '../../models/chat/Interfaces/IChatModels';
 import { TokenStorageService } from './token-storage.service';
@@ -13,6 +14,7 @@ export class WebSocketService {
 
   webSocket!: WebSocket;
   chatMessages: ChatMessageDto[] = [];
+  chatRooms:ChatRoom[]= []
 
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) { }
 
@@ -35,6 +37,9 @@ export class WebSocketService {
           this.router.navigateByUrl("/");
           break;
         case "auth":
+          console.log(chatMessageDto);
+          this.chatRooms.push(chatMessageDto.message);
+          console.log(chatMessageDto.message);
           break;
         default:
           console.log(chatMessageDto);

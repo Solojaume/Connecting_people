@@ -5,6 +5,7 @@ class Usuario_Chat {
     public $nombre;
     protected $token;
     public $socket;
+    private $imagen;
     public function __construct($socket,$id=false,$nombre=false,$token=false) {
         $this->id = $id;
         $this->nombre=$nombre;
@@ -26,5 +27,9 @@ class Usuario_Chat {
     public function getNombre()
     {
         return $this->nombre;
+    }
+    public function getId()
+    {
+       return $this->id;
     }
 }

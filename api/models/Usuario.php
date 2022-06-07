@@ -46,8 +46,11 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         return static::findOne($id);
+    }    
+    public static function findIdentityById($id)
+    {
+        return Yii::$app->db->createCommand("SELECT * from usuario where id=$id")->queryAll();
     }
-
     /**
      * @return int|string current user ID
      */
@@ -85,7 +88,6 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         echo "validate";
         $con=$this->token==$token;
         $con2=$this->validateCaducityDateAuthToken()==true;
-        //var_dump($con2);
         return $con && $con2;
     }
     public function validateRecoveryToken($token){

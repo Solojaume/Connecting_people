@@ -3,9 +3,15 @@ namespace app\commands\models;
 
 use app\commads\models\Usuario1 as ModelsUsuario1;
 use app\controllers\UsuarioController;
+use app\models\Mach;
 use app\models\Usuario;
+require_once("chat_Rooms.php");
+use app\commands\models\Chat_Rooms;
+use app\models\Mensajes;
 
 class ChatHandler {
+	//En la siguiente variable guardo una concurrencia por cada usuario 
+	private $chat_rooms=[];
 	function sendAll($message,$clientSocketArray) {
 		$messageLength = strlen($message);
 		echo ("send \n");
@@ -94,7 +100,7 @@ class ChatHandler {
 		return $chatMessage;
 	}
 	
-	public function auth($token){
+	public function auth($token,&$usuariosHelper,$socket){
 		$token_auth =$token;
 		
         $u=Usuario::findIdentityByAccessToken($token_auth);
@@ -107,9 +113,127 @@ class ChatHandler {
         }
 		
 		if(isset($u["id"])&&isset($u["usuario"])&&isset($u["token"])){
-			//echo "true";
+			//En esta variable se guardan los matches sacados de la bd
+			$matchs=Mach::getUserMatches($u["id"]);
+			//La siguiente variable existe para solo enviarle
+			$matches=[];
+			echo "entra en auth\n";
+			foreach ($matchs as $key ) {
+				echo"foreach salvage";
+				if($key["match_id_usu1"]==$u["id"]){
+					echo "\nDentro del ifo";
+					$usuario1=Usuario::findIdentity($u["id"]);
+					$usuario2=Usuario::findIdentity($key["match_id_usu2"]);
+
+					$chat_room_id=uniqid();
+					$estado="Off line";
+					$mensages_devolver=[];
+					if($usuariosHelper->findWithId($key["match_id_usu2"])==true){
+						echo "On lINE\n";
+						$estado="On Line";
+					}
+					$mensages_bd=Mensajes::getMensajesByMatch($key["match_id"])??[];
+					foreach ($mensages_bd as $mensage ) {
+						$mensage_devolver=$mensage;
+						echo "\ndentro del for ifado";
+						$mensage_devolver[]=[
+							
+							"chat_room_id"=>$chat_room_id
+						];
+						$mensages_devolver[]=$mensage_devolver;
+					}
+					$matches[] = new Chat_Rooms(
+						//"chat_room_id"
+						$chat_room_id,
+						//"match_id"
+						$key["match_id"],
+						//"usuario_1"=>
+						[//EsTE SIEMPRE HACE REFENCIA AL USUARIO QUE SE AUTENTICA
+							"id"=>$usuario1["id"],
+							"nombre"=>$usuario1["nombre"]
+						],
+						//"usuario_2"
+						[
+							"id"=>$usuario2["id"],
+							"nombre"=>$usuario2["nombre"]
+						],
+						//estado"
+						$estado,
+						//"mensajes"
+						$mensages_devolver
+					);
+
+				}else if($key["match_id_usu2"]==$u["id"]){
+					echo "\n Dentro de elsa\n";
+					$usuario1=Usuario::findIdentity($key["match_id_usu2"]);
+					$usuario2=Usuario::findIdentity($key["match_id_usu1"]);
+
+					$chat_room_id=uniqid();
+					$estado="Off line";
+					$mensages_devolver=[];
+					//var_dump($usuariosHelper->findWithId($key["match_id_usu1"]));
+					echo "match_id_usu1";
+					if($usuariosHelper->findWithId($key["match_id_usu1"])==true){
+						echo "Online 2";
+						$estado="On Line";
+					}
+					$mensages_bd=Mensajes::getMensajesByMatch($key["match_id"])??[];
+					echo"\nAntes del for";
+					foreach ($mensages_bd as $key2 ) {
+						echo "\ndentro del for elsado";
+						$mensage_devolver=$key2;
+						$mensage_devolver[]=[
+							"chat_room_id"=>$chat_room_id
+						];
+						$mensages_devolver[]=$mensage_devolver;
+					}
+					echo "\nNew CHAT";
+					/*$matches[]=new Chat_Rooms(
+						//"chat_room_id"
+						$chat_room_id,
+						//"match_id"
+						$key["match_id"],
+						//"usuario_1"=>
+						[//EsTE SIEMPRE HACE REFENCIA AL USUARIO QUE SE AUTENTICA
+							"id"=>$usuario1["id"],
+							"nombre"=>$usuario1["nombre"]
+						],
+						//"usuario_2"
+						[
+							"id"=>$usuario2["id"],
+							"nombre"=>$usuario2["nombre"]
+						],
+						//estado"
+						$estado,
+						//"mensajes"
+						$mensages_devolver
+					);*/
+					
+					$matches[]=new Chat_Rooms(
+						$chat_room_id,$key["match_id"],
+						[//EsTE SIEMPRE HACE REFENCIA AL USUARIO QUE SE AUTENTICA
+							"id"=>$usuario1["id"],
+							"nombre"=>$usuario1["nombre"]
+						],
+						[
+							"id"=>$usuario2["id"],
+							"nombre"=>$usuario2["nombre"]
+						],
+						$estado, 
+						$mensages_devolver
+					);
+					echo"\nestoY A MEDIA";
+				}
+				
+			}
+			$matches_devolver=[];
+			echo"\nestoy ya \n";
+			foreach ($matches as $key ) {
+				$this->chat_rooms[]= $key;
+				$matches_devolver[]=$key->asArray();
+			}
 			
-			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"ok",'message_type'=>'auth']));
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$matches_devolver,'message_type'=>'auth']));
 			//return $message;
 			return ["autenticacion"=>["usuario"=>$u["usuario"],"token"=>$u["token"],"id"=>$u["id"]],"message"=>$message];
 		}else{
@@ -117,6 +241,7 @@ class ChatHandler {
 			return ["autenticacion"=>false,"message"=>$message];
 		} 
 	}
+	
 }
 
 ?>
