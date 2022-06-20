@@ -80,7 +80,7 @@ class ChatHandler {
 	}
 	
 	function newConnectionACK($client_ip_address) {
-		echo("new ACK \n");
+		//echo("new ACK \n");
 		$message = 'New client ' . $client_ip_address;
 		$messageArray = array("chat_user"=>"system",'chat_message'=>$message,'message_type'=>'chat-connection-ack');
 		$ACK = $this->seal(json_encode($messageArray));
@@ -100,8 +100,12 @@ class ChatHandler {
 		return $chatMessage;
 	}
 	
-	public function auth($token,&$usuariosHelper,$socket){
-		$token_auth =$token;
+	/*
+	* Este es el metodo que autentifica
+	*/
+	public function auth($token,&$usuariosHelper,&$socket=null)
+	{
+		$token_auth = $token;
 		
         $u=Usuario::findIdentityByAccessToken($token_auth);
 		
@@ -110,16 +114,46 @@ class ChatHandler {
        
         if($con && $con2){
             $u = ["usuario"=>$u->nombre,"token"=>$token_auth,"id"=>$u->id];
+			//se guarda los datos del usuario con el socket para poder identificarlos
+			echo "van las 2 pinche puerco";
+			var_dump($usuariosHelper->findWithId($u["id"]));
+			if($usuariosHelper->findWithId($u["id"])==true&&isset($socket)){
+				$usuariosHelper->findWithId($u["id"])->setUsuario($u);
+				$usuariosHelper->findWithId($u["id"])->setSocket($socket);
+			} else if(isset($socket)){
+				echo "\n van ";
+				$usuariosHelper->findWithSocket($socket)->setUsuario($u);
+			}
         }
+		if(isset($u["id"])&&isset($u["usuario"])&&isset($u["token"])){
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Auth correcta",'message_type'=>'auth']));
+			//return $message;
+			return ["autenticacion"=>$u,"message"=>$message];
+		}else{
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];}
+
+	}
+
+	public function getChatsDeUsuario($token,&$usuariosHelper){
+		echo "Entra en getsCHAT()";
+		$u=$this->auth($token,$usuariosHelper,$usuariosHelper->findWithToken($token)->getSocket())["autenticacion"];
+		if((isset($u["id"])&&isset($u["usuario"])&&isset($u["token"]))&&$usuariosHelper->findWithToken($token)){
+			//echo"If primer auth";
+		}else if($u=$this->auth($token,$usuariosHelper,$usuariosHelper->findWithToken($token)->getSocket())["autenticacion"]===FALSE && !$usuariosHelper->findWithToken($token)){
+			//echo "ELse auth";
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];
+		}
 		
 		if(isset($u["id"])&&isset($u["usuario"])&&isset($u["token"])){
 			//En esta variable se guardan los matches sacados de la bd
 			$matchs=Mach::getUserMatches($u["id"]);
 			//La siguiente variable existe para solo enviarle
 			$matches=[];
-			echo "entra en auth\n";
+			echo "\n Entra en auth";
 			foreach ($matchs as $key ) {
-				echo"foreach salvage";
+				echo"\nForeach salvage";
 				if($key["match_id_usu1"]==$u["id"]){
 					echo "\nDentro del ifo";
 					$usuario1=Usuario::findIdentity($u["id"]);
@@ -129,13 +163,13 @@ class ChatHandler {
 					$estado="Off line";
 					$mensages_devolver=[];
 					if($usuariosHelper->findWithId($key["match_id_usu2"])==true){
-						echo "On lINE\n";
+						//echo "\nOn lINE";
 						$estado="On Line";
 					}
 					$mensages_bd=Mensajes::getMensajesByMatch($key["match_id"])??[];
 					foreach ($mensages_bd as $mensage ) {
 						$mensage_devolver=$mensage;
-						echo "\ndentro del for ifado";
+						//echo "\n Dentro del for ifado";
 						$mensage_devolver[]=[
 							
 							"chat_room_id"=>$chat_room_id
@@ -172,42 +206,23 @@ class ChatHandler {
 					$estado="Off line";
 					$mensages_devolver=[];
 					//var_dump($usuariosHelper->findWithId($key["match_id_usu1"]));
-					echo "match_id_usu1";
+					//echo "\n Match_id_usu1";
 					if($usuariosHelper->findWithId($key["match_id_usu1"])==true){
-						echo "Online 2";
+						echo "\n Online 2";
 						$estado="On Line";
 					}
 					$mensages_bd=Mensajes::getMensajesByMatch($key["match_id"])??[];
-					echo"\nAntes del for";
+					//echo"\nAntes del for";
 					foreach ($mensages_bd as $key2 ) {
-						echo "\ndentro del for elsado";
+						//echo "\nDentro del for elsado";
 						$mensage_devolver=$key2;
 						$mensage_devolver[]=[
 							"chat_room_id"=>$chat_room_id
 						];
 						$mensages_devolver[]=$mensage_devolver;
 					}
-					echo "\nNew CHAT";
-					/*$matches[]=new Chat_Rooms(
-						//"chat_room_id"
-						$chat_room_id,
-						//"match_id"
-						$key["match_id"],
-						//"usuario_1"=>
-						[//EsTE SIEMPRE HACE REFENCIA AL USUARIO QUE SE AUTENTICA
-							"id"=>$usuario1["id"],
-							"nombre"=>$usuario1["nombre"]
-						],
-						//"usuario_2"
-						[
-							"id"=>$usuario2["id"],
-							"nombre"=>$usuario2["nombre"]
-						],
-						//estado"
-						$estado,
-						//"mensajes"
-						$mensages_devolver
-					);*/
+					//echo "\nNew CHAT";
+
 					
 					$matches[]=new Chat_Rooms(
 						$chat_room_id,$key["match_id"],
@@ -222,23 +237,23 @@ class ChatHandler {
 						$estado, 
 						$mensages_devolver
 					);
-					echo"\nestoY A MEDIA";
+					//echo"\nestoY A MEDIA";
 				}
 				
 			}
 			$matches_devolver=[];
-			echo"\nestoy ya \n";
+			//echo"\nestoy ya \n";
 			foreach ($matches as $key ) {
 				$this->chat_rooms[]= $key;
 				$matches_devolver[]=$key->asArray();
 			}
 			
-			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$matches_devolver,'message_type'=>'auth']));
-			//return $message;
-			return ["autenticacion"=>["usuario"=>$u["usuario"],"token"=>$u["token"],"id"=>$u["id"]],"message"=>$message];
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$matches_devolver,'message_type'=>'chats']));
+			//echo "MENSaje";
+			return ["autenticacion"=>TRUE,"message"=>$message];
 		}else{
-			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"error",'message_type'=>'auth_error')));
-			return ["autenticacion"=>false,"message"=>$message];
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];
 		} 
 	}
 	
