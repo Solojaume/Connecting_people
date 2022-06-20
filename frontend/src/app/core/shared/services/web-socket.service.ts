@@ -7,6 +7,8 @@ import { Comunicacion } from '../../models/chat/comunicacion';
 import { IChatModels } from '../../models/chat/Interfaces/IChatModels';
 import { TokenStorageService } from './token-storage.service';
 
+const WEB_SOCKET_KEY = 'Web-socket';
+const WEB_SOCKET_URL='ws://localhost:8080/demo/php-socket.php';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,11 +18,25 @@ export class WebSocketService {
   chatMessages: ChatMessageDto[] = [];
   chatRooms:ChatRoom[]= []
 
-  constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) { }
+  constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
+    this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
+  }
+  public newWebSocket() {
+    let webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
+    this.saveWebSocket(webSocket);
+  }
+
+  public saveWebSocket(webSocket:WebSocket){
+    window.sessionStorage.removeItem(WEB_SOCKET_KEY);
+    window.sessionStorage.setItem(WEB_SOCKET_KEY, JSON.stringify(webSocket));
+  }
+  public getWebSocket(): WebSocket {
+    return JSON.parse(window.sessionStorage.getItem(WEB_SOCKET_KEY)??"");
+  }
 
   public openWebSocket(){
-    this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
-
+    
+    console.log(this.webSocket)
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
       let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
@@ -38,6 +54,12 @@ export class WebSocketService {
           break;
         case "auth":
           console.log(chatMessageDto);
+          //this.chatRooms.push(chatMessageDto.message);
+          console.log(chatMessageDto.message);
+          break;
+    
+        case "chats":
+          console.log(chatMessageDto);
           this.chatRooms.push(chatMessageDto.message);
           console.log(chatMessageDto.message);
           break;
@@ -50,11 +72,11 @@ export class WebSocketService {
     };
 
     this.webSocket.onclose = (event) => {
-      console.log('Close: ', event);
+      //console.log('Close: ', event);
     };
 
     this.webSocket.onerror = (error)=>{
-      console.log("Error: ", error);
+      //console.log("Error: ", error);
     };
 
   }

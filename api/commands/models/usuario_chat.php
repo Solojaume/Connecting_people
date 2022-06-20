@@ -20,6 +20,9 @@ class Usuario_Chat {
         return true;
     }
 
+    public function setSocket($soket){
+        $this->socket=$socket;
+    }
     public function getToken()
     {
         return $this->token;

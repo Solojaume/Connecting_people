@@ -17,12 +17,22 @@ class UsuarioHelper{
         
         $this->usuarios[]=$usuario;
     }
+
+    public function disconectUsuarioBySocket($socket)
+    {
+        $u=$this->findWithSocket($socket);
+        echo "\n Desconectar USUARIO";
+        var_dump(array_search($u,$this->usuarios));
+        $newUsuarioIndex = array_search($u,$this->usuarios);
+        unset($this->usuarios[$newUsuarioIndex]);
+    }
     
+
     public function findWithSocket($socket)
     {
         foreach ($this->usuarios as $key ) {
            if($key->socket==$socket){
-            return $key;
+                return $key;
            }
         }
         return false;
@@ -40,12 +50,15 @@ class UsuarioHelper{
     }
     public function findWithId($id)
     {  
+        echo"\n Lista de usuarios\n";
+        var_dump($this->usuarios);
         foreach ($this->usuarios as $key ) {
-            echo"Imprimiendo key";
+            echo"\nImprimiendo key";
             var_dump($key->getId());
-            echo"Imprimiendo id";
+            echo"\nImprimiendo id";
             var_dump($id);
-            if($key->getId()===$id){
+            var_dump($key->getId().""==$id);
+            if($key->getId().""===$id){
              return $key;
             }
         }

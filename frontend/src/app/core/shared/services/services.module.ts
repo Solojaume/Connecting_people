@@ -7,6 +7,7 @@ import { ActivateRecoveryService } from './activate-recovery.service';
 import { MatchService } from './match.service';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 import { WebSocketService } from './web-socket.service';
+import { WebSocketStorageService } from './web-socket-storage.service';
 
 
 
@@ -24,8 +25,8 @@ import { WebSocketService } from './web-socket.service';
     ActivateRecoveryService,
     CookieService,
     MatchService,
-    authInterceptorProviders,
-    
+    WebSocketService,
+    authInterceptorProviders
   ]
 })
 export class ServicesModule { }

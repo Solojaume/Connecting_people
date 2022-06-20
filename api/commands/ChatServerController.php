@@ -69,6 +69,8 @@ class ChatServerController extends Controller
                            //echo "Mensage";
                            
                            $message = $chatHandler->auth($messageObj->objeto,$usuariosHelper,$newSocketArrayResource);
+
+                           
                           // echo "Mensage2\n";
                         
                            if($message["autenticacion"]==true){
@@ -77,10 +79,28 @@ class ChatServerController extends Controller
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
                               
                            }else{
+
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
-                             // $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
+                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,$usuariosHelper);
                            }
                               
+                           break;
+                        case 'get_chats':
+                           echo "\n Get_chats";
+                           $usu=$usuariosHelper->findWithSocket($newSocketArrayResource)->getToken();
+                           echo "\n Imprimiendo usuario";
+                           var_dump($usu);
+                           $message = $chatHandler->getChatsDeUsuario($messageObj->objeto,$usuariosHelper,$usu);
+
+                           if($message["autenticacion"]==true){
+                              //var_dump($u);
+                              $chatHandler->sendAll($message["message"],$clientSocketArray);
+                              
+                           }else{
+
+                              $chatHandler->sendAll($message["message"],$clientSocketArray);
+                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,$usuariosHelper);
+                           }                          
                            break;
                         case "send":
                            $messageObj=$messageObj->objeto;
@@ -117,7 +137,7 @@ class ChatServerController extends Controller
           
 
             if ($socketData === false) { 
-               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
+               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler,$usuariosHelper);
             }
          }
       }
@@ -128,13 +148,14 @@ class ChatServerController extends Controller
       
    }
 
-   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler)
+   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler,&$usuarioHelper)
    {
       echo "se desconecta";
       socket_getpeername($newSocketArrayResource, $client_ip_address);
       $connectionACK = $chatHandler->connectionDisconnectACK($client_ip_address);
       $chatHandler->sendAll($connectionACK,$clientSocketArray);
       $newSocketIndex = array_search($newSocketArrayResource, $clientSocketArray);
+      $usuarioHelper->disconectUsuarioBySocket($newSocketArrayResource);
       unset($clientSocketArray[$newSocketIndex]);	  
    
    }
