@@ -112,7 +112,7 @@ class ChatHandler {
 
 	}
 
-	public function getChatsDeUsuario($token,&$usuariosHelper){
+	public function getChatsDeUsuario($token){
 		echo "Entra en getsCHAT()";
 		$u=$this->auth($token,$usuariosHelper,$usuariosHelper->findWithToken($token)->getSocket())["autenticacion"];
 		if((isset($u["id"])&&isset($u["usuario"])&&isset($u["token"]))&&$usuariosHelper->findWithToken($token)){

@@ -17,6 +17,9 @@ import { SharedModule } from 'src/app/core/shared/shared.module';
   ],
   exports:[
     ChatComponent
+  ],
+  providers:[
+    
   ]
 })
 export class ChatModule { }

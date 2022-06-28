@@ -34,6 +34,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         return 'usuario';
     }
 
+    
     //Encontrar usuario por token
     public static function findIdentityByAccessToken($token, $type = null) {
         return self::findOne(['token' => $token]);
@@ -43,6 +44,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentityByRecoveryToken($token){
         return self::findOne(['token_recuperar_pass'=>$token]);
     }
+
     public static function findIdentity($id)
     {
         return static::findOne($id);
@@ -50,6 +52,14 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentityById($id)
     {
         return Yii::$app->db->createCommand("SELECT * from usuario where id=$id")->queryAll();
+    }
+    public static function findIdentityBySocket($ip_cli, $ip_ser, $puer_cli,$puer_serv)
+    {   
+        return self::findOne(["ip_cliente"=>$ip_cli,"ip_servidor"=>$ip_ser,"puerto_cliente"=>$puer_cli,"puerto_servidor"=>$puer_serv]);
+        return Yii::$app->db->createCommand(
+            "SELECT * FROM usuario where ip_cliente=$ip_cli && ip_servidor=$ip_ser && puerto_cliente=$puer_cli && puerto_servidor=$puer_serv"
+        )->queryAll();
+        return self::findIdentity($u[0]["id"]);
     }
     /**
      * @return int|string current user ID
@@ -128,6 +138,8 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             [['email'], 'string', 'max' => 100],
             [['password'], 'string', 'max' => 64],
             [['nombre'], 'string', 'max' => 11],
+            [['ip_cliente','ip_servidor'], 'string', 'max' => 16],
+            [['puerto_cliente','puerto_servidor'], 'string', 'max' => 6],
             [['token'], 'string', 'max' => 100],
             [['token_recuperar_pass'], 'string', 'max' => 100],
             [['email'], 'unique'],
@@ -152,6 +164,10 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             'token_recuperar_pass' => 'Token Recuperar Pass',
             'cad_token_recuperar_pass' => 'Cad Token Recuperar Pass',
             'activo' => 'Activo',
+            'ip_cliente'=> 'IP Cliente',
+            'puerto_cliente'=>'Puerto Cliente',
+            'ip_servidor'=> 'IP Servidor',
+            'puerto_servidor'=>'Puerto Servidor',
         ];
     }
     public function beforeSave($insert){
@@ -166,6 +182,8 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             $this->rol=0;//0 es usuario registrado 1 es admin
             $this->activo=0;
         }
+        //echo"";
+        //var_dump($this);
         return parent::beforeSave($insert);
         //return ["status"=>"ok","mensaje"=>"Ha sido activado satisfactoriamente"];
     }

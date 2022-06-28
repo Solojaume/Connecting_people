@@ -40,7 +40,7 @@ export class WebSocketService {
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
       let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-      let com= new Comunicacion("auth",token)
+      let com = new Comunicacion("auth",token)
       this.sendMessage(com);
     };
 
@@ -72,7 +72,7 @@ export class WebSocketService {
     };
 
     this.webSocket.onclose = (event) => {
-      //console.log('Close: ', event);
+      console.log('Close: ', event);
     };
 
     this.webSocket.onerror = (error)=>{
@@ -86,6 +86,14 @@ export class WebSocketService {
   }
 
   public closeWebSocket() {
-    this.webSocket.close();
+    let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+    let com = new Comunicacion("desconectar",token)
+    this.sendMessage(com);
+    try {
+      this.webSocket.close();
+    } catch (error) {
+      
+    }
+   
   }
 }

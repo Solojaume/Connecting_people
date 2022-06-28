@@ -68,7 +68,7 @@ class ChatServerController extends Controller
                           
                            //echo "Mensage";
                            
-                           $message = $chatHandler->auth($messageObj->objeto,$usuariosHelper,$newSocketArrayResource);
+                           $message = $chatHandler->auth($messageObj->objeto,$newSocketArrayResource);
 
                            
                           // echo "Mensage2\n";
@@ -81,16 +81,15 @@ class ChatServerController extends Controller
                            }else{
 
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
-                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,$usuariosHelper);
+                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
                            }
                               
                            break;
                         case 'get_chats':
                            echo "\n Get_chats";
-                           $usu=$usuariosHelper->findWithSocket($newSocketArrayResource)->getToken();
+                          
                            echo "\n Imprimiendo usuario";
-                           var_dump($usu);
-                           $message = $chatHandler->getChatsDeUsuario($messageObj->objeto,$usuariosHelper,$usu);
+                           
 
                            if($message["autenticacion"]==true){
                               //var_dump($u);
@@ -137,7 +136,7 @@ class ChatServerController extends Controller
           
 
             if ($socketData === false) { 
-               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler,$usuariosHelper);
+               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
             }
          }
       }
@@ -148,7 +147,7 @@ class ChatServerController extends Controller
       
    }
 
-   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler,&$usuarioHelper)
+   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler)
    {
       echo "se desconecta";
       socket_getpeername($newSocketArrayResource, $client_ip_address);

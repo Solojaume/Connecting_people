@@ -58,6 +58,8 @@ class Mach extends \yii\db\ActiveRecord
             'match_estado_u1' => 'Match Estado U1',
             'match_estado_u2' => 'Match Estado U2',
             'match_fecha' => 'Match Fecha',
+            'estado_conexion_u1'=>'Estado Conexion U1',
+            'estado_conexion_u2'=>'Estado Conexion U2'
         ];
     }
 
