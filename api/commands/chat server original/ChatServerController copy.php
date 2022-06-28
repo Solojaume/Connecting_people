@@ -5,9 +5,27 @@ use app\daemons\ChatServer;
 use consik\yii2websocket\WebSocketServer;
 use yii\console\Controller;
 use app\commands\models\ChatHandler;
+use app\models\Usuario;
+use yii\data\ActiveDataProvider;
 
 class ChatServer1Controller extends Controller
 {
+   public function actions() {
+      $actions = parent::actions();
+      //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+     // unset($actions['delete'], $actions['create'],$actions['update']);
+      // Redefinimos el método que prepara los datos en el index
+      $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+      return $actions;
+   }
+
+   public function indexProvider($uidx) {
+      $uid=\Yii::$app->user->identity->id;
+
+      return new ActiveDataProvider([
+          'query' => Usuario::find()->where('usuarios_id='.$uid )->orderBy('id')
+      ]);
+   }
    private $socket_working=false;
    public function actionStart($host="localhost",$port = 8080)
    {
@@ -54,7 +72,7 @@ class ChatServer1Controller extends Controller
                      switch ($messageObj->comand) {
                         case 'auth':
                            $message = $chatHandler->auth($messageObj->objeto);
-                           var_dump($message);
+                           //var_dump($message);
                            if($message["autenticacion"]){
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
                            }else{

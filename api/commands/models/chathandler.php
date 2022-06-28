@@ -1,12 +1,9 @@
 <?php
 namespace app\commands\models;
 
-use app\commads\models\Usuario1 as ModelsUsuario1;
-use app\controllers\UsuarioController;
 use app\models\Mach;
 use app\models\Usuario;
-require_once("chat_Rooms.php");
-use app\commands\models\Chat_Rooms;
+
 use app\models\Mensajes;
 
 class ChatHandler {

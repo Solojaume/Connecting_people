@@ -1,16 +1,11 @@
 <?php
 namespace app\commands;
-require ("models/usuarioshelper.php");
-require ("models/chathandler.php");
-require_once("models/chat_Rooms.php");
-use app\daemons\ChatServer;
-use consik\yii2websocket\WebSocketServer;
+
 use yii\console\Controller;
 use app\commands\models\ChatHandler;
 
-use app\commands\models\UsuarioHelper;
 
-use app\commands\models\Usuario_Chat;
+
 class ChatServerController extends Controller
 {
    private $socket_working=false;
@@ -21,7 +16,7 @@ class ChatServerController extends Controller
       define('PORT',$port);
       $null = NULL;
       $chatHandler = new ChatHandler();
-      $usuariosHelper = new UsuarioHelper();
+
 
       $socketResource = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
       socket_set_option($socketResource, SOL_SOCKET, SO_REUSEADDR, 1);
@@ -44,7 +39,7 @@ class ChatServerController extends Controller
          
             
             //añadimos la nueva conexion a la lista de usuarios
-            $usuariosHelper->addUsuario($newSocket);
+           
             $connectionACK = $chatHandler->newConnectionACK($client_ip_address);
             
             $chatHandler->sendAll($connectionACK,$clientSocketArray);
