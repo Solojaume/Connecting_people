@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IntranetComponent } from './intranet.component';
 import { IntranetRoutingModule } from './intranet-routing.module';
 import { SharedModule } from '../core/shared/shared.module';
+import { WebSocketService } from '../core/shared/services/web-socket.service';
+import { ServicesModule } from '../core/shared/services/services.module';
 
 @NgModule({
   declarations: [
@@ -11,10 +13,14 @@ import { SharedModule } from '../core/shared/shared.module';
   imports: [
     CommonModule,
     IntranetRoutingModule,
-    SharedModule
+    SharedModule, 
+    ServicesModule
   ],
   exports:[
     IntranetComponent
+  ], 
+  providers:[
+    
   ]
 })
 export class IntranetModule { }

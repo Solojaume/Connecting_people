@@ -85,7 +85,6 @@ class ReviewController extends ApiController
                 $rev = $rev->getReviewByUserID($usuario);
                 for ($i=0; $i < count($rev); $i++) { 
                     $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
-                    //die();
                     $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
                 }
                 return $rev;    
@@ -94,6 +93,29 @@ class ReviewController extends ApiController
             }    
         }
         return ["error"=>"UPPS, Algo ha salido mal"];
+        
+    }
+    public static function getReviewsByUserIdWithAuthToken()
+    {
+       $u=self::getUserWhithAuthToken();
+        if(isset($u['error'])){
+            return $u["error"];
+        }
+            
+            // var_dump($usuario);
+        if (!$u==null) {
+            $rev = new Review();
+            $rev = $rev->getReviewByUserID($u["id"]);
+            for ($i=0; $i < count($rev); $i++) { 
+                $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
+                $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
+            }
+            return $rev;    
+        }else{
+             return ["error"=>"No hay usuario en la peticion"];
+        }    
+        
+
         
     }
     /**

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
+const RELOAD_KEY = "reloaded";
 @Injectable({
   providedIn: 'root'
 })
@@ -26,5 +27,27 @@ export class TokenStorageService {
       return JSON.parse(user);
     }
     return {};
+  }
+
+  public setReloadTrue(): void {
+    window.sessionStorage.removeItem(RELOAD_KEY);
+    window.sessionStorage.setItem(RELOAD_KEY, "true");
+  }
+  public setReloadFalse(): void {
+    window.sessionStorage.removeItem(RELOAD_KEY);
+    window.sessionStorage.setItem(RELOAD_KEY, "false");
+  }
+
+  public setCode(code:string){
+    window.sessionStorage.removeItem("code");
+    window.sessionStorage.setItem("code",code );
+  }
+
+  public getCode(){
+    window.sessionStorage.getItem("code");
+  }
+
+  public getReload(): string | null {
+    return window.sessionStorage.getItem(RELOAD_KEY);
   }
 }
