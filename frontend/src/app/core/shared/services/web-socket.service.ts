@@ -21,9 +21,9 @@ export class WebSocketService {
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
     this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
   }
-  public newWebSocket() {
-    let webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
-    this.saveWebSocket(webSocket);
+  private newWebSocket() {
+    this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
+    
   }
 
   public saveWebSocket(webSocket:WebSocket){
@@ -35,7 +35,10 @@ export class WebSocketService {
   }
 
   public openWebSocket(){
-    
+    if(this.webSocket.readyState>1){
+      this.newWebSocket();
+      //this.webSocket.OPEN;
+    }
     console.log(this.webSocket)
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
@@ -91,7 +94,9 @@ export class WebSocketService {
     this.sendMessage(com);
     try {
       this.webSocket.close();
+      
     } catch (error) {
+      throw error;
       
     }
    
