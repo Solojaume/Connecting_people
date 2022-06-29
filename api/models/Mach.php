@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\controllers\ReviewController;
 use Yii;
 
 /**
@@ -44,6 +45,7 @@ class Mach extends \yii\db\ActiveRecord
         ];
     }
 
+    
     /**
      * {@inheritdoc}
      */
@@ -56,8 +58,11 @@ class Mach extends \yii\db\ActiveRecord
             'match_estado_u1' => 'Match Estado U1',
             'match_estado_u2' => 'Match Estado U2',
             'match_fecha' => 'Match Fecha',
+            'estado_conexion_u1'=>'Estado Conexion U1',
+            'estado_conexion_u2'=>'Estado Conexion U2'
         ];
     }
+
     public static function getUserMatches($uid)
     {
         $m=Yii::$app->db->createCommand(
@@ -65,6 +70,7 @@ class Mach extends \yii\db\ActiveRecord
         )->queryAll();
         return $m;
     }
+
     public static function getUsersNoMostrados($entorno="prod",$data=null){
         $lista_usuarios=[];
         $usuario=["id"=>0,
@@ -81,18 +87,40 @@ class Mach extends \yii\db\ActiveRecord
             }
         }else {
             $lista_usuarios=Yii::$app->db->createCommand(
-                "SELECT id,nombre,timestamp_nacimiento FROM usuario as u LEFT JOIN mach as m on m.match_id_usu1 = u.id where u.id!=$usuario1 and 
-                (not EXISTS (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu1 = u.id WHERe m2.match_estado_u1=1 and u.id=$usuario1) AND NOT EXISTS 
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m3 on m3.match_id_usu1 = u.id WHERe m3.match_estado_u1=2 and u.id=$usuario1) AND NOT EXISTS 
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u.id WHERe m4.match_estado_u1=2 and m4.match_id_usu2=$usuario1));
-                "
+                //Select a  la tabla usuario
+                "SELECT id,nombre,timestamp_nacimiento FROM usuario as u where
+                NOT EXISTS 
+                /*Esto saca a los usuarios los cuales les has dado like en primer lugar*/ 
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and m2.match_id_usu1=$usuario1 and u2.id=u.id)
+                AND NOT EXISTS
+                /*Esto saca a los usuarios los cuales les has dado like en segundo lugar*/
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and u2.id=$usuario1 and u2.id=u.id) 
+                AND NOT EXISTS 
+                /*Esto saca a los usuarios los cuales les has dado dislike en primer lugar*/         
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m3 on m3.match_id_usu1 = u2.id WHERe m3.match_estado_u1=2 and u2.id=$usuario1 and u2.id=u.id) AND NOT EXISTS 
+                /*usuario a los cuales te han dado dislike en Segundo lugar */
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu1 = u2.id WHERe m4.match_estado_u2=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id)
+                AND NOT EXISTS
+                /*usuario a los cuales te han dado dislike en primer lugar */
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERe m4.match_estado_u1=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id) AND NOT EXISTS
+                /*OBTENEMOS EL USUARIO CON LOS QUE HEMOS HECHO MACTH*/
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERE match_id_usu1=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id OR  match_id_usu2=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id) AND EXISTS
+                /*La primera consulta es para que no aparezca mi propio usuario*/
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m on m.match_id_usu1 = u2.id where u2.id!=$usuario1 and u2.id=u.id)"
+                
             )->queryAll();
-           // $lista_usuarios=Usuario::find("*")->where("id!=$usuario1"));
-            //var_dump($lista_usuarios);
-            //die();
+          
 
             $us=[];
-            $us[]=["id"=>$lista_usuarios[0]["id"],"timestamp_nacimiento"=>$lista_usuarios[0]["timestamp_nacimiento"],"nombre"=>$lista_usuarios[0]["nombre"],"imagenes"=>[],"reviews"=>[]];
+            $us[]=[
+                    "id"=>$lista_usuarios[0]["id"],
+                    "timestamp_nacimiento"=>
+                    //La fecha de nacimiento se deve cacular en el registro
+                    Helper::calcularEdad($lista_usuarios[0]["timestamp_nacimiento"]),
+                    "nombre"=>$lista_usuarios[0]["nombre"],
+                    "imagenes"=>Imagen::getImagenUsuario($lista_usuarios[0]["id"]),
+                    "reviews"=>[]
+                ];
             //die();
     
             foreach ($lista_usuarios as $key ) {
@@ -108,8 +136,10 @@ class Mach extends \yii\db\ActiveRecord
                     }
                 }
                 if ($bol==true) {
-                    $key["imagenes"]=[];
-                    $key["reviews"]=[];
+                    $key["imagenes"]=Imagen::getImagenUsuario($key["id"]);
+                    $key["reviews"]= ReviewController::getReviewsByUserIdWithAuthToken();
+                    //La fecha de nacimiento se deve cacular en el registro
+                    $key["timestamp_nacimiento"] = Helper::calcularEdad($key["timestamp_nacimiento"]);
                     $us[]=$key; 
                  }  
                 
@@ -165,7 +195,7 @@ class Mach extends \yii\db\ActiveRecord
     }
     public function beforeSave($insert){
         if ($this->isNewRecord) {
-            $this->id=count(Mach::find()->asArray()->all());
+            $this->match_id=count(Mach::find()->asArray()->all());
         }
         return parent::beforeSave($insert);
     }

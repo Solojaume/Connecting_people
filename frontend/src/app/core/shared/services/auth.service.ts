@@ -32,4 +32,10 @@ export class AuthService {
         fecha_na:fecha_na
     }));
   }
+  autenticacion(token:string){
+    return this.http.post<UsuarioAPP>(
+      this.apiBase+"usuario/autenticate",JSON.stringify({
+        token:token
+      }));
+  }
 }

@@ -15,7 +15,7 @@ import { authInterceptorProviders } from './core/shared/_helpers/auth.intercepto
     AppRoutingModule,
     CoreModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -13,13 +13,13 @@
 
   <div class="checkbox mb-3">
     <label class="color-white">
-      <input type="checkbox" value="remember-me"> Recuérdame
+      <input type="checkbox"  class="form-check-input" formControlName="rememberMe" value="remember-me"> Recuérdame (Por su seguridad, esto se hara durante 1 semana)
     </label>
   </div>
   <app-buttons [button]="buttonLogueame"></app-buttons>
   <app-buttons [button]="buttonRegistrame"></app-buttons>
   <app-buttons class="color-quintal" [button]="buttoneRecuperar"></app-buttons>
 </form>
-<div *ngIf="error">
+<div class="color-white" *ngIf="error!=''">
   {{error}}
 </div>  

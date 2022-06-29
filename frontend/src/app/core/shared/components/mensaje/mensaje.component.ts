@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ChatMessageDto } from 'src/app/core/models/chat/chatMessageDto';
 
 @Component({
   selector: 'app-mensaje',
@@ -6,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./mensaje.component.scss']
 })
 export class MensajeComponent implements OnInit {
-  @Input () mensaje!:any; //[fecha]
+  @Input () mensaje!:ChatMessageDto; //[fecha]
   constructor() { }
 
   ngOnInit(): void {

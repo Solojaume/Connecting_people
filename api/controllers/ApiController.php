@@ -69,4 +69,6 @@ class ApiController extends \yii\rest\ActiveController
         }
         return ["error"=> "Sesion caducada, inicia sesion de nuevo"];
     }
+
+    
 }

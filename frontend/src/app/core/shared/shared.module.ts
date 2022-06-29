@@ -11,7 +11,7 @@ import { ServicesModule } from './services/services.module';
 
 @NgModule({
   declarations: [
-      ImagenesComponent
+      ImagenesComponent,
   ],
   imports: [
     CommonModule,
@@ -20,7 +20,6 @@ import { ServicesModule } from './services/services.module';
     ReviewsModule, 
     MensajeModule,
     ButtonsModule,
-    ServicesModule
   ],
   exports:[
     ReviewModule,
@@ -28,7 +27,7 @@ import { ServicesModule } from './services/services.module';
     ReactiveFormsModule,
     MensajeModule,
     ButtonsModule,   
-    ServicesModule
+    
   ],
   providers:[]
 })

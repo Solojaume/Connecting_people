@@ -4,6 +4,10 @@ namespace app\controllers;
 
 use app\models\Usuario;
 use app\models\UsuarioSearch;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mime\Email;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -48,12 +52,13 @@ class UsuarioController extends ApiController
                         'activate'=>['POST'],
                         'create'=>['POST'],
                         'cambiarContrasenya'=>['POST'],
-                        'recuperar'=>['GET','POST']
+                        'recuperar'=>['GET','POST'],
+                        'autenticate' => ['POST']
                     ],
                 ],  
                 'authenticator' => [//token
                     'class' => HttpBearerAuth::className(),
-                    'except' => ['login','create',"activate","recuperar"],
+                    'except' => ['login','create',"activate","recuperar",'autenticate'],
                 ]
             ]
         );
@@ -83,7 +88,7 @@ class UsuarioController extends ApiController
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-  
+    
 
     /**
      * Creates a new Usuario model.
@@ -93,28 +98,32 @@ class UsuarioController extends ApiController
     public function actionCreate()
     {
         $model = new Usuario();
-        //echo"guey";
-        $params=json_decode(file_get_contents("php://input"), false);
-        //return $params;
 
+        $params=json_decode(file_get_contents("php://input"), false);
         if ($this->request->isPost) {
             $post=$this->request->post();
             //return $post;
-            //Comprovamos que los campos que vamos a utilizar existan en el post
-            if(!isset($params->email)){
-                return ["error"=>"El email no puede estar bacio"];
+            //Comprovamos que los campos que vamos a utilizar existan en el params
+            if(!isset($params->email)|$params->email==""){
+                return ["error"=>"El email es un campo requerido","errorType"=>"email"];
+            }else if (static::is_valid_email($params->email)==false) {
+                return ["error"=>"El email no es valido, introduce un email valido","errorType"=>"email"];
             }
-            if(!isset($params->password)){
-                return ["error"=>"El password no puede estar bacio"];
+            if(!isset($params->password)|$params->password==""){
+                return ["error"=>"La contraseña es un campo requerido","errorType"=>"password"];
+            }else if(strlen($params->password)<6){
+                return ["error"=>"La contraseña ha de tener mínimo 6 caracteres","errorType"=>"password"];
             }
-            if(!isset($params->pass2)){
-                return ["error"=>"La repetición de password no puede estar bacio"];
+            if(!isset($params->pass2)|$params->pass2==""){
+                return ["error"=>"La confirmación de contraseña es un campo requerido","errorType"=>"password2"];
+            }else if($params->password!=$params->pass2){
+                return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
             }
-            if(!isset($params->nombre)){
-                return ["error"=>"El nombre no puede estar bacio"];
+            if(!isset($params->nombre)|$params->nombre==""){
+                return ["error"=>"El nombre es un campo requerido","errorType"=>"nombre"];
             }
-            if(!isset($params->fecha_na)){
-                return ["error"=>"El fecha nacimiento no puede estar bacio"];
+            if(!isset($params->fecha_na)|$params->fecha_na==""){
+                return ["error"=>"La fecha nacimiento es un campo requerido","errorType"=>"fecha"];
             }
             
             //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
@@ -136,19 +145,19 @@ class UsuarioController extends ApiController
                 //return ["error"=>$model->password,"status"=>"-"];
 
                 if($model->save()){
-
-                   // return ["error"=>$model->token_recuperar_pass,"status"=>"-"];
-                   
-                    return ["status"=>"ok","mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
+                    $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$model->email,"url"=>"http://localhost:4200"])["url"];
+                    $this->sendMail($model->email,"Activacion - Connecting People", $text);
+                    return ["mensaje"=>"Se ha registrado correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
                 }else{
-                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email"];
+                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email","errorType"=>"general"];
                 }
             } else if(!$cond){
-                return ["error" => "Las contraseñas no coinciden"];
+                return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
             }
         } else {
             echo "ddd";
             $model->loadDefaultValues();
+            return ["error"=>"Contacte con el soporte"];
         }
 
         /*return $this->render('create', [
@@ -190,6 +199,7 @@ class UsuarioController extends ApiController
 
         return $this->redirect(['index']);
     }
+
     /*Cambia la contraseña cuanda se esta dentro del usuario
     *Si el token de validacion no es validado, se devolvera un error
     * Si el token esta caducado,se devolvera error */
@@ -256,6 +266,29 @@ class UsuarioController extends ApiController
         }
     }
     
+    public function actionAutenticate(){
+        $params=json_decode(file_get_contents("php://input"), false);
+        @$token=$params->token;
+        $u=null;
+        try {
+            if(isset($token))
+            $u=\app\models\Usuario::findIdentityByAccessToken($token);
+
+        } catch (\Throwable $th) {
+            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
+
+        }
+        if ($u==null) {
+            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
+        }     
+        $validacion=$u->validateAuthToken($token);
+        if($validacion===true){
+            return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
+        }else{
+            return ["error"=>"La sessión ha caducado, por favor inicie sesion de nuevo"];
+        }
+        
+    } 
     /**
      * Finds the Usuario model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -272,18 +305,74 @@ class UsuarioController extends ApiController
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
+    /**
+     *
+     * Valida un email usando filter_var y comprobar las DNS. 
+     *  Devuelve true si es correcto o false en caso contrario
+     *
+     * @param    string  $str la dirección a validar
+     * @return   boolean
+     *
+     */
+    private static function is_valid_email($str)
+    {
+        $dns_correctos=["gmail.com","outlook.com","hotmail.es","hotmail.com","yahoo.com"];
+        $result = (false !== filter_var($str, FILTER_VALIDATE_EMAIL));
+        $count=0;
+        if ($result)
+        {
+            list($user, $domain) = explode('@', $str);
+            foreach ($dns_correctos as $key) {
+               if($domain!=$key){
+                    $count=$count+1;
+               }else{
+                   $count=0;
+                   break;
+               }
+            }
+            if($count>0){
+                return false;
+            }
+
+            $result = checkdnsrr($domain, 'MX');
+        }
+        
+        return $result;
+    }
+
+    private function sendMail($to,$subject,$text){
+        $eventDispatcher = new EventDispatcher();
+         
+        $MAILER_DSN="gmail://connectingpeoplesending@gmail.com:vvgrbszitsxpgpdn@default?verify_peer=0";
+        $transport = Transport::fromDsn($MAILER_DSN);
+        $mailer = new Mailer($transport, null, $eventDispatcher);
+        
+        $email = (new Email())
+        ->from('connectingpeoplesending@gmail.com')
+        ->to($to)
+        //->cc('cc@example.com')
+        //->bcc('bcc@example.com')
+        //->replyTo('fabien@example.com')
+        //->priority(Email::PRIORITY_HIGH)
+        ->subject($subject)
+        ->text("Si has recivido el email sin que te corresponda, eliminalo. Este es el link de connecting people: $text")
+        ->html('<p>'."Si has recivido el email sin que te corresponda, eliminalo.
+            <br> Este es el link de connecting people para $text".'</p>');
+
+         return $mailer->send($email);
+    }
     //Esta funcion sirve para loguear
     public function actionLogin(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Si se envían los datos en formato raw dentro de la petición http, se recogen así:
             $params=json_decode(file_get_contents("php://input"), false);
-            @$email=$params->email;
-            @$password=$params->password;
+            @$email=$params->email??"";
+            @$password=$params->password??"";
+            //var_dump($params);
+           // die();
             // Si se envían los datos de la forma habitual (form-data), se reciben en $_POST:
             //$email=$_POST['email'] ?? " ";
             //$password=$_POST['password'] ?? " ";
-            
-            
             
             if($u=Usuario::findOne(['email'=>$email])){
           
@@ -299,7 +388,7 @@ class UsuarioController extends ApiController
                 if($u->password==$password || $u->password==self::sha256($password)) {//Esto es para comprobar la contraseña en texto plano o cifrada
                     if($u->activo===1){
                         $u->token = self::generateToken();
-                        $now = static::generarCadToken("+ 24 hour");
+                        $now = static::generarCadToken("+ 168 hour");
                         $u->cad_token = $now;
                         $u->save();
                         return ['token'=>$u->token,'id'=>$u->id,'nombre'=>$u->nombre,'rol'=>$u->rol];
@@ -347,33 +436,48 @@ class UsuarioController extends ApiController
     }
 
     public function actionActivate(){
-        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["token_activacion"])){
-            $t_a=$_GET["token_activacion"];
+        $params=json_decode(file_get_contents("php://input"), false);
+       // return ["error"=>$params];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($params->token_activacion)){
+            
+            $t_a=$params->token_activacion;
             $u = Usuario::findIdentityByRecoveryToken($t_a);
-            if (isset($u)&&$u->validateRecoveryToken($t_a)&&!$u->token_recuperar_pass===null) {
+            //return $u->validateRecoveryToken($t_a);
+            if (isset($u)&&$u->validateRecoveryToken($t_a)&&!$u->token_recuperar_pass==null) {
                 $u->activo=1;
                 $u->cad_token_recuperar_pass=null;
                 $u->token_recuperar_pass=null;
                 $u->save();
                 return ["status"=>"ok","mensaje"=>"Ha sido activado satisfactoriamente"];
             }
+            else if(isset($u)){
+                $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$u->email,"url"=>"http://localhost:4200"])["url"];
+                $this->sendMail($u->email,"Activacion - Connecting People", $text);
+                return ["mensaje"=>"Se ha enviado un nuevo enlace de activación"];
+            }
         }
-        return ["error"=> "Petición incorrecta, solicite otro enlace de activación"];
+        return ["error"=> "Petición incorrecta, puede que ya se haya activado prueve a iniciar sesion"];
     }
 
-    public static function getUserWhithAuthToken($type = "array")
+    public static function getUserWhithAuthToken($type = "array",$token=null)
     {
-        //Devuelve el usuario del token que se encuentre en la cabecera de la petición
-        $token_auth = \Yii::$app->request->headers->get("authorization");
-        //var_dump($token_auth);
-        $token_auth = str_replace('Bearer ', '', $token_auth);
-        //var_dump($token_auth);
-        $u=Usuario::findIdentityByAccessToken($token_auth);
-        if($type==="array"){
-            return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+        try {
+            //Devuelve el usuario del token que se encuentre en la cabecera de la petición
+            $token_auth = \Yii::$app->request->headers->get("authorization");
+            //var_dump($token_auth);
+            $token_auth =$token===null ?str_replace('Bearer ', '', $token_auth):$token;
+            //var_dump($token_auth);
+            $u=Usuario::findIdentityByAccessToken($token_auth);
+            if($type==="array"){
+                return ["usuario"=>$u,"token"=>$token_auth,"id"=>$u->id];
+            }
+            return $u;
+        } catch (\Throwable $th) {
+            return false;
+            //throw $th;
         }
-        return $u;
     }
+    
     public static function sha256($pass1 = null)
     {
         return hash("sha256",$pass1);
@@ -385,20 +489,19 @@ class UsuarioController extends ApiController
         return $now;
     }
 
-    public function actionRecuperar(any $var = null)
+    public function actionRecuperar($var = null)
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";
             $t_a=$_GET["token_activacion"] ?? " ";
-            $s_a=$_GET["sub_action"] ?$var->sub_action: " ";
-            $email=$_GET["email"] ?? " ";
-            
+            $s_a=isset($_GET["sub_action"]) ?$_GET["sub_action"]:$var["sub_action"];
+            $email= isset($_GET["email"])?$_GET["email"]:$var["email"];
             $p=$_POST["password"]??" ";
             $p1=$_POST["password1"]??" ";
             $u =  Usuario::findIdentityByRecoveryToken($t_a)?:Usuario::findOne(["email"=>$email]);
             //var_dump($u);
             $con0 = $s_a !== " " && $email !==" " && Usuario::findOne(["email"=>$email])==true;
-            $api_usurio=$var->url??"http://localhost/connectingpeople/api/web/usuario";
+            $api_usurio=$var["url"]??"http://localhost/connectingpeople/api/web/usuario";
             
             // var_dump($s_a);
             switch ($s_a) {
@@ -407,14 +510,17 @@ class UsuarioController extends ApiController
                     if ($con0===true) {
                         $u->cad_token_recuperar_pass=self::generarCadToken();
                         $u->token_recuperar_pass=self::generateToken();
-                        if($u->activo===0){
+                        if(isset($var["action"])){
+                            $action = $var["action"];
+                        }
+                        else if($u->activo==0){
                             $action="/activate";
                         }else{
                             $action="/recuperar?sub_action=recovery";
                         }
                         if($u->save())
                         return ["status"=>"ok",
-                        "url"=>$api_usurio.$action."&&token_activacion=".$u->token_recuperar_pass];//Quitar esto cuando se envien correos
+                        "url"=>$api_usurio.$action."/".$u->token_recuperar_pass];//Quitar esto cuando se envien correos
                        //return ["status"=>"ok","mensaje"=>"Ha sido recuperado satisfactoriamente"];
                     }else{
                         return ["error"=>"No se encontrado email"];
