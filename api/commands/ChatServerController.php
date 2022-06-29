@@ -110,6 +110,11 @@ class ChatServerController extends Controller
                               $chatHandler->sendAll($chat_box_message,$clientSocketArray);
                            }
                            break;
+                        case 'desconectar':
+                           $m = CommandsUsuarioController::DesconectarPorToken($messageObj->objeto,$chatHandler);
+                           $chatHandler->sendAll($m,$clientSocketArray);
+                           $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
+                           break;
                         default:
                             $chat_message = $chatHandler->$messageObj->comand($messageObj->objeto);
                            // $chatHandler->sendAll($chat_message,$clientSocketArray);
@@ -129,10 +134,10 @@ class ChatServerController extends Controller
             echo"\nsale\n";
             $socketData = @socket_read($newSocketArrayResource, 2048, PHP_NORMAL_READ);
           
-
+/*
             if ($socketData === false) { 
                $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
-            }
+            }*/
          }
       }
       socket_close($socketResource);
@@ -146,10 +151,11 @@ class ChatServerController extends Controller
    {
       echo "se desconecta";
       socket_getpeername($newSocketArrayResource, $client_ip_address);
+      //socket_close($newSocketArrayResource);
+      socket_shutdown($newSocketArrayResource,2);
       $connectionACK = $chatHandler->connectionDisconnectACK($client_ip_address);
       $chatHandler->sendAll($connectionACK,$clientSocketArray);
       $newSocketIndex = array_search($newSocketArrayResource, $clientSocketArray);
-      $usuarioHelper->disconectUsuarioBySocket($newSocketArrayResource);
       unset($clientSocketArray[$newSocketIndex]);	  
    
    }

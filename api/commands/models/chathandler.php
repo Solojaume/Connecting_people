@@ -1,6 +1,7 @@
 <?php
 namespace app\commands\models;
 
+use app\commands\CommandsUsuarioController;
 use app\models\Mach;
 use app\models\Usuario;
 
@@ -102,10 +103,27 @@ class ChatHandler {
 	*/
 	public function auth($token,&$socket=null)
 	{
-		$u=true;
-		$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Auth correcta",'message_type'=>'auth']));
+		
+		//Obtenemos ip remota y su puerto
+		socket_getpeername($socket,$ip_c, $p_c);
+
+		//Obtenemos la ip local y su puerto
+		socket_getpeername($socket,$ip_s,$p_s);
+		$u=CommandsUsuarioController::auth($token,$ip_c,$p_c,$ip_s,$p_s);
+		echo "\n Pruebicas \n";
+		var_dump(isset($u->token));
+		var_dump(isset($u->id));
+		var_dump(isset($u->nombre));
+		if(isset($u->id)&&isset($u->nombre)&&isset($u->token)){
+			echo"ssssssssssss";
+			$u=["id"=>$u->id,"nombre"=>$u->nombre,"token"=>$u->token,"rol"=>0];
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Auth correcta",'message_type'=>'auth']));
 			//return $message;
 			return ["autenticacion"=>$u,"message"=>$message];
+		}else{
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];
+        }
 
 	}
 
