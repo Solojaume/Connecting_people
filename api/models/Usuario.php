@@ -49,10 +49,12 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return static::findOne($id);
     }    
+
     public static function findIdentityById($id)
     {
         return Yii::$app->db->createCommand("SELECT * from usuario where id=$id")->queryAll();
     }
+
     public static function findIdentityBySocket($ip_cli, $ip_ser, $puer_cli,$puer_serv)
     {   
         return self::findOne(["ip_cliente"=>$ip_cli,"ip_servidor"=>$ip_ser,"puerto_cliente"=>$puer_cli,"puerto_servidor"=>$puer_serv]);
@@ -68,6 +70,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->id;
     }
+
     
 
     /**
@@ -78,6 +81,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->password;
     }
     
+
     public function validateCaducityDateAuthToken()
     {   
         //date_default_timezone_set('UTC');
@@ -86,7 +90,8 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         //echo "NOW:$now";
         //echo " Date:$date";
         return $now<$date;
-    }  
+    } 
+
     public function validateCaducityDateRecoveryToken()
     {
         //date_default_timezone_set('UTC ');
@@ -94,12 +99,14 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         $now = strtotime(date("Y-m-d H:i:s"));
         return $now<$date;
     }
+
     public function validateAuthToken($token){
         echo "validate";
         $con=$this->token==$token;
         $con2=$this->validateCaducityDateAuthToken()==true;
         return $con && $con2;
     }
+
     public function validateRecoveryToken($token){
         return ($this->token_recuperar_pass===$token)&&($this->validateCaducityDateRecoveryToken()==true);
     }
@@ -126,6 +133,10 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->getAuthKey() === $authKey;
     }
 
+    public static function DisconectAll()
+    {
+        self::updateAll(['ip_cliente'=> "",'ip_servidor'=>"", 'puerto_cliente'=>"",'puerto_servidor'=>""]);
+    }
     /**
      * {@inheritdoc}
      */

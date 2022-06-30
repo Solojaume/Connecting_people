@@ -12,7 +12,7 @@ class ChatHandler {
 	private $chat_rooms=[];
 	function sendAll($message,$clientSocketArray) {
 		$messageLength = strlen($message);
-		echo ("send \n");
+		echo ("\nSend all");
 		foreach($clientSocketArray as $clientSocket)
 		{
  			@socket_write($clientSocket,$message,$messageLength);
@@ -20,6 +20,23 @@ class ChatHandler {
 		return true;
 	}
 
+	function send($message,$clientSocket)
+	{
+		$messageLength = strlen($message);
+		@socket_write($clientSocket,$message,$messageLength);
+		return true;
+	}
+
+	function sendToOneByUsuarioId($message,$clientSocketArray,$usuarioId)
+	{
+		if($s=CommandsUsuarioController::findSocketById($clientSocketArray,$usuarioId)){
+			$this->send($message,$s);
+			return true;
+		}
+		return false;
+	}
+
+	
 	function unseal($socketData) {
 		$length = ord($socketData[1]) & 127;
 		if($length == 126) {
@@ -79,7 +96,10 @@ class ChatHandler {
 	
 	function newConnectionACK($client_ip_address) {
 		//echo("new ACK \n");
+		//var_dump($client_ip_address);
+		echo "\n ACK";
 		$message = 'New client ' . $client_ip_address;
+		echo "\n New ACK POR DEntro";
 		$messageArray = array("chat_user"=>"system",'chat_message'=>$message,'message_type'=>'chat-connection-ack');
 		$ACK = $this->seal(json_encode($messageArray));
 		return $ACK;
@@ -110,12 +130,9 @@ class ChatHandler {
 		//Obtenemos la ip local y su puerto
 		socket_getpeername($socket,$ip_s,$p_s);
 		$u=CommandsUsuarioController::auth($token,$ip_c,$p_c,$ip_s,$p_s);
-		echo "\n Pruebicas \n";
-		var_dump(isset($u->token));
-		var_dump(isset($u->id));
-		var_dump(isset($u->nombre));
+		echo "\n Auth ";
+		
 		if(isset($u->id)&&isset($u->nombre)&&isset($u->token)){
-			echo"ssssssssssss";
 			$u=["id"=>$u->id,"nombre"=>$u->nombre,"token"=>$u->token,"rol"=>0];
 			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Auth correcta",'message_type'=>'auth']));
 			//return $message;

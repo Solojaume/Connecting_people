@@ -31,8 +31,8 @@ export class ChatComponent implements OnInit {
     //this.webSocketService.openWebSocket();
   
     let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-    //let com = new Comunicacion("get_chats",token);
-   // this.webSocketService.sendMessage(com);    
+    let com = new Comunicacion("get_chats",token);
+    this.webSocketService.sendMessage(com);    
   }
 
   ngOnDestroy(): void {

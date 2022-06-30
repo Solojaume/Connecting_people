@@ -75,6 +75,24 @@ class   CommandsUsuarioController extends WebsocketController
         }
         return false;
     }
+
+    /*
+    *Este metodo devuelve el objeto socket al que esta conectado un usuario
+    */
+    public static function findSocketById($arraySocket,$id)
+    {
+        $u = Usuario::findIdentity($id);
+        foreach ($arraySocket as $arraySocketResource) {
+            socket_getpeername($arraySocketResource,$ip_c, $p_c);
+
+            //Obtenemos la ip local y su puerto
+            socket_getpeername($arraySocketResource,$ip_s,$p_s);
+            if($u->ip_servidor==$ip_s && $u->ip_client==$ip_c && $u->puerto_cliente="".$p_c && $u->puerto_servidor=="".$p_s){
+                return $arraySocketResource;
+            }
+        }
+        return false;
+    }
     /*
     * Este metodo sirve para borrar el socket de la base de datos
     */

@@ -71,14 +71,17 @@ class Mach extends \yii\db\ActiveRecord
         return $m;
     }
 
-    public static function getUsersNoMostrados($entorno="prod",$data=null){
+    public static function getUsersNoMostrados($entorno="prod",$data=null,$usuario1=null){
         $lista_usuarios=[];
         $usuario=["id"=>0,
         "nombre"=>"",
         "edad"=>0,
         "imagenes"=>[],
         "review"=>[]];
-        $usuario1 = \app\controllers\UsuarioController::getUserWhithAuthToken()["usuario"]["id"];
+        if(!isset($usuario1)){
+            $usuario1 = \app\controllers\UsuarioController::getUserWhithAuthToken()["usuario"]["id"];
+        }
+        
         //var_dump($usuario1);
        // $usuario1=$usuario1->id;
         if($entorno === "test" && $data!==null){

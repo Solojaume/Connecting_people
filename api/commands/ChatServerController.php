@@ -3,14 +3,14 @@ namespace app\commands;
 
 use yii\console\Controller;
 use app\commands\models\ChatHandler;
-
-
+use app\models\Usuario;
 
 class ChatServerController extends Controller
 {
    private $socket_working=false;
    public function actionStart($host="localhost",$port = 8080)
    {
+      Usuario::DisconectAll();
       $this->socket_working=true;
       define('HOST_NAME',"$host"); 
       define('PORT',$port);
@@ -40,9 +40,9 @@ class ChatServerController extends Controller
             
             //añadimos la nueva conexion a la lista de usuarios
            
-            $connectionACK = $chatHandler->newConnectionACK($client_ip_address);
+            //$connectionACK = $chatHandler->newConnectionACK($client_ip_address);
             
-            $chatHandler->sendAll($connectionACK,$clientSocketArray);
+            //$chatHandler->sendAll($connectionACK,$clientSocketArray);
             
             $newSocketIndex = array_search($socketResource, $newSocketArray);
             unset($newSocketArray[$newSocketIndex]);
@@ -51,7 +51,7 @@ class ChatServerController extends Controller
          foreach ($newSocketArray as $newSocketArrayResource) {	
             try {
                while(socket_recv($newSocketArrayResource, $socketData, 1024, 0) >= 1){
-                  echo "Socket Data";
+                  echo "\nSocket Data";
                             
                   $socketMessage = $chatHandler->unseal($socketData);
                   $messageObj = json_decode($socketMessage);
@@ -61,7 +61,7 @@ class ChatServerController extends Controller
                      switch ($messageObj->comand) {
                         case 'auth':
                           
-                           //echo "Mensage";
+                           echo "\nMensage pre auth";
                            
                            $message = $chatHandler->auth($messageObj->objeto,$newSocketArrayResource);
 
@@ -69,22 +69,28 @@ class ChatServerController extends Controller
                           // echo "Mensage2\n";
                         
                            if($message["autenticacion"]==true){
-                              
-                              //var_dump($u);
-                              $chatHandler->sendAll($message["message"],$clientSocketArray);
-                              
+                              echo"\n Autentication True";
+                             
+                              $connectionACK = $chatHandler->newConnectionACK($message["autenticacion"]["nombre"]);
+                              echo "\n NewConnectionACK";
+                              $chatHandler->sendAll($connectionACK,$clientSocketArray);
+                              echo"\n Send all good";
+                              $chatHandler->send($message["message"],$newSocketArrayResource);
+                              echo "\n Send";
                            }else{
 
-                              $chatHandler->sendAll($message["message"],$clientSocketArray);
+                              $chatHandler->send($message["message"],$newSocketArrayResource);
                               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
                            }
                               
                            break;
+                        case 'ge':
+                           # code...
+                           break;
                         case 'get_chats':
-                           echo "\n Get_chats";
-                          
-                           echo "\n Imprimiendo usuario";
-                           
+                           $message=CommandsMatchController::getChatsYMatches($messageObj->objeto
+                        
+                        );                       
 
                            if($message["autenticacion"]==true){
                               //var_dump($u);
@@ -93,7 +99,7 @@ class ChatServerController extends Controller
                            }else{
 
                               $chatHandler->sendAll($message["message"],$clientSocketArray);
-                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,$usuariosHelper);
+                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
                            }                          
                            break;
                         case "send":
@@ -134,18 +140,17 @@ class ChatServerController extends Controller
             echo"\nsale\n";
             $socketData = @socket_read($newSocketArrayResource, 2048, PHP_NORMAL_READ);
           
-/*
+
             if ($socketData === false) { 
                $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
-            }*/
+            }
          }
       }
       socket_close($socketResource);
       echo "Se desconecto";
+      Usuario::DisconectAll();
    }
-   private function findUser(){
-      
-   }
+   
 
    private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler)
    {
@@ -153,7 +158,7 @@ class ChatServerController extends Controller
       socket_getpeername($newSocketArrayResource, $client_ip_address);
       //socket_close($newSocketArrayResource);
       socket_shutdown($newSocketArrayResource,2);
-      $connectionACK = $chatHandler->connectionDisconnectACK($client_ip_address);
+      $connectionACK = $chatHandler->connectionDisconnectACK("$client_ip_address");
       $chatHandler->sendAll($connectionACK,$clientSocketArray);
       $newSocketIndex = array_search($newSocketArrayResource, $clientSocketArray);
       unset($clientSocketArray[$newSocketIndex]);	  
