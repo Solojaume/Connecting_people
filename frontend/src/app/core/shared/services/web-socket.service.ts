@@ -9,6 +9,8 @@ import { TokenStorageService } from './token-storage.service';
 
 const WEB_SOCKET_KEY = 'Web-socket';
 const WEB_SOCKET_URL='ws://localhost:8080/demo/php-socket.php';
+const AUTH_KEY = 'autenticacion';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,55 +18,80 @@ export class WebSocketService {
 
   webSocket!: WebSocket;
   chatMessages: ChatMessageDto[] = [];
-  chatRooms:ChatRoom[]= []
-
+  chatRooms:ChatRoom[]= [];
+  
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
-    this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
+    this.webSocket = new WebSocket(WEB_SOCKET_URL);
   }
   private newWebSocket() {
-    this.webSocket = new WebSocket('ws://localhost:8080/demo/php-socket.php');
+    this.webSocket = new WebSocket(WEB_SOCKET_URL);
     
   }
 
-  public saveWebSocket(webSocket:WebSocket){
-    window.sessionStorage.removeItem(WEB_SOCKET_KEY);
-    window.sessionStorage.setItem(WEB_SOCKET_KEY, JSON.stringify(webSocket));
+  private setAutenticadoTrue() {
+    window.sessionStorage.removeItem(AUTH_KEY);
+    window.sessionStorage.setItem(AUTH_KEY, "true");
   }
-  public getWebSocket(): WebSocket {
-    return JSON.parse(window.sessionStorage.getItem(WEB_SOCKET_KEY)??"");
+
+  public setAutenticadoFalse(){
+    window.sessionStorage.removeItem(AUTH_KEY);
+    window.sessionStorage.setItem(AUTH_KEY, "false");
+  }
+  
+  public getAutenticado(){
+    return window.sessionStorage.getItem(AUTH_KEY);
   }
 
   public openWebSocket(){
-    if(this.webSocket.readyState>1){
+    if(this.webSocket.readyState==3){
       this.newWebSocket();
+      this.setAutenticadoFalse();
       //this.webSocket.OPEN;
     }
     console.log(this.webSocket)
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
-      let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-      let com = new Comunicacion("auth",token)
-      this.sendMessage(com);
+      if(this.getAutenticado()=="false"){
+        let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+        let com = new Comunicacion("auth",token)
+        console.log("Pre auth");
+        this.sendMessage(com);
+        console.log("auth");
+        this.setAutenticadoTrue();
+      }else if(this.getAutenticado()=="true"){
+        let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+        let com = new Comunicacion("auth",token)
+        console.log("Pre auth");
+        this.sendMessage(com);
+        console.log("auth");
+      }
+     
     };
 
     this.webSocket.onmessage = (event) => {
       const chatMessageDto = JSON.parse(event.data);
       switch (chatMessageDto.message_type) {
         case "auth_error":
+
           this.token.signOut();
           this.cookies.deleteAll();
+          this.webSocket.close();
           this.router.navigateByUrl("/");
           break;
         case "auth":
           console.log(chatMessageDto);
           //this.chatRooms.push(chatMessageDto.message);
           console.log(chatMessageDto.message);
+          this.setAutenticadoTrue;
           break;
     
         case "chats":
           console.log(chatMessageDto);
           this.chatRooms.push(chatMessageDto.message);
           console.log(chatMessageDto.message);
+          break;
+        case "CambiadaPagina":
+          
           break;
         default:
           console.log(chatMessageDto);
@@ -76,10 +103,11 @@ export class WebSocketService {
 
     this.webSocket.onclose = (event) => {
       console.log('Close: ', event);
+      this.setAutenticadoFalse();
     };
 
     this.webSocket.onerror = (error)=>{
-      //console.log("Error: ", error);
+      console.log("Error: ", error);
     };
 
   }
@@ -93,11 +121,31 @@ export class WebSocketService {
     let com = new Comunicacion("desconectar",token)
     this.sendMessage(com);
     try {
+      console.log(this.webSocket);
       this.webSocket.close();
       
     } catch (error) {
+      console.log(this.webSocket);
+      console.log("uPS ALGO HIZO CRACKs");
       throw error;
       
+    }
+   
+  }
+
+  public CambiarPagina(){
+    let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+    let com = new Comunicacion("cambiar_pagina",token)
+    this.sendMessage(com);
+    try {
+      console.log(this.webSocket);
+      this.webSocket.close();
+      
+    } catch (error) {
+      console.log(this.webSocket);
+      console.log("uPS ALGO HIZO CRACKs");
+      throw error;
+     
     }
    
   }

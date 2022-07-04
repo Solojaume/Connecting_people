@@ -58,9 +58,8 @@ class   CommandsUsuarioController extends WebsocketController
         $con2=$u->validateCaducityDateAuthToken()==true;
         if($con&&$con2){
             return $u;
-        }else{
-
         }
+        return false;
     }
 
     public static function DesconectarPorToken($token,&$chathandler)

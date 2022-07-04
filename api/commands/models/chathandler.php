@@ -1,6 +1,7 @@
 <?php
 namespace app\commands\models;
 
+use app\commands\CommandsMatchController;
 use app\commands\CommandsUsuarioController;
 use app\models\Mach;
 use app\models\Usuario;
@@ -144,20 +145,13 @@ class ChatHandler {
 
 	}
 
+
 	public function getChatsDeUsuario($token){
 		echo "Entra en getsCHAT()";
-		$u=$this->auth($token,$usuariosHelper,$usuariosHelper->findWithToken($token)->getSocket())["autenticacion"];
-		if((isset($u["id"])&&isset($u["usuario"])&&isset($u["token"]))&&$usuariosHelper->findWithToken($token)){
-			//echo"If primer auth";
-		}else if($u=$this->auth($token,$usuariosHelper,$usuariosHelper->findWithToken($token)->getSocket())["autenticacion"]===FALSE && !$usuariosHelper->findWithToken($token)){
-			//echo "ELse auth";
-			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
-			return ["autenticacion"=>FALSE,"message"=>$message];
-		}
-		
-		if(isset($u["id"])&&isset($u["usuario"])&&isset($u["token"])){
-			//En esta variable se guardan los matches sacados de la bd
-			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"tus putos matches se perdieron",'message_type'=>'chats']));
+		$getChatYMatches=CommandsMatchController::getChatsYMatches($token);		
+		if($getChatYMatches["autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"])){
+			$ChatYMatches=["Matches"=>$getChatYMatches["Matches"],"Chats"=>$getChatYMatches["Chats"]];
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$ChatYMatches,'message_type'=>'chats']));
 			//echo "MENSaje";
 			return ["autenticacion"=>TRUE,"message"=>$message];
 		}else{
@@ -165,7 +159,32 @@ class ChatHandler {
 			return ["autenticacion"=>FALSE,"message"=>$message];
 		} 
 	}
+
+	public function cambiadaPagina($token,&$socket=null)
+	{
+		
+		//Obtenemos ip remota y su puerto
+		socket_getpeername($socket,$ip_c, $p_c);
+
+		//Obtenemos la ip local y su puerto
+		socket_getpeername($socket,$ip_s,$p_s);
+		$u=CommandsUsuarioController::auth($token,$ip_c,$p_c,$ip_s,$p_s);
+		echo "\n Auth ";
+		
+		if(isset($u->id)&&isset($u->nombre)&&isset($u->token)){
+			$u=["id"=>$u->id,"nombre"=>$u->nombre,"token"=>$u->token,"rol"=>0];
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Cambiado Pagina Correctamente",'message_type'=>'CambiadaPagina']));
+			//return $message;
+			return ["autenticacion"=>$u,"message"=>$message];
+		}else{
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];
+        }
+
+	}
+
 	
 }
 
-?>
+
+?> 

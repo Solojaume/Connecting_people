@@ -58,6 +58,7 @@ class ChatServerController extends Controller
                   
                   
                   if(isset($messageObj->comand)&& isset($messageObj->objeto)){
+                     var_dump($newSocketArray);
                      switch ($messageObj->comand) {
                         case 'auth':
                           
@@ -84,17 +85,20 @@ class ChatServerController extends Controller
                            }
                               
                            break;
-                        case 'ge':
-                           # code...
+                        case 'cambiar_pagina':
+                           $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
+                           break;
+                        case 'cambiada_pagina':
+                           $message = $chatHandler->cambiadaPagina($messageObj->objeto);
+                           $chatHandler->send($message["message"],$newSocketArrayResource);
                            break;
                         case 'get_chats':
-                           $message=CommandsMatchController::getChatsYMatches($messageObj->objeto
-                        
-                        );                       
+                           $message = $chatHandler->getChatsDeUsuario($messageObj->objeto);                       
 
                            if($message["autenticacion"]==true){
                               //var_dump($u);
-                              $chatHandler->sendAll($message["message"],$clientSocketArray);
+                             // $chatHandler->sendAll($message["message"],$clientSocketArray);
+                              $chatHandler->send($message["message"],$newSocketArrayResource);
                               
                            }else{
 
@@ -117,8 +121,9 @@ class ChatServerController extends Controller
                            }
                            break;
                         case 'desconectar':
+                           echo "\n Desconectar por token";
                            $m = CommandsUsuarioController::DesconectarPorToken($messageObj->objeto,$chatHandler);
-                           $chatHandler->sendAll($m,$clientSocketArray);
+                           $chatHandler->send($m,$newSocketArrayResource);
                            $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
                            break;
                         default:
@@ -126,7 +131,7 @@ class ChatServerController extends Controller
                            // $chatHandler->sendAll($chat_message,$clientSocketArray);
                            break;
                      }
-                    
+                    var_dump($newSocketArray);
                      //ChatHandler:$messageObj->comand();
                   }
                  
@@ -142,6 +147,7 @@ class ChatServerController extends Controller
           
 
             if ($socketData === false) { 
+               var_dump($newSocketArrayResource);
                $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
             }
          }
@@ -154,7 +160,7 @@ class ChatServerController extends Controller
 
    private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler)
    {
-      echo "se desconecta";
+      echo "\nSe desconecta el usuario";
       socket_getpeername($newSocketArrayResource, $client_ip_address);
       //socket_close($newSocketArrayResource);
       socket_shutdown($newSocketArrayResource,2);

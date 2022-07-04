@@ -24,36 +24,41 @@ class CommandsMatchController extends WebsocketController
 
     public static function getMatches($token){
         $u=CommandsUsuarioController::getUserWhithAuthToken($token)->id;
-        
-        return ["autentication"=>$u,"matches"=>Mach::getUserMatches($u)];
+        if($u){
+            return ["autenticacion"=>$u,"matches"=>Mach::getUserMatches($u)];
+        }
+        return ["autenticacion"=>false,"matches"=>null];;
     }
 
     public static function getChatsYMatches($token){
         $matchesBd = self::getMatches($token);
-        $u = $matchesBd["autentication"];
+        $u = $matchesBd["autenticacion"];
         $matchesBd = $matchesBd["matches"];
         $matchesDevolver = [];
         $chatsDevolver = [];
-
-        foreach ($matchesBd as $match) {
-            $mensajes=Mensajes::getMensajesByMatch($match["match_id"]);
-            if($match["match_id_usu1"] == $u->id){
-                $u2=Usuario::findIdentity($match["match_id_usu2"]);
-                $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre];
-                $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre];
-            }else if($match["match_id_usu2"] == $u->id){
-                $u2=Usuario::findIdentity($match["match_id_usu1"]);
-                $match["match_id_usu2"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad()];
-                $match["match_id_usu1"] = ["id"=>$u2->id,"nombre" => $u2->nombre];
-            }
-            if(sizeof($mensajes)>0){
-                $match["mensajes"]=$mensajes;
-               $chatsDevolver[]=$match;
-
-            }else{
-                $matchesDevolver[]=$match;
+        if ($u && isset($matchesBd)){
+            foreach ($matchesBd as $match) {
+                $mensajes=Mensajes::getMensajesByMatch($match["match_id"]);
+                if($match["match_id_usu1"] == $u->id){
+                    $u2=Usuario::findIdentity($match["match_id_usu2"]);
+                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                }else if($match["match_id_usu2"] == $u->id){
+                    $u2=Usuario::findIdentity($match["match_id_usu1"]);
+                    $match["match_id_usu2"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
+                    $match["match_id_usu1"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                }
+                if(sizeof($mensajes)>0){
+                   $match["mensajes"]=$mensajes;
+                   $chatsDevolver[]=$match;
+    
+                }else{
+                    $matchesDevolver[]=$match;
+                }
             }
         }
+
+        
         return["Autentication"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
     }
 

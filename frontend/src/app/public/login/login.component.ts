@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UsuarioAPP } from 'src/app/core/models/usuario/usuario-app.model';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
 
 @Component({
   selector: 'app-login',
@@ -19,11 +20,13 @@ export class LoginComponent implements OnInit {
   constructor(private apiService:AuthService,
     private token:TokenStorageService,
     private router:Router, 
-    private cookieService:CookieService  ) { 
+    private cookieService:CookieService,
+    private webSocketService:WebSocketService ) { 
   }
  
   ngOnInit(): void {
     let usuario;
+    this.webSocketService.setAutenticadoFalse();
     try {
       usuario=JSON.parse(this.cookieService.get("usuario"))??"";
     } catch (error) {
@@ -31,7 +34,7 @@ export class LoginComponent implements OnInit {
     }
    
    
-    if(usuario.token!=""&&this.token.getUser()  ){
+    if(usuario.token!="" && this.token.getUser()  ){
       this.subscribe = this.apiService.autenticacion(usuario.token).subscribe(
         usu => {
           if(usu.error){
@@ -44,8 +47,8 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl("/home");
           }
         }
-      );
-    } else if(usuario.token=="" &&!this.token.getUser() && !this.token.getToken()||!this.token.getUser() && !this.token.getToken()) {
+      ); 
+    } else if(usuario.token=="" && !this.token.getUser() && !this.token.getToken() || this.token.getUser() && !this.token.getToken()) {
 
       this.router.navigateByUrl("/");
     }else 
@@ -128,7 +131,7 @@ export class LoginComponent implements OnInit {
   };
 
   ngOnDestroy(){
-    //this.subscribe.unsubscribe();
+    this.webSocketService.setAutenticadoFalse();
   }
   
   

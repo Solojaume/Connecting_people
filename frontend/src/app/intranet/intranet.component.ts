@@ -29,7 +29,7 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
-    this.webSocketService.openWebSocket();  
+    //this.webSocketService.openWebSocket();  
   }
   
   logout(){
@@ -41,6 +41,6 @@ export class IntranetComponent implements OnInit {
     this.router.navigateByUrl("/");
   }
   ngOnDestroy(){
-    //this.webSocketService.closeWebSocket();
+    //this.webSocketService.CambiarPagina();  
   }
 }
