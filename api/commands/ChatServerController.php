@@ -86,7 +86,7 @@ class ChatServerController extends Controller
                               
                            break;
                         case 'cambiar_pagina':
-                           $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
+                           $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
                            break;
                         case 'cambiada_pagina':
                            $message = $chatHandler->cambiadaPagina($messageObj->objeto);
@@ -158,14 +158,15 @@ class ChatServerController extends Controller
    }
    
 
-   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler)
+   private function disconectUser(&$newSocketArrayResource,&$clientSocketArray,&$chatHandler, $enviarMensajeATodos=true)
    {
       echo "\nSe desconecta el usuario";
       socket_getpeername($newSocketArrayResource, $client_ip_address);
       //socket_close($newSocketArrayResource);
       socket_shutdown($newSocketArrayResource,2);
       $connectionACK = $chatHandler->connectionDisconnectACK("$client_ip_address");
-      $chatHandler->sendAll($connectionACK,$clientSocketArray);
+      if($enviarMensajeATodos==true)
+         $chatHandler->sendAll($connectionACK,$clientSocketArray);
       $newSocketIndex = array_search($newSocketArrayResource, $clientSocketArray);
       unset($clientSocketArray[$newSocketIndex]);	  
    

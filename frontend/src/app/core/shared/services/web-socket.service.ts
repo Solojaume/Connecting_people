@@ -43,7 +43,7 @@ export class WebSocketService {
   }
 
   public openWebSocket(){
-    if(this.webSocket.readyState==3){
+    if(this.webSocket.readyState>=1){
       this.newWebSocket();
       this.setAutenticadoFalse();
       //this.webSocket.OPEN;
@@ -127,7 +127,7 @@ export class WebSocketService {
     } catch (error) {
       console.log(this.webSocket);
       console.log("uPS ALGO HIZO CRACKs");
-      throw error;
+      //throw error;
       
     }
    
@@ -144,7 +144,7 @@ export class WebSocketService {
     } catch (error) {
       console.log(this.webSocket);
       console.log("uPS ALGO HIZO CRACKs");
-      throw error;
+      //throw error;
      
     }
    
