@@ -5,6 +5,7 @@ import { ChatMessageDto } from '../../models/chat/chatMessageDto';
 import { ChatRoom } from '../../models/chat/chat_room';
 import { Comunicacion } from '../../models/chat/comunicacion';
 import { IChatModels } from '../../models/chat/Interfaces/IChatModels';
+import { Match } from '../../models/chat/Match';
 import { TokenStorageService } from './token-storage.service';
 
 const WEB_SOCKET_KEY = 'Web-socket';
@@ -18,8 +19,8 @@ export class WebSocketService {
 
   webSocket!: WebSocket;
   chatMessages: ChatMessageDto[] = [];
-  chatRooms:ChatRoom[]= [];
-  
+  chatRooms:ChatRoom[] = [];
+  matches:Match[] = []
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
     this.webSocket = new WebSocket(WEB_SOCKET_URL);
   }
@@ -42,28 +43,35 @@ export class WebSocketService {
     return window.sessionStorage.getItem(AUTH_KEY);
   }
 
+  /*
+  *Este metodo sirve para abrir la conexion 
+  */
   public openWebSocket(){
-    if(this.webSocket.readyState>=1){
+    if(this.webSocket.readyState>=1 && this.getAutenticado()=="false"){
       this.newWebSocket();
       this.setAutenticadoFalse();
       //this.webSocket.OPEN;
+    }else if(this.getAutenticado()=="true"){
+      this.newWebSocket();
     }
     console.log(this.webSocket)
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
       if(this.getAutenticado()=="false"){
+        this.chatMessages = [];
+        this.chatRooms = [];
         let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
         let com = new Comunicacion("auth",token)
         console.log("Pre auth");
         this.sendMessage(com);
         console.log("auth");
         this.setAutenticadoTrue();
-      }else if(this.getAutenticado()=="true"){
+      } else if(this.getAutenticado()=="true"){
         let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-        let com = new Comunicacion("auth",token)
-        console.log("Pre auth");
+        let com = new Comunicacion("cambiada_pagina",token)
+        console.log("Pre pagina cambiada");
         this.sendMessage(com);
-        console.log("auth");
+        console.log("Página cambiada");
       }
      
     };
@@ -77,25 +85,34 @@ export class WebSocketService {
           this.cookies.deleteAll();
           this.webSocket.close();
           this.router.navigateByUrl("/");
+          this.chatMessages = [];
+          this.chatRooms = [];
+          console.log("Chat Messages:",this.chatMessages);
           break;
         case "auth":
           console.log(chatMessageDto);
           //this.chatRooms.push(chatMessageDto.message);
           console.log(chatMessageDto.message);
-          this.setAutenticadoTrue;
-          break;
-    
-        case "chats":
-          console.log(chatMessageDto);
-          this.chatRooms.push(chatMessageDto.message);
-          console.log(chatMessageDto.message);
+          this.setAutenticadoTrue();
           break;
         case "CambiadaPagina":
-          
+          console.log(chatMessageDto);
+          let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+          let com = new Comunicacion("get_chats",token);
+          this.sendMessage(com);  
           break;
+        case "chats":
+          console.log(chatMessageDto);
+          this.chatRooms=chatMessageDto.chat_message.Chats;
+          this.matches=chatMessageDto.chat_message.Matches;
+          console.log("Chats: ",chatMessageDto.chat_message.Chats);
+          console.log("Match: ",chatMessageDto.chat_message.Matches)
+          break;
+
         default:
           console.log(chatMessageDto);
           this.chatMessages.push(chatMessageDto);
+          console.log("Chat Messages:",this.chatMessages);
           break;
       }
      
@@ -103,7 +120,7 @@ export class WebSocketService {
 
     this.webSocket.onclose = (event) => {
       console.log('Close: ', event);
-      this.setAutenticadoFalse();
+      //this.setAutenticadoFalse();
     };
 
     this.webSocket.onerror = (error)=>{
@@ -118,12 +135,13 @@ export class WebSocketService {
 
   public closeWebSocket() {
     let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-    let com = new Comunicacion("desconectar",token)
+    let com = new Comunicacion("desconectar",token);
+    this.setAutenticadoFalse();
     this.sendMessage(com);
+ 
     try {
       console.log(this.webSocket);
       this.webSocket.close();
-      
     } catch (error) {
       console.log(this.webSocket);
       console.log("uPS ALGO HIZO CRACKs");
@@ -148,5 +166,10 @@ export class WebSocketService {
      
     }
    
+  }
+
+  public Resetear(){
+    this.chatMessages = [];
+    this.chatRooms = [];
   }
 }

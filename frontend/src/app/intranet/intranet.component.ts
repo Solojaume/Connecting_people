@@ -39,6 +39,7 @@ export class IntranetComponent implements OnInit {
   
     this.token.signOut();
     this.router.navigateByUrl("/");
+    this.webSocketService.Resetear();
   }
   ngOnDestroy(){
     //this.webSocketService.CambiarPagina();  

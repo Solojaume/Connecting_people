@@ -82,6 +82,7 @@ class Mensajes extends \yii\db\ActiveRecord
     }
     //Obtener  los mensages pasando
     public static function getMensajesByMatch($match){
+        echo "\n GetMensajesBYMatch";
         $sql= Yii::$app->db->createCommand("SELECT * from mensajes where mensajes_match_id=$match")->queryAll();
         return $sql;
         //return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> where("mensajes_match_id = $match");

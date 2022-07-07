@@ -101,7 +101,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     public function validateAuthToken($token){
-        echo "validate";
+       // echo "validate";
         $con=$this->token==$token;
         $con2=$this->validateCaducityDateAuthToken()==true;
         return $con && $con2;

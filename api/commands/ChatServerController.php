@@ -89,10 +89,14 @@ class ChatServerController extends Controller
                            $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
                            break;
                         case 'cambiada_pagina':
-                           $message = $chatHandler->cambiadaPagina($messageObj->objeto);
+                           echo"\nCambiada PAGINA";
+                           $message = $chatHandler->cambiadaPagina($messageObj->objeto,$newSocketArrayResource);
+                           echo"mensaje";
+                           var_dump($message);
                            $chatHandler->send($message["message"],$newSocketArrayResource);
                            break;
                         case 'get_chats':
+                           echo "\nGet chats";
                            $message = $chatHandler->getChatsDeUsuario($messageObj->objeto);                       
 
                            if($message["autenticacion"]==true){
@@ -141,15 +145,16 @@ class ChatServerController extends Controller
             } catch (\Throwable $th) {
                //throw $th;
             }
-            
+            /*
             echo"\nsale\n";
             $socketData = @socket_read($newSocketArrayResource, 2048, PHP_NORMAL_READ);
           
-
+           
             if ($socketData === false) { 
                var_dump($newSocketArrayResource);
                $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
-            }
+            } 
+            */
          }
       }
       socket_close($socketResource);

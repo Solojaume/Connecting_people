@@ -152,6 +152,9 @@ export class MatchComponent implements OnInit {
 
   
   ngOnDestroy(){
-   // this.webSocketService.CambiarPagina();  
+    if(this.webSocketService.getAutenticado()=="true"){
+      this.webSocketService.CambiarPagina();  
+    }
+   
   }
 }

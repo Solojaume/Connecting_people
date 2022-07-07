@@ -23,6 +23,7 @@ class ChatHandler {
 
 	function send($message,$clientSocket)
 	{
+		var_dump($message);
 		$messageLength = strlen($message);
 		@socket_write($clientSocket,$message,$messageLength);
 		return true;
@@ -147,14 +148,26 @@ class ChatHandler {
 
 
 	public function getChatsDeUsuario($token){
-		echo "Entra en getsCHAT()";
-		$getChatYMatches=CommandsMatchController::getChatsYMatches($token);		
-		if($getChatYMatches["autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"])){
+		echo "\nEntra en getsCHAT()";
+		$getChatYMatches=CommandsMatchController::getChatsYMatches($token);	
+		
+		echo "\nObtenido los matches";
+		echo"\nIsset Matches: ";	
+		var_dump(  isset($getChatYMatches["Matches"]));
+		echo "\n \nIsset Chats: ";
+		var_dump(isset($getChatYMatches["Chats"]));
+		echo"\n\n Autenticacion: ";
+		var_dump($getChatYMatches["Autenticacion"]);
+		echo"\n\n Condicion If: ";
+		var_dump($getChatYMatches["Autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"]));
+		if($getChatYMatches["Autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"])){
+			echo "\nEntra en el ifo";
 			$ChatYMatches=["Matches"=>$getChatYMatches["Matches"],"Chats"=>$getChatYMatches["Chats"]];
 			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$ChatYMatches,'message_type'=>'chats']));
 			//echo "MENSaje";
 			return ["autenticacion"=>TRUE,"message"=>$message];
 		}else{
+			echo "\nUps dentro de elsa";
 			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
 			return ["autenticacion"=>FALSE,"message"=>$message];
 		} 
@@ -162,14 +175,17 @@ class ChatHandler {
 
 	public function cambiadaPagina($token,&$socket=null)
 	{
-		
-		//Obtenemos ip remota y su puerto
-		socket_getpeername($socket,$ip_c, $p_c);
-
+		echo "\nleer ip servidor";
 		//Obtenemos la ip local y su puerto
 		socket_getpeername($socket,$ip_s,$p_s);
+		echo "IP: $ip_s , Puerto: $p_s";
+		echo "\npre leer socket ip cliente";
+		//Obtenemos ip remota y su puerto
+		socket_getpeername($socket,$ip_c, $p_c);
+		
+		echo "\nPre auth cambiada";
 		$u=CommandsUsuarioController::auth($token,$ip_c,$p_c,$ip_s,$p_s);
-		echo "\n Auth ";
+		echo "\n Auth cAMBIADA PAGINA";
 		
 		if(isset($u->id)&&isset($u->nombre)&&isset($u->token)){
 			$u=["id"=>$u->id,"nombre"=>$u->nombre,"token"=>$u->token,"rol"=>0];
