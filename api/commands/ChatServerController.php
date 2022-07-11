@@ -58,7 +58,7 @@ class ChatServerController extends Controller
                   
                   
                   if(isset($messageObj->comand)&& isset($messageObj->objeto)){
-                     var_dump($newSocketArray);
+                     
                      switch ($messageObj->comand) {
                         case 'auth':
                           
@@ -111,17 +111,18 @@ class ChatServerController extends Controller
                            }                          
                            break;
                         case "send":
+                           echo "\n send";
                            $messageObj=$messageObj->objeto;
                        
                            if(isset($messageObj->chat_user)&&isset($messageObj->chat_message)){
-                              echo "find With Token";
-                              $messageObj->chat_user=$usuariosHelper->findWithToken($messageObj->chat_user);
+                              echo "\nFind With Token";
+                              $u=CommandsUsuarioController::findUserWhithID($messageObj->chat_user)->id;
+                             // $m=
+                              var_dump($messageObj);
+                              //$chatHandler->sendToOneByUsuarioId();
                              
 
-                              $messageObj->chat_user=$messageObj->chat_user->nombre;
-                             
-                              $chat_box_message = $chatHandler->createChatBoxMessage($messageObj->chat_user, $messageObj->chat_message);
-                              $chatHandler->sendAll($chat_box_message,$clientSocketArray);
+                              
                            }
                            break;
                         case 'desconectar':
@@ -135,7 +136,7 @@ class ChatServerController extends Controller
                            // $chatHandler->sendAll($chat_message,$clientSocketArray);
                            break;
                      }
-                    var_dump($newSocketArray);
+                   
                      //ChatHandler:$messageObj->comand();
                   }
                  
@@ -145,7 +146,7 @@ class ChatServerController extends Controller
             } catch (\Throwable $th) {
                //throw $th;
             }
-            /*
+            
             echo"\nsale\n";
             $socketData = @socket_read($newSocketArrayResource, 2048, PHP_NORMAL_READ);
           
@@ -154,7 +155,7 @@ class ChatServerController extends Controller
                var_dump($newSocketArrayResource);
                $this->disconectUser($newSocketArrayResource,$clientSocketArray,$chatHandler);
             } 
-            */
+            
          }
       }
       socket_close($socketResource);

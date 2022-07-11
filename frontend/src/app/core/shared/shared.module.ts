@@ -7,6 +7,8 @@ import { ImagenesComponent } from './components/imagenes/imagenes.component';
 import { MensajeModule } from './components/mensaje/mensaje.module';
 import { ButtonsModule } from './components/buttons/buttons.module';
 import { ServicesModule } from './services/services.module';
+import { DesplegableComponent } from './components/desplegable/desplegable.component';
+import { DesplegableModule } from './components/desplegable/desplegable.module';
 
 
 @NgModule({
@@ -20,6 +22,7 @@ import { ServicesModule } from './services/services.module';
     ReviewsModule, 
     MensajeModule,
     ButtonsModule,
+    DesplegableModule
   ],
   exports:[
     ReviewModule,
@@ -27,7 +30,7 @@ import { ServicesModule } from './services/services.module';
     ReactiveFormsModule,
     MensajeModule,
     ButtonsModule,   
-    
+    DesplegableModule    
   ],
   providers:[]
 })

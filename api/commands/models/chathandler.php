@@ -23,15 +23,16 @@ class ChatHandler {
 
 	function send($message,$clientSocket)
 	{
-		var_dump($message);
 		$messageLength = strlen($message);
 		@socket_write($clientSocket,$message,$messageLength);
 		return true;
 	}
 
-	function sendToOneByUsuarioId($message,$clientSocketArray,$usuarioId)
+	function sendToOneByUsuarioId($message,$clientSocketArray,$usuarioId,$token=null)
 	{
-		if($s=CommandsUsuarioController::findSocketById($clientSocketArray,$usuarioId)){
+
+		$u=isset($token)?CommandsUsuarioController::getUserWhithAuthToken($token):false;
+		if($u && $s=CommandsUsuarioController::findSocketById($clientSocketArray,$usuarioId)){
 			$this->send($message,$s);
 			return true;
 		}
@@ -146,7 +147,35 @@ class ChatHandler {
 
 	}
 
+	public function getChatsDeUsuarioBySocket($socket){
+		echo "\nEntra en getsCHAT()";
+		$u=CommandsUsuarioController::findUsuarioBySocket($socket);
+		$getChatYMatches=CommandsMatchController::getChatsYMatchesById($u->id);	
+		
+		echo "\nObtenido los matches";
+		echo"\nIsset Matches: ";	
+		var_dump(  isset($getChatYMatches["Matches"]));
+		echo "\n \nIsset Chats: ";
+		var_dump(isset($getChatYMatches["Chats"]));
+		echo"\n\n Autenticacion: ";
+		var_dump($getChatYMatches["Autenticacion"]);
+		echo"\n\n Condicion If: ";
+		var_dump($getChatYMatches["Autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"]));
+		if($getChatYMatches["Autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"])){
+			echo "\nEntra en el ifo";
+			$ChatYMatches=["Matches"=>$getChatYMatches["Matches"],"Chats"=>$getChatYMatches["Chats"]];
+			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$ChatYMatches,'message_type'=>'chats']));
+			//echo "MENSaje";
+			return ["autenticacion"=>TRUE,"message"=>$message];
+		}else{
+			echo "\nUps dentro de elsa";
+			$message=$this->seal(json_encode(array("chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error')));
+			return ["autenticacion"=>FALSE,"message"=>$message];
+		} 
+	}
 
+	/*
+	*Este metodo sirve para obtener los chats de un usuario con su token  */
 	public function getChatsDeUsuario($token){
 		echo "\nEntra en getsCHAT()";
 		$getChatYMatches=CommandsMatchController::getChatsYMatches($token);	

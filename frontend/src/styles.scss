@@ -42,6 +42,13 @@ $cuaternario-l:#FA0DA590;
     @include background($theme:$q)
 }
 
+.a{
+    @include theme($background:$white ,$color:#333);
+    &:hover{
+        background: $gray;
+    }
+}
+
 //Color stiles
 .color-white, .white-text .color-secondary-hover:hover{
     @include color();

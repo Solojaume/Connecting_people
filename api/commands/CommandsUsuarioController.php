@@ -46,6 +46,13 @@ class   CommandsUsuarioController extends WebsocketController
         }
        
     }
+    /*
+    *Este metodo obtiene un usuario por su id
+    */
+    public static function findUserWhithID( $id = null)
+    {
+        return Usuario::findIdentity($id);
+    }
 
     /*
     *
@@ -92,18 +99,30 @@ class   CommandsUsuarioController extends WebsocketController
         }
         return false;
     }
+
+    /*
+    *Este es el metodo sirve para obtener el usuario con el socket
+    */
+    public static function findUsuarioBySocket($socket = null)
+    {
+        echo "\nEntramos en findUsuarioBySocket";
+        socket_getpeername($socket,$ip_c, $p_c);
+
+		//Obtenemos la ip local y su puerto
+		socket_getpeername($socket,$ip_s,$p_s);
+        echo "\nPre findBySocket";
+        $u=Usuario::findIdentityBySocket("'$ip_c'","'$ip_s'","'$p_c'","'$p_s'");
+        $u = Usuario::findIdentityByAccessToken($u["token"]);
+        return $u;
+    }
+
     /*
     * Este metodo sirve para borrar el socket de la base de datos
     */
     public static function CerrarConexion($socket)
     {
         //Obtenemos ip remota y su puerto
-		socket_getpeername($socket,$ip_c, $p_c);
-
-		//Obtenemos la ip local y su puerto
-		socket_getpeername($socket,$ip_s,$p_s);
-
-        $u=Usuario::findIdentityBySocket("'$ip_c'","'$ip_s'","'$p_c'","'$p_s'");
+		
         
         //$u=Usuario::findIdentity($u[0]["id"]);
         echo"\n FindIdentityBySocket";

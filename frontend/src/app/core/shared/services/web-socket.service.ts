@@ -24,6 +24,7 @@ export class WebSocketService {
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
     this.webSocket = new WebSocket(WEB_SOCKET_URL);
   }
+  
   private newWebSocket() {
     this.webSocket = new WebSocket(WEB_SOCKET_URL);
     
@@ -105,8 +106,10 @@ export class WebSocketService {
           console.log(chatMessageDto);
           this.chatRooms=chatMessageDto.chat_message.Chats;
           this.matches=chatMessageDto.chat_message.Matches;
-          console.log("Chats: ",chatMessageDto.chat_message.Chats);
-          console.log("Match: ",chatMessageDto.chat_message.Matches)
+          console.log("Chats mensaje: ",chatMessageDto.chat_message.Chats);
+          console.log("Match mensaje: ",chatMessageDto.chat_message.Matches);
+          console.log("Chats en variable: ",this.chatRooms);
+          console.log("Match en variable: ",this.matches);
           break;
 
         default:
