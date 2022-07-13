@@ -2,6 +2,7 @@
 namespace app\commands\models;
 
 use app\commands\CommandsMatchController;
+use app\commands\CommandsMensajesController;
 use app\commands\CommandsUsuarioController;
 use app\models\Mach;
 use app\models\Usuario;
@@ -21,14 +22,19 @@ class ChatHandler {
 		return true;
 	}
 
-	function send($message,$clientSocket)
-	{
+	function send($message,$clientSocket,$mensaje_db=null)
+	{ 
+		echo"\nEntrando en send ";
+		if(isset($mensaje_db)){
+			$mensaje_db->enviado=1;
+			$mensaje_db->save();
+		}
 		$messageLength = strlen($message);
 		@socket_write($clientSocket,$message,$messageLength);
 		return true;
 	}
 
-	function sendToOneByUsuarioId($message,$clientSocketArray,$usuarioId,$token=null)
+	function sendToOneByUsuarioId($message,$clientSocketArray,$usuarioId,$token=null,)
 	{
 
 		$u=isset($token)?CommandsUsuarioController::getUserWhithAuthToken($token):false;
@@ -192,6 +198,7 @@ class ChatHandler {
 		if($getChatYMatches["Autenticacion"] && isset($getChatYMatches["Matches"])&&isset($getChatYMatches["Chats"])){
 			echo "\nEntra en el ifo";
 			$ChatYMatches=["Matches"=>$getChatYMatches["Matches"],"Chats"=>$getChatYMatches["Chats"]];
+			echo"\nPost $ ChatYMatch";
 			$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>$ChatYMatches,'message_type'=>'chats']));
 			//echo "MENSaje";
 			return ["autenticacion"=>TRUE,"message"=>$message];
@@ -228,7 +235,43 @@ class ChatHandler {
 
 	}
 
+	/*
+	*Este metodo recive, guarda y prepara el mensaje para ser enviado al usuario2, ademas de comprovar tambien si el usuario  esta autenticado o no
 	
+	*/
+	public function getMensajeParaUsuario2($objeto)
+	{   var_dump($objeto);
+		echo "\ngetMensajeParaUsuario2";
+		$findUsuario2ByMaResult=CommandsMatchController::findUsuario2ByMatch($objeto->chat_user,$objeto->match_id);
+		echo "\nfindUsuario2ByMaResult correcto";
+		$message=["chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error'];
+		if($findUsuario2ByMaResult["autenticacion"]==false){
+			echo"\nEntra en el if";
+			$message=$this->seal(json_encode($message));
+			return ["autenticacion"=>false,"message"=>$message];
+		}
+		$u=$findUsuario2ByMaResult["autenticacion"];
+		//Asignamos los datos a la variable a devolver;
+		//Asignamos los datos a la variable a devolver;
+		$objeto->chat_user = $u->id;
+		$message["chat_user"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>$u->timestamp_nacimiento];
+		$message["chat_message"] = $objeto->chat_message;
+		$message["chat_message_type"]="mensaje";
+		$message["match_id"]=$objeto->match_id;
+		echo "\n Pre crea Mensaje bd";
+		$findUsuario2ByMaResult["mensaje_bd"]=CommandsMensajesController::create($objeto);
+		echo "\n Se ha creado  el mensaje en bd";
+		$message["id"]=$findUsuario2ByMaResult["mensaje_bd"]->mensajes_id;
+		$message_devolver=$this->seal(json_encode($message));
+		
+		unset($message);
+		$findUsuario2ByMaResult["mensajes_devolver"]=$message_devolver;
+		
+		
+		//$match["id"]=
+		return $findUsuario2ByMaResult;
+		
+	}
 }
 
 

@@ -111,18 +111,31 @@ class ChatServerController extends Controller
                            }                          
                            break;
                         case "send":
-                           echo "\n send";
+                           echo "\n send switch";
                            $messageObj=$messageObj->objeto;
                        
                            if(isset($messageObj->chat_user)&&isset($messageObj->chat_message)){
-                              echo "\nFind With Token";
-                              $u=CommandsUsuarioController::findUserWhithID($messageObj->chat_user)->id;
-                             // $m=
-                              var_dump($messageObj);
-                              //$chatHandler->sendToOneByUsuarioId();
                              
-
+                              echo "\nPRERespuesta";
+                              $respuesta=$chatHandler->getMensajeParaUsuario2($messageObj);
+                            
+                              echo "\nPost getMensajeParaUsuario2";
+                              $socket_u2=CommandsUsuarioController::findSocketByUsuario($newSocketArray,$respuesta["usuario2"]);
+                             // echo "\nVer respuesta:";
+                              var_dump($respuesta);
                               
+                              echo "\n Var dump mensaje_devolver:";
+                              var_dump($respuesta["mensajes_devolver"]);
+                              echo "\n Find Socket By Usuario";
+                              $chatHandler->send($respuesta["mensaje_devolver"],$newSocketArrayResource);
+                              echo "\nPost Send al usuario que lo envio";
+                              
+                              if($respuesta["autenticacion"]==false){
+                                 $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
+                              }
+                              $chatHandler->send($respuesta["mensaje_devolver"],$socket_u2,$respuesta["mensajes_db"]);
+                              echo "\nPost Send al usuario que lo recivio";
+                           
                            }
                            break;
                         case 'desconectar':

@@ -21,8 +21,10 @@ export class WebSocketService {
   chatMessages: ChatMessageDto[] = [];
   chatRooms:ChatRoom[] = [];
   matches:Match[] = []
+  chatUsar!:any;
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
     this.webSocket = new WebSocket(WEB_SOCKET_URL);
+    this.chatUsar;
   }
   
   private newWebSocket() {
@@ -96,11 +98,20 @@ export class WebSocketService {
           console.log(chatMessageDto.message);
           this.setAutenticadoTrue();
           break;
+        case "mensaje": 
+          if (this.chatUsar.mensajes) {
+            
+          }
+          break;
         case "CambiadaPagina":
           console.log(chatMessageDto);
           let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
           let com = new Comunicacion("get_chats",token);
           this.sendMessage(com);  
+          break;
+        case "mensaje":
+          console.log("Nuevo mensaje:",chatMessageDto);
+          this.chatMessages;
           break;
         case "chats":
           console.log(chatMessageDto);
@@ -171,8 +182,36 @@ export class WebSocketService {
    
   }
 
+
   public Resetear(){
     this.chatMessages = [];
     this.chatRooms = [];
   }
+
+  private añadirMensajeAChat(mensaje:any){
+    for (let index = 0; index < this.chatRooms.length; index++) {
+      const element = this.chatRooms[index];
+      if(this.chatUsar.id==this.chatRooms[index].id){
+        this.chatRooms[index].mensajes?.push(mensaje);
+        return element;
+      }
+      
+    }
+    return false;
+  }
+  private añadirMensajeAMatch(mensaje:any){
+    for (let index = 0; index < this.matches.length; index++) {
+      const element = this.matches[index];
+      if(this.chatUsar.id==this.matches[index].id){
+        this.chatUsar.mensajes.push(mensaje);
+        this.chatRooms.push(this.chatUsar);
+        
+        this.matches.slice(index);
+        return element;
+      }
+      
+    }
+    return false;
+  }
 }
+

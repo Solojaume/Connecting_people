@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DesplegableComponent } from './desplegable.component';
+import { ServicesModule } from '../../services/services.module';
 
 
 
@@ -9,7 +10,8 @@ import { DesplegableComponent } from './desplegable.component';
     DesplegableComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ServicesModule
   ],
   exports:[
     DesplegableComponent

@@ -24,10 +24,10 @@
 								<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
 							</div>
 							<div class="flex-grow-1 pl-3">
-								<strong>{{chatUsar.match_id_usu2.nombre}}</strong>
-								<div class="text-muted small" *ngIf="chatUsar.estado_conexion_u2=='Conectado'"> <em>Online</em> </div>
-								<div class="text-muted small" *ngIf="chatUsar.estado_conexion_u2=='Escriviendo'"> <em>Typing...</em></div>
-								<div class="text-muted small" *ngIf="chatUsar.estado_conexion_u2=='Desconectado'"> <em>Offline </em></div>
+								<strong>{{webSocketService.chatUsar.match_id_usu2.nombre}}</strong>
+								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Conectado'"> <em>Online</em> </div>
+								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Escriviendo'"> <em>Typing...</em></div>
+								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Desconectado'"> <em>Offline </em></div>
 							</div>
 							<div>
 								

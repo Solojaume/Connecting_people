@@ -62,7 +62,11 @@ class Mach extends \yii\db\ActiveRecord
             'estado_conexion_u2'=>'Estado Conexion U2'
         ];
     }
-
+    /*
+    *Obtiene un match de la bd por su id */
+    public static function getMatch($id){
+        return static::findOne($id);
+    }
     public static function getUserMatches($uid)
     {
         $m=Yii::$app->db->createCommand(

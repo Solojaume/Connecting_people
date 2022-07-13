@@ -84,10 +84,18 @@ class   CommandsUsuarioController extends WebsocketController
 
     /*
     *Este metodo devuelve el objeto socket al que esta conectado un usuario
+    @params $arraySocket:array
+    @params $id: number
     */
     public static function findSocketById($arraySocket,$id)
     {
         $u = Usuario::findIdentity($id);
+        return self::findSocketByUsuario($arraySocket,$u);
+        
+    }
+
+    public static function findSocketByUsuario(&$arraySocket,$u)
+    {
         foreach ($arraySocket as $arraySocketResource) {
             socket_getpeername($arraySocketResource,$ip_c, $p_c);
 

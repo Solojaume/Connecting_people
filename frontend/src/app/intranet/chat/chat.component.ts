@@ -30,7 +30,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.webSocketService.openWebSocket();
-    this.chatUsar = {match_id_usu2:this.token.getUser()}
+    this.webSocketService.chatUsar = {match_id_usu2:this.token.getUser()}
    
   }
 
@@ -42,8 +42,14 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage() {
-
-    const chatMessageDto = new ChatMessageDto(this.token.getUser().token, this.formularioEnvio.value.message, "Mensaje", this.chatUsar.match_id);
+    //console.log("Chat Usar:",this.chatUsar)
+    
+    const chatMessageDto = new ChatMessageDto(
+      this.token.getUser().token, 
+      this.formularioEnvio.value.message, 
+      "mensaje",
+      this.webSocketService.chatUsar.match_id
+    );
     const comunicaciones = new Comunicacion("send",chatMessageDto);
     this.webSocketService.sendMessage(comunicaciones);
     this.formularioEnvio.value.message = "";
@@ -51,7 +57,12 @@ export class ChatComponent implements OnInit {
   }
   cargarChat(chat:any){
     console.log('Se ha cambiado el chat a:',chat); 
-    this.chatUsar=chat;
+    this.webSocketService.chatUsar=chat;
+    if(!chat.hasOwnProperty("mensajes")){
+      this.webSocketService.chatUsar.mensajes=[];
+    }
+    
+   
   }
 }
 

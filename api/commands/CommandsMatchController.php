@@ -36,6 +36,10 @@ class CommandsMatchController extends WebsocketController
         return ["autenticacion"=>false,"matches"=>null];;
     }
 
+    /*
+    *  Este metodo obtiene los matches del id de usuario que se haya pasado por parametro
+    * @Params id:int
+    */
     public static function getMatchesById($id){
         $u=CommandsUsuarioController::findUserWhithID($id);
         if($u){
@@ -99,8 +103,10 @@ class CommandsMatchController extends WebsocketController
             echo "\nDentro del if";
             foreach ($matchesBd as $match) {
                 echo "\nEmpieza foreach";
-             
-                $mensajes=Mensajes::getMensajesByMatch($match["match_id"]);
+
+              
+                $mensajes=CommandsMensajesController::getByMatch($match["match_id"],$u->id);
+                //unset($match["match_id"]);
                 if($match["match_id_usu1"] == $u->id){
                     echo "\nEntra en el primer if";
                     $u2=Usuario::findIdentity($match["match_id_usu2"]);
@@ -147,5 +153,36 @@ class CommandsMatchController extends WebsocketController
         
         return["Autenticacion"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
     }
+
+    /*
+    *Obtiene un match por su id
+    */
+    public static function getMatch($id)
+    {
+        return Mach::getMatch($id);
+    }
+
+    /*
+	*Encuentra el otro usuario de un chat pasandole el token del usuario que lo envia y el match_id del mensaje
+	*/
+    public static function findUsuario2ByMatch($token,$match_id)
+    {
+        echo "\nfindUsuario dentro";
+        $u=CommandsUsuarioController::getUserWhithAuthToken($token);
+       
+        $match=static::getMatch($match_id);
+        if($u){
+           echo "\n u ya entro en ifema";
+           $u2=$match->match_id_usu2;
+           if($match->match_id_usu2==$u->id){
+            echo "\n segundo";
+            $u2=$match->match_id_usu1;
+           }
+          $u2=Usuario::findIdentity($u2);
+          return ["autenticacion"=>$u,"usuario2"=>$u2,"match"=>$match];
+        }
+        return ["autenticacion"=>false,"usuario2"=>null];
+    }
+
 
 }

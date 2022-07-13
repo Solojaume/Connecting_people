@@ -42,7 +42,7 @@ export class DesplegableComponent implements OnInit {
   }
   
   cambiarChatOMatch(element:any){
-    
+    console.log("Element",element);
     this.chatEvent.emit(element);
 
   }
