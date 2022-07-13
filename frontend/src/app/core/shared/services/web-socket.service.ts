@@ -98,11 +98,7 @@ export class WebSocketService {
           console.log(chatMessageDto.message);
           this.setAutenticadoTrue();
           break;
-        case "mensaje": 
-          if (this.chatUsar.mensajes) {
-            
-          }
-          break;
+        
         case "CambiadaPagina":
           console.log(chatMessageDto);
           let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;

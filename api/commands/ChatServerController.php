@@ -126,8 +126,8 @@ class ChatServerController extends Controller
                               
                               echo "\n Var dump mensaje_devolver:";
                               var_dump($respuesta["mensajes_devolver"]);
-                              echo "\n Find Socket By Usuario";
-                              $chatHandler->send($respuesta["mensaje_devolver"],$newSocketArrayResource);
+                              echo "\n Presend";
+                              $chatHandler->send($respuesta["mensajes_devolver"],$newSocketArrayResource);
                               echo "\nPost Send al usuario que lo envio";
                               
                               if($respuesta["autenticacion"]==false){
