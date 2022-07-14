@@ -169,17 +169,22 @@ class CommandsMatchController extends WebsocketController
     {
         echo "\nfindUsuario dentro";
         $u=CommandsUsuarioController::getUserWhithAuthToken($token);
-       
+        echo"\n \n\n\n\n \nToken";
+        var_dump($token);
+        echo"\n Usuario:";
+       // var_dump($u==true);
         $match=static::getMatch($match_id);
-        if($u){
+        if($u==true){
            echo "\n u ya entro en ifema";
            $u2=$match->match_id_usu2;
+           $estado_conexion=$match->estado_conexion_u2;
            if($match->match_id_usu2==$u->id){
             echo "\n segundo";
             $u2=$match->match_id_usu1;
+            $estado_conexion=$match->estado_conexion_u1;
            }
           $u2=Usuario::findIdentity($u2);
-          return ["autenticacion"=>$u,"usuario2"=>$u2,"match"=>$match];
+          return ["autenticacion"=>$u,"usuario2"=>$u2,"match"=>$match,"estado2"=>$estado_conexion];
         }
         return ["autenticacion"=>false,"usuario2"=>null];
     }

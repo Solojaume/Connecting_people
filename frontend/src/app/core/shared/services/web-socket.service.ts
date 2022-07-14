@@ -107,7 +107,7 @@ export class WebSocketService {
           break;
         case "mensaje":
           console.log("Nuevo mensaje:",chatMessageDto);
-          this.chatMessages;
+          
           break;
         case "chats":
           console.log(chatMessageDto);

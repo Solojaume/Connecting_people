@@ -256,7 +256,7 @@ class ChatHandler {
 		$objeto->chat_user = $u->id;
 		$message["chat_user"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>$u->timestamp_nacimiento];
 		$message["chat_message"] = $objeto->chat_message;
-		$message["chat_message_type"]="mensaje";
+		$message["message_type"]="mensaje";
 		$message["match_id"]=$objeto->match_id;
 		echo "\n Pre crea Mensaje bd";
 		$findUsuario2ByMaResult["mensaje_bd"]=CommandsMensajesController::create($objeto);
