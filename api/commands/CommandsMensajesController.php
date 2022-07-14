@@ -35,16 +35,20 @@ class CommandsMensajesController extends WebsocketController
         echo"\n Entra en getByMatch";
         $mensajes=Mensajes::getMensajesByMatch($match_id);
 
-        var_dump($mensajes);
-
+       
+        echo"\n Preforeach";
         foreach ($mensajes as $mensaje) {
             if ($mensaje["mensajes_usuario_id"]!=$u) {
-                $mensaje2=Mensajes::findIdentity($mensaje["id"]);
+                echo "\n Pre mensaje buscado en bd";
+                var_dump($mensaje);
+                $mensaje2=Mensajes::findIdentity($mensaje["mensajes_id"]);
+                echo "\n Mensaje buscado en bd exitosamente";
                 $mensaje2->entregado=1;
                 $mensaje["entregado"]=1;
                 $mensaje2->save();
             }
         }
+        var_dump($mensajes);
         return $mensajes;
     }
 }

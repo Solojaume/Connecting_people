@@ -93,6 +93,7 @@ class CommandsMatchController extends WebsocketController
     }
 
     public static function getChatsYMatches($token){
+        echo "entra en getChatsYMatches";
         $matchesBd = self::getMatches($token);
         echo "\nMatches obtenidos";
         $u = $matchesBd["autenticacion"];

@@ -27,8 +27,9 @@ class ChatServerController extends Controller
       while ($this->socket_working===true) {
          $newSocketArray = $clientSocketArray;
          socket_select($newSocketArray, $null, $null, 0, 10);
-         
+        
          if (in_array($socketResource, $newSocketArray)) {
+            echo("\n\n\n\n\n Nuevo usuario conectado");
             $newSocket = socket_accept($socketResource);
             $clientSocketArray[] = $newSocket;
            // echo "Conectaa \n";
@@ -76,8 +77,10 @@ class ChatServerController extends Controller
                               echo "\n NewConnectionACK";
                               $chatHandler->sendAll($connectionACK,$clientSocketArray);
                               echo"\n Send all good";
+                              echo"\nMessage";
+                              var_dump($message["message"]);
                               $chatHandler->send($message["message"],$newSocketArrayResource);
-                              echo "\n Send";
+                              echo "\n Sended";
                            }else{
 
                               $chatHandler->send($message["message"],$newSocketArrayResource);

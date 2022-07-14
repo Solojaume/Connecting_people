@@ -75,6 +75,7 @@ class Mensajes extends \yii\db\ActiveRecord
     */
     public static function findIdentity($id)
     {
+        echo "\n El id es: $id";
         return static::findOne($id);
 
     }
