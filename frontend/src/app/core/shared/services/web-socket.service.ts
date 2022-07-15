@@ -107,7 +107,13 @@ export class WebSocketService {
           break;
         case "mensaje":
           console.log("Nuevo mensaje:",chatMessageDto);
-          
+          if(this.chatUsar.hasOwnProperty("mensajes")){
+            this.añadirMensajeAChat(chatMessageDto);
+          }
+          else{
+            this.añadirMensajeAMatch(chatMessageDto);
+          }
+          this.chatMessages=this.chatUsar.mensajes;
           break;
         case "chats":
           console.log(chatMessageDto);
@@ -187,21 +193,28 @@ export class WebSocketService {
   private añadirMensajeAChat(mensaje:any){
     for (let index = 0; index < this.chatRooms.length; index++) {
       const element = this.chatRooms[index];
-      if(this.chatUsar.id==this.chatRooms[index].id){
+      //Si tiene mensajes y esta en chat usar
+      if(this.chatUsar.match_id==this.chatRooms[index].match_id){
+        this.chatRooms[index].mensajes?.push(mensaje);
+       // this.chatUsar.mensajes.push(mensaje);
+        //this.chatMessages.push(mensaje);
+        return element;
+      }
+      //Si tiene mensajes y no esta en chat usar
+      if(this.chatRooms[index].match_id==mensaje.match_id){
         this.chatRooms[index].mensajes?.push(mensaje);
         return element;
       }
-      
     }
     return false;
   }
   private añadirMensajeAMatch(mensaje:any){
     for (let index = 0; index < this.matches.length; index++) {
-      const element = this.matches[index];
-      if(this.chatUsar.id==this.matches[index].id){
-        this.chatUsar.mensajes.push(mensaje);
+      const element = this.matches[index];//
+      //Si no tiene mensajes y no esta en chat usar
+      if(mensaje.match_id==this.matches[index].match_id){
+        //this.chatUsar.mensajes.push(mensaje);
         this.chatRooms.push(this.chatUsar);
-        
         this.matches.slice(index);
         return element;
       }

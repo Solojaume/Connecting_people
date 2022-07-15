@@ -34,21 +34,30 @@ class CommandsMensajesController extends WebsocketController
     { 
         echo"\n Entra en getByMatch";
         $mensajes=Mensajes::getMensajesByMatch($match_id);
-
+        $mensajes_devolver=[];
        
         echo"\n Preforeach";
         foreach ($mensajes as $mensaje) {
+            $mns=[];
+            $mensaje2=Mensajes::findIdentity($mensaje["mensajes_id"]);
             if ($mensaje["mensajes_usuario_id"]!=$u) {
                 echo "\n Pre mensaje buscado en bd";
                 var_dump($mensaje);
-                $mensaje2=Mensajes::findIdentity($mensaje["mensajes_id"]);
                 echo "\n Mensaje buscado en bd exitosamente";
+                
                 $mensaje2->entregado=1;
-                $mensaje["entregado"]=1;
                 $mensaje2->save();
             }
+            $mns["chat_user"]=$mensaje2->mensajes_usuario_id;
+            $mns["chat_message"]=$mensaje2->mensaje_contenido;
+            $mns["type"] = "inChat";
+            $mns["match_id"] = $match_id;
+            $mns["id"]= $mensaje2->mensajes_id;
+            $mns["timestamp"] = $mensaje2->timestamp;
+            $mns["estado"] = 1;
+            $mensajes_devolver[]=$mns;
         }
-        var_dump($mensajes);
-        return $mensajes;
+        //var_dump($mensajes);
+        return $mensajes_devolver;
     }
 }

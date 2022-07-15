@@ -61,7 +61,7 @@ export class ChatComponent implements OnInit {
     if(!chat.hasOwnProperty("mensajes")){
       this.webSocketService.chatUsar.mensajes=[];
     }
-    
+    this.webSocketService.chatMessages=this.webSocketService.chatUsar.mensajes;
    
   }
 }
