@@ -1,4 +1,6 @@
-<div class=" chat-message-ritgh pb-4 ml-3 end-0" *ngIf="usuario.nombre==mensaje.chat_user">
+
+<!-- Este muestra los mensajes cuando el usuario que lo envia es el mismo que lo usa-->
+<div class=" chat-message-ritgh pb-4 ml-3 end-0" *ngIf="usuario.nombre==mensaje.chat_user&&mensaje.message_type=='inChat'">
     <div>
         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
         <div class="text-muted small text-nowrap mt-2">{{mensaje.timestamp}}</div>
@@ -8,7 +10,32 @@
         {{mensaje.chat_message}}
     </div>
 </div>
-<div class="chat-message-left pb-4 mr-3 start-0" *ngIf="usuario.nombre!=mensaje.chat_user">
+<!-- Este muestra los mensajes cuando el usuario que lo envia es el mismo que lo usa y esta en un objeto-->
+<div class=" chat-message-ritgh pb-4 ml-3 end-0" *ngIf="usuario.nombre==mensaje.chat_user.nombre&&mensaje.message_type=='mensaje'">
+    <div>
+        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+        <div class="text-muted small text-nowrap mt-2">{{mensaje.timestamp}}</div>
+    </div>
+    <div class="flex-shrink-1 bg-cuaternario-ligero rounded py-2 px-3 ml-3">
+        <div class="font-weight-bold h6 mb-1">{{mensaje.chat_user.nombre}} </div>
+        {{mensaje.chat_message}}
+    </div>
+</div>
+
+<!-- Este muestra los mensajes cuando el usuario que lo envia es distinto que lo usa-->
+<div class="chat-message-left pb-4 mr-3 start-0" *ngIf="usuario.nombre!=mensaje.chat_user&&mensaje.message_type=='inChat'">
+    <div>
+        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+        <div class="text-muted small text-nowrap mt-2">{{mensaje.timestamp}}</div>
+    </div>
+    <div class="flex-shrink-1 bg-cuaternario-ligero rounded py-2 px-3 ml-3">
+        <div class="font-weight-bold h6 mb-1">{{mensaje.chat_user}} </div>
+        {{mensaje.chat_message}}
+    </div>
+</div>
+<!-- Este muestra los mensajes cuando el usuario que lo envia es el mismo que lo usa y esta en un objeto-->
+
+<div class=" chat-message-ritgh pb-4 ml-3 end-0" *ngIf="usuario.nombre!=mensaje.chat_user.nombre &&mensaje.message_type==''">
     <div>
         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
         <div class="text-muted small text-nowrap mt-2">{{mensaje.timestamp}}</div>

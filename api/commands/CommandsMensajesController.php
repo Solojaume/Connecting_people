@@ -50,7 +50,7 @@ class CommandsMensajesController extends WebsocketController
             }
             $mns["chat_user"]=$mensaje2->mensajes_usuario_id;
             $mns["chat_message"]=$mensaje2->mensaje_contenido;
-            $mns["type"] = "inChat";
+            $mns["message_type"] = "inChat";
             $mns["match_id"] = $match_id;
             $mns["id"]= $mensaje2->mensajes_id;
             $mns["timestamp"] = $mensaje2->timestamp;
