@@ -122,8 +122,13 @@ class ChatServerController extends Controller
                               echo "\nPRERespuesta";
                               $respuesta=$chatHandler->getMensajeParaUsuario2($messageObj);
                             
+                              echo"\nClientSocketAray:";
+                              var_dump($clientSocketArray);
                               echo "\nPost getMensajeParaUsuario2";
-                              $socket_u2=CommandsUsuarioController::findSocketByUsuario($newSocketArray,$respuesta["usuario2"]);
+                              echo"\nPreFindUsuarioBySocket";
+                              
+                              //$socket_u2=CommandsUsuarioController::findSocketByUsuario($clientSocketArray,$respuesta["usuario2"],$newSocketArray);
+                              //echo "\nPost GetsocketByUsuario";
                              // echo "\nVer respuesta:";
                               //var_dump($respuesta);
                               
@@ -131,16 +136,22 @@ class ChatServerController extends Controller
                               var_dump($respuesta["mensajes_devolver"]);
                               echo "\n Presend";
                               $chatHandler->send($respuesta["mensajes_devolver"],$newSocketArrayResource);
-                              echo "\nPost Send al usuario que lo envio";
+                              echo "\nPost Send al usuario que lo envio\n";
                               var_dump($respuesta["autenticacion"]==false);
                               if($respuesta["autenticacion"]==false){
                                  $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
                               }
+                              echo "\nEstado 2";
+                              var_dump($respuesta["estado2"]);
+
                               if($respuesta["estado2"]=="Conectado"||$respuesta["estado2"]=="Escriviendo"){
-                                 $chatHandler->send($respuesta["mensajes_devolver"],$socket_u2,$respuesta["mensajes_db"]);
+                                 //var_dump($socket_u2);
+                                 echo "\Presend Send al usuario que lo recivio";
+                                 //$chatHandler->send($respuesta["mensajes_devolver"],$socket_u2,$respuesta["mensajes_db"]);
                                  echo "\nPost Send al usuario que lo recivio";
                               }
-                             
+                              
+                              echo"\nNo entra en el if";
                            
                            }
                            break;
@@ -159,13 +170,18 @@ class ChatServerController extends Controller
                      //ChatHandler:$messageObj->comand();
                   }
                  
-                  
+                  //$u=CommandsUsuarioController::findUsuarioBySocket($newSocketArrayResource);
+                  $reauth=$chatHandler->newReAuth();
+                  $chatHandler->send($reauth,$newSocketArrayResource); 
+                  echo"\n Sended reauth";
                   break 2;
                }
             } catch (\Throwable $th) {
                //throw $th;
             }
             
+            
+         
             echo"\nsale\n";
             $socketData = @socket_read($newSocketArrayResource, 2048, PHP_NORMAL_READ);
           
