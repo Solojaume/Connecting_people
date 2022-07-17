@@ -57,7 +57,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function findIdentityBySocket($ip_cli, $ip_ser, $puer_cli,$puer_serv)
     {   
-        return self::findOne(["ip_cliente"=>$ip_cli,"ip_servidor"=>$ip_ser,"puerto_cliente"=>$puer_cli,"puerto_servidor"=>$puer_serv]);
+        //return self::findOne(["ip_cliente"=>$ip_cli,"ip_servidor"=>$ip_ser,"puerto_cliente"=>$puer_cli,"puerto_servidor"=>$puer_serv]);
         return Yii::$app->db->createCommand(
             "SELECT * FROM usuario where ip_cliente=$ip_cli && ip_servidor=$ip_ser && puerto_cliente=$puer_cli && puerto_servidor=$puer_serv"
         )->queryAll();

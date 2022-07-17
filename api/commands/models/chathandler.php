@@ -272,6 +272,12 @@ class ChatHandler {
 		return $findUsuario2ByMaResult;
 		
 	}
+	
+	public function newReAuth()
+	{
+		$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Cambiado Pagina Correctamente",'message_type'=>'reauth']));
+		return $message;
+	}
 }
 
 

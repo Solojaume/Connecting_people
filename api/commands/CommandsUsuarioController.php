@@ -94,15 +94,73 @@ class   CommandsUsuarioController extends WebsocketController
         
     }
 
-    public static function findSocketByUsuario(&$arraySocket,$u)
-    {
-        foreach ($arraySocket as $arraySocketResource) {
-            socket_getpeername($arraySocketResource,$ip_c, $p_c);
 
-            //Obtenemos la ip local y su puerto
-            socket_getpeername($arraySocketResource,$ip_s,$p_s);
-            if($u->ip_servidor==$ip_s && $u->ip_client==$ip_c && $u->puerto_cliente="".$p_c && $u->puerto_servidor=="".$p_s){
-                return $arraySocketResource;
+    public static function findSocketByUsuario(&$arraySocket,$u,&$newArraySocket=null)
+    {
+        echo"\n findSocketByUsuario";
+        echo"\nVar_dump arraySocket";
+        var_dump($arraySocket);
+         
+        
+        foreach ($arraySocket as $arraySocketResource) {
+            var_dump($arraySocketResource);
+            echo "\nEntra foreach";
+            try {
+                socket_getpeername($arraySocketResource,$ip_c, $p_c);
+                echo "\nIP Cliente:$ip_c ";
+                var_dump($ip_c);
+                echo"\nPuerto Cliente:$p_c";
+                $p_c="".$p_c;
+                var_dump($p_c);
+                //Obtenemos la ip local y su puerto
+                socket_getpeername($arraySocketResource,$ip_s,$p_s);
+                echo "\nIP Servidor:$ip_s";
+                $p_s="".$p_s;
+                var_dump($ip_s);
+                echo"\nPuerto Servidor:$p_s";
+                var_dump($p_s);
+
+                if($u->ip_servidor==$ip_s && $u->ip_client==$ip_c && $u->puerto_cliente=$p_c && $u->puerto_servidor==$p_s){
+                    echo"\n Entra en el if";
+                    return $arraySocketResource;
+                }
+               
+            } catch (\Throwable $th) {
+                echo"\nPeta elsocket\n\n";
+                echo "falló socket_select(), razón: " .
+                socket_strerror(socket_last_error()) . "\n";
+                
+            }
+        }
+
+        foreach ($newArraySocket as $arraySocketResource) {
+            var_dump($arraySocketResource);
+            echo "\nEntra foreach segundo";
+            try {
+                socket_getpeername($arraySocketResource,$ip_c, $p_c);
+                echo "\nIP Cliente:$ip_c ";
+                var_dump($ip_c);
+                echo"\nPuerto Cliente:$p_c";
+                $p_c="".$p_c;
+                var_dump($p_c);
+                //Obtenemos la ip local y su puerto
+                socket_getpeername($arraySocketResource,$ip_s,$p_s);
+                echo "\nIP Servidor:$ip_s";
+                $p_s="".$p_s;
+                var_dump($ip_s);
+                echo"\nPuerto Servidor:$p_s";
+                var_dump($p_s);
+
+                if($u->ip_servidor==$ip_s && $u->ip_client==$ip_c && $u->puerto_cliente=$p_c && $u->puerto_servidor==$p_s){
+                    echo"\n Entra en el if";
+                    return $arraySocketResource;
+                }
+               
+            } catch (\Throwable $th) {
+                echo"\nPeta elsocket\n\n";
+                echo "falló socket_select(), razón: " .
+                socket_strerror(socket_last_error()) . "\n";
+                
             }
         }
         return false;
@@ -120,7 +178,7 @@ class   CommandsUsuarioController extends WebsocketController
 		socket_getpeername($socket,$ip_s,$p_s);
         echo "\nPre findBySocket";
         $u=Usuario::findIdentityBySocket("'$ip_c'","'$ip_s'","'$p_c'","'$p_s'");
-        $u = Usuario::findIdentityByAccessToken($u["token"]);
+      //  $u = Usuario::findIdentityByAccessToken($u["token"]);
         return $u;
     }
 

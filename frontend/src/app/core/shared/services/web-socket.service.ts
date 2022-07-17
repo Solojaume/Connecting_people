@@ -98,13 +98,20 @@ export class WebSocketService {
           console.log(chatMessageDto.message);
           this.setAutenticadoTrue();
           break;
-        
+        case "reauth":
+          console.log(chatMessageDto);
+          let token2=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+          let com2 = new Comunicacion("get_chats",token2);
+          
+          this.sendMessage(com2);  
+          break;
         case "CambiadaPagina":
           console.log(chatMessageDto);
           let token=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
           let com = new Comunicacion("get_chats",token);
           this.sendMessage(com);  
           break;
+        
         case "mensaje":
           console.log("Nuevo mensaje:",chatMessageDto);
           if(this.chatUsar.hasOwnProperty("mensajes")){
@@ -118,6 +125,7 @@ export class WebSocketService {
         case "chats":
           console.log(chatMessageDto);
           this.chatRooms=chatMessageDto.chat_message.Chats;
+          
           this.matches=chatMessageDto.chat_message.Matches;
           console.log("Chats mensaje: ",chatMessageDto.chat_message.Chats);
           console.log("Match mensaje: ",chatMessageDto.chat_message.Matches);

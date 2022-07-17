@@ -9,6 +9,7 @@ import { TokenStorageService } from '../../services/token-storage.service';
 })
 export class MensajeComponent implements OnInit {
   @Input () mensaje!:ChatMessageDto; //[fecha]
+  @Input () u2?:any;
   usuario!:any;
   constructor(private token:TokenStorageService) {
     this.usuario=token.getUser();
