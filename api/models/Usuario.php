@@ -61,7 +61,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
         return Yii::$app->db->createCommand(
             "SELECT * FROM usuario where ip_cliente=$ip_cli && ip_servidor=$ip_ser && puerto_cliente=$puer_cli && puerto_servidor=$puer_serv"
         )->queryAll();
-        return self::findIdentity($u[0]["id"]);
+       
     }
     /**
      * @return int|string current user ID

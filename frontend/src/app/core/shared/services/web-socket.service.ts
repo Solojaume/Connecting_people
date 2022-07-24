@@ -8,7 +8,7 @@ import { IChatModels } from '../../models/chat/Interfaces/IChatModels';
 import { Match } from '../../models/chat/Match';
 import { TokenStorageService } from './token-storage.service';
 
-const WEB_SOCKET_KEY = 'Web-socket';
+const CHAT_USADO= 'Chat_usado';
 const WEB_SOCKET_URL='ws://localhost:8080/demo/php-socket.php';
 const AUTH_KEY = 'autenticacion';
 
@@ -22,6 +22,7 @@ export class WebSocketService {
   chatRooms:ChatRoom[] = [];
   matches:Match[] = []
   chatUsar!:any;
+  mensajes_sin_enviar:any[]=[]; 
   constructor(private token:TokenStorageService, private cookies:CookieService, private router:Router) {
     this.webSocket = new WebSocket(WEB_SOCKET_URL);
     this.chatUsar;
@@ -40,6 +41,32 @@ export class WebSocketService {
   public setAutenticadoFalse(){
     window.sessionStorage.removeItem(AUTH_KEY);
     window.sessionStorage.setItem(AUTH_KEY, "false");
+  }
+
+  public setChat(params:any,param2="") {
+    window.sessionStorage.removeItem(CHAT_USADO);
+    window.sessionStorage.setItem(CHAT_USADO, params.match_id);
+    if(param2!=""){
+      window.sessionStorage.removeItem(CHAT_USADO);
+      window.sessionStorage.setItem(CHAT_USADO, param2);
+    }
+    this.chatUsar=params;
+    this.chatMessages=params.mensajes;
+  }  
+
+  public getChat():any{
+    return window.sessionStorage.getItem(CHAT_USADO);
+  }
+
+  public findChat() : any {
+    let devolver:any=false;
+    this.chatRooms.forEach(element => {
+      if(element.match_id == this.getChat()){
+        devolver = element;
+      }
+      
+    });
+    return devolver;
   }
   
   public getAutenticado(){
@@ -98,11 +125,17 @@ export class WebSocketService {
           console.log(chatMessageDto.message);
           this.setAutenticadoTrue();
           break;
+        case "update_chats":
+
+          break;
         case "reauth":
           console.log(chatMessageDto);
           let token2=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
-          let com2 = new Comunicacion("get_chats",token2);
-          
+          let com2 = new Comunicacion("update_chats",{"auth":token2});
+          if(this.mensajes_sin_enviar.length>0){
+            com2 = new Comunicacion("update_chats",{"auth":token2,"mensajes_nuevos":this.mensajes_sin_enviar});
+            this.mensajes_sin_enviar=[];
+          }
           this.sendMessage(com2);  
           break;
         case "CambiadaPagina":
@@ -125,10 +158,14 @@ export class WebSocketService {
         case "chats":
           console.log(chatMessageDto);
           this.chatRooms=chatMessageDto.chat_message.Chats;
-          
           this.matches=chatMessageDto.chat_message.Matches;
-          console.log("Chats mensaje: ",chatMessageDto.chat_message.Chats);
-          console.log("Match mensaje: ",chatMessageDto.chat_message.Matches);
+          let chat=this.findChat();
+          if (chat!=false) {
+            this.chatUsar=chat;
+            this.chatMessages=chat.mensajes;
+          }
+          //console.log("Chats mensaje: ",chatMessageDto.chat_message.Chats);
+         // console.log("Match mensaje: ",chatMessageDto.chat_message.Matches);
           console.log("Chats en variable: ",this.chatRooms);
           console.log("Match en variable: ",this.matches);
           break;

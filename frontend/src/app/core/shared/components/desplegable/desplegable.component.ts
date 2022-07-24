@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IMatchModel } from 'src/app/core/models/chat/Interfaces/IMatchModel';
+import { WebSocketService } from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-desplegable',
@@ -12,7 +13,7 @@ export class DesplegableComponent implements OnInit {
   @Input () tipo_objeto!:string;
   @Input () lista_objetos!:any[];
   @Output () chatEvent = new EventEmitter<any>();
-  constructor() { }
+  constructor(public webSocketService:WebSocketService) { }
   //emited:boolean=false;
   ngOnChanges(){
     /*
@@ -44,7 +45,10 @@ export class DesplegableComponent implements OnInit {
   cambiarChatOMatch(element:any){
     console.log("Element",element);
     this.chatEvent.emit(element);
-
   }
+
+  
+  
+
 
 }

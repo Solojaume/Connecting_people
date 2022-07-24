@@ -50,8 +50,9 @@ export class ChatComponent implements OnInit {
       "mensaje",
       this.webSocketService.chatUsar.match_id
     );
-    const comunicaciones = new Comunicacion("send",chatMessageDto);
-    this.webSocketService.sendMessage(comunicaciones);
+    //const comunicaciones = new Comunicacion("send",chatMessageDto);
+    //this.webSocketService.sendMessage(comunicaciones);
+    this.webSocketService.mensajes_sin_enviar.push(chatMessageDto);
     this.formularioEnvio.value.message = "";
     this.formularioEnvio.reset();
   }
@@ -62,7 +63,10 @@ export class ChatComponent implements OnInit {
       this.webSocketService.chatUsar.mensajes=[];
     }
     this.webSocketService.chatMessages=this.webSocketService.chatUsar.mensajes;
-   
+    
+    if(this.webSocketService.findChat()==false){
+      this.webSocketService.setChat(chat);
+    }
   }
 }
 

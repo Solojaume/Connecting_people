@@ -14,6 +14,74 @@ class CommandsMatchController extends WebsocketController
    {
         return Mach::find($id);
    }
+
+    public static function getActualizacionChatsDeUsuario($token)
+    {        
+        $u=CommandsUsuarioController::getUserWhithAuthToken($token);
+        echo "\nEntra en getChatsYMatches";
+        $matchesBd = self::getMatches($token);
+        echo "\nMatches obtenidos";
+        $u = $matchesBd["autenticacion"];
+        $matchesBd = $matchesBd["matches"];
+        $matchesDevolver = [];
+        $chatsDevolver = [];
+        if ($u && isset($matchesBd)){
+            echo "\nDentro del if";
+            foreach ($matchesBd as $match) {
+                echo "\nEmpieza foreach";
+
+              
+                $mensajes=CommandsMensajesController::getMensajesNoEntregadoByMatchId($match["match_id"],$u->id);
+                //unset($match["match_id"]);
+                if($match["match_id_usu1"] == $u->id){
+                    echo "\nEntra en el primer if";
+                    $u2=Usuario::findIdentity($match["match_id_usu2"]);
+                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                }else if($match["match_id_usu2"] == $u->id){
+                    echo "\nEntra en el else if";
+                    $u2=Usuario::findIdentity($match["match_id_usu1"]);
+                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    $estado_conexion = $match["estado_conexion_u1"];
+                    $match["estado_conexion_u1"] = $match["estado_conexion_u2"];
+                    $match["estado_conexion_u2"] = $estado_conexion;
+                }else{
+                    echo"\nUsuario: ";
+                    var_dump($u);
+                    echo "\n \n u->id:";
+                    var_dump($u->id);
+    
+                    echo"\n\nMatch_id_usu1:";
+                    var_dump($match["match_id_usu1"]);
+                    echo"\n Match_id_usu1 == u->id:";
+                    var_dump($match["match_id_usu1"] == $u->id);
+    
+                    echo"\n \n Match_id_usu2:";
+                    var_dump($match["match_id_usu2"]);
+                    echo"\n Match_id_usu2 == u->id:";
+                    var_dump($match["match_id_usu2"] == $u->id);
+                }
+                
+                
+                if(sizeof($mensajes)>0){
+                    echo "\nCHAT DEVOLVER AÑADIDO";
+                   $match["mensajes"]=$mensajes;
+                   $chatsDevolver[]=$match;
+                   $match["nuevos"]=sizeof($mensajes);
+                }else{
+                    echo "\nMatch DEVOLVER AÑADIDO";
+                    $matchesDevolver[]=$match;
+
+                }
+                
+            }
+        }
+        return["Autenticacion"=>$u,"chats_sin_mensajes"=>$matchesDevolver,"chats_con_nuevos_mensjaes"=>$chatsDevolver];
+
+    }
+
+    
     public static function actionGet_new_match_users_list($token){
         if($u=CommandsUsuarioController::getUserWhithAuthToken($token)){
             $m= new Mach();
@@ -81,6 +149,7 @@ class CommandsMatchController extends WebsocketController
                     echo "\nCHAT DEVOLVER AÑADIDO";
                    $match["mensajes"]=$mensajes;
                    $chatsDevolver[]=$match;
+
     
                 }else{
                     echo "\nMatch DEVOLVER AÑADIDO";
@@ -97,6 +166,7 @@ class CommandsMatchController extends WebsocketController
         $matchesBd = self::getMatches($token);
         echo "\nMatches obtenidos";
         $u = $matchesBd["autenticacion"];
+       
         $matchesBd = $matchesBd["matches"];
         $matchesDevolver = [];
         $chatsDevolver = [];
@@ -104,9 +174,8 @@ class CommandsMatchController extends WebsocketController
             echo "\nDentro del if";
             foreach ($matchesBd as $match) {
                 echo "\nEmpieza foreach";
-
-              
                 $mensajes=CommandsMensajesController::getByMatch($match["match_id"],$u->id);
+                echo"\nObtenido";
                 //unset($match["match_id"]);
                 if($match["match_id_usu1"] == $u->id){
                     echo "\nEntra en el primer if";
@@ -150,7 +219,7 @@ class CommandsMatchController extends WebsocketController
                 }
             }
         }
-
+       
         
         return["Autenticacion"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
     }

@@ -60,9 +60,18 @@ class   CommandsUsuarioController extends WebsocketController
     */
     public static function getUserWhithAuthToken($token)
     {
+        echo"\n GetUserWithAuthToken";
         $u=Usuario::findIdentityByAccessToken($token);
+        $u->vuelta_a_actualizar = date("Y-m-d H:i:s");
+        if(isset($u->id))
+            $u->save();
+        echo"\n Guardamos la actualización en bd";
         $con=$u->token==$token;
+        echo "\nVar_dump con";
+        var_dump($con);
         $con2=$u->validateCaducityDateAuthToken()==true;
+        echo "\nVar_dump con2";
+        var_dump($con2);
         if($con&&$con2){
             return $u;
         }
@@ -76,6 +85,7 @@ class   CommandsUsuarioController extends WebsocketController
         $u->puerto_cliente = "";
         $u->ip_servidor = "";
         $u->puerto_servidor = "";
+        $u->vuelta_a_actualizar = date("Y-m-d H:i:s",0);
         if($u->save()){
             return $chathandler->seal(json_encode(["chat_user"=>"system",'chat_message'=>"cerrada correctamente",'message_type'=>'auth_error']));
         }
@@ -178,33 +188,14 @@ class   CommandsUsuarioController extends WebsocketController
 		socket_getpeername($socket,$ip_s,$p_s);
         echo "\nPre findBySocket";
         $u=Usuario::findIdentityBySocket("'$ip_c'","'$ip_s'","'$p_c'","'$p_s'");
-      //  $u = Usuario::findIdentityByAccessToken($u["token"]);
-        return $u;
+        if(!isset($u["id"])){
+            return false;
+        }
+        echo "\n ENcontrado  by socket";
+        //echo"\n Var_dump: u";
+        //var_dump($u);
+        //  $u = Usuario::findIdentityByAccessToken($u["token"]);
+        return $u[0];
     }
 
-    /*
-    * Este metodo sirve para borrar el socket de la base de datos
-    */
-    public static function CerrarConexion($socket)
-    {
-        //Obtenemos ip remota y su puerto
-		
-        
-        //$u=Usuario::findIdentity($u[0]["id"]);
-        echo"\n FindIdentityBySocket";
-        var_dump($u);
-        var_dump($ip_c);
-        var_dump($ip_s);
-        var_dump($p_c);
-        var_dump($p_s);
-        
-
-        /*
-        $u->ip_cliente = "";
-        $u->puerto_cliente = "";
-        $u->ip_servidor = "";
-        $u->puerto_servidor = "";
-        $u->save();
-        */
-    }
 }

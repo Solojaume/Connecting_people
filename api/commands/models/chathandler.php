@@ -239,37 +239,30 @@ class ChatHandler {
 	*Este metodo recive, guarda y prepara el mensaje para ser enviado al usuario2, ademas de comprovar tambien si el usuario  esta autenticado o no
 	
 	*/
-	public function getMensajeParaUsuario2($objeto)
-	{   var_dump($objeto);
-		echo "\ngetMensajeParaUsuario2";
-		$findUsuario2ByMaResult=CommandsMatchController::findUsuario2ByMatch($objeto->chat_user,$objeto->match_id);
-		echo "\nfindUsuario2ByMaResult correcto";
+	public function getActualizacionChats($token,$mensajes=null)
+	{   
+		echo"\n Entrando en getActualizacion CHATS";
+		$u=CommandsUsuarioController::getUserWhithAuthToken($token);
+		echo "\nGetUserWithAuthToken";
 		$message=["chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error'];
-		if($findUsuario2ByMaResult["autenticacion"]==false){
+		$return=["autenticacion"=>$u];
+		if($u==false){
 			echo"\nEntra en el if";
 			$message=$this->seal(json_encode($message));
 			return ["autenticacion"=>false,"message"=>$message];
 		}
-		$u=$findUsuario2ByMaResult["autenticacion"];
-		//Asignamos los datos a la variable a devolver;
-		//Asignamos los datos a la variable a devolver;
-		$objeto->chat_user = $u->id;
-		$message["chat_user"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>$u->timestamp_nacimiento];
-		$message["chat_message"] = $objeto->chat_message;
-		$message["message_type"]="mensaje";
-		$message["match_id"]=$objeto->match_id;
-		echo "\n Pre crea Mensaje bd";
-		$findUsuario2ByMaResult["mensaje_bd"]=CommandsMensajesController::create($objeto);
-		echo "\n Se ha creado  el mensaje en bd";
-		$message["id"]=$findUsuario2ByMaResult["mensaje_bd"]->mensajes_id;
-		$message_devolver=$this->seal(json_encode($message));
+		$message["message_type"]="update_chat";
+		if(isset($mensajes)){
+			echo"\n Mensajes if";
+			foreach ($mensajes as $mensaje ) {
+			  CommandsMensajesController::create($mensaje);
+			}
+		}
+		$message["chat_message"]= CommandsMatchController::getActualizacionChatsDeUsuario($token);
+		$message=$this->seal(json_encode($message));
+		$return["mensajes_devolver"]=$message;
 		
-		unset($message);
-		$findUsuario2ByMaResult["mensajes_devolver"]=$message_devolver;
-		
-		
-		//$match["id"]=
-		return $findUsuario2ByMaResult;
+		return $return;
 		
 	}
 	

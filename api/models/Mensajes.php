@@ -102,6 +102,19 @@ class Mensajes extends \yii\db\ActiveRecord
         //return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> where("mensajes_match_id = $match");
     }
 
+    public static function getMensajesNoMostradosByMatch($match){
+        // echo "\n GetMensajesBYMatch";
+         return (new \yii\db\Query())
+         ->select('*')
+         ->from('mensajes')
+         ->where("mensajes_match_id=:match && entregado=0",[":match"=>$match])
+         
+         ->all();
+         $sql= Yii::$app->db->createCommand("SELECT * from mensajes where mensajes_match_id=$match")->queryAll();
+         return $sql;
+         //return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> where("mensajes_match_id = $match");
+     }
+
     public static function getMensajesByUserId($usu){
        // $q=new \yii\db\Query();
         $sql= Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)" )->queryAll();
@@ -112,6 +125,16 @@ class Mensajes extends \yii\db\ActiveRecord
         ]);*/
     }
     
+    public static function getNoRecivedMensajesByMatchId($match,$usu){
+        /*$sql=Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)
+        AND entregado=0 AND mensajes_usuario_id!=$usu")->queryAll();
+        return $sql;*/
+        return (new \yii\db\Query()) -> select("*") 
+        -> from("mensajes") -> 
+        where("mensajes_match_id =:m_id && entregado=0 && mensajes_usuario_id!=:usu",["m_id"=>$match,":usu"=>$usu]);
+        
+    }
+
     public static function getNoRecivedMensajesByUserId($usu){
         $sql=Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)
         AND entregado=0 AND mensajes_usuario_id!=$usu")->queryAll();
@@ -128,7 +151,7 @@ class Mensajes extends \yii\db\ActiveRecord
     public static function getCountNoRecivedMensagesByUserId($usu){
         $sql= Yii::$app->db->createCommand("SELECT count(mensajes_id) FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu) AND entregado=0")->queryAll();
         return $sql;
-        return (new \yii\db\Query()) -> select( count("mensajes_id")) -> from("mensajes") -> innerJoin("mach","mensajes_match_id=match_id") -> 
+        return (new \yii\db\Query()) -> select(count("mensajes_id")) -> from("mensajes") -> innerJoin("mach","mensajes_match_id=match_id") -> 
         where("(match_id_usu1= $usu && entregado = 0 ) || (match_id_usu2= $usu && entregado = 0)");
 
     }

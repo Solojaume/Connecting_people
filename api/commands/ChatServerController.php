@@ -50,6 +50,7 @@ class ChatServerController extends Controller
          }
          
          foreach ($newSocketArray as $newSocketArrayResource) {	
+            echo"\n Entra en foreach";
             try {
                while(socket_recv($newSocketArrayResource, $socketData, 1024, 0) >= 1){
                   echo "\nSocket Data";
@@ -113,25 +114,20 @@ class ChatServerController extends Controller
                               $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
                            }                          
                            break;
-                        case "send":
-                           echo "\n send switch";
-                           $messageObj=$messageObj->objeto;
-                       
-                           if(isset($messageObj->chat_user)&&isset($messageObj->chat_message)){
-                             
+                        case "update_chats":
+                           echo "\n Update chat";
+                           $messageObj = $messageObj->objeto;
+                           $auth = $messageObj->auth;
+                           $mensajes=null;
+                           if(isset($auth)){
+                              if(isset($messageObj->mensajes_nuevos)){
+                                 $mensajes = $messageObj->mensajes_nuevos;
+                              }
                               echo "\nPRERespuesta";
-                              $respuesta=$chatHandler->getMensajeParaUsuario2($messageObj);
-                            
-                              echo"\nClientSocketAray:";
-                              var_dump($clientSocketArray);
-                              echo "\nPost getMensajeParaUsuario2";
-                              echo"\nPreFindUsuarioBySocket";
-                              
-                              //$socket_u2=CommandsUsuarioController::findSocketByUsuario($clientSocketArray,$respuesta["usuario2"],$newSocketArray);
-                              //echo "\nPost GetsocketByUsuario";
-                             // echo "\nVer respuesta:";
-                              //var_dump($respuesta);
-                              
+                              $respuesta = $chatHandler->getActualizacionChats($auth,$mensajes);
+                              echo"\n Respuesta";
+                              var_dump($respuesta);
+                   
                               echo "\n Var dump mensaje_devolver:";
                               var_dump($respuesta["mensajes_devolver"]);
                               echo "\n Presend";
@@ -141,16 +137,7 @@ class ChatServerController extends Controller
                               if($respuesta["autenticacion"]==false){
                                  $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
                               }
-                              echo "\nEstado 2";
-                              var_dump($respuesta["estado2"]);
 
-                              if($respuesta["estado2"]=="Conectado"||$respuesta["estado2"]=="Escriviendo"){
-                                 //var_dump($socket_u2);
-                                 echo "\Presend Send al usuario que lo recivio";
-                                 //$chatHandler->send($respuesta["mensajes_devolver"],$socket_u2,$respuesta["mensajes_db"]);
-                                 echo "\nPost Send al usuario que lo recivio";
-                              }
-                              
                               echo"\nNo entra en el if";
                            
                            }
@@ -170,13 +157,35 @@ class ChatServerController extends Controller
                      //ChatHandler:$messageObj->comand();
                   }
                  
-                  //$u=CommandsUsuarioController::findUsuarioBySocket($newSocketArrayResource);
-                  $reauth=$chatHandler->newReAuth();
-                  $chatHandler->send($reauth,$newSocketArrayResource); 
-                  echo"\n Sended reauth";
+                  $u=CommandsUsuarioController::findUsuarioBySocket($newSocketArrayResource);
+                  //Esta variable sirve para sumar
+                  $sec_extra = 5;
+                  
+                  if($u==true){
+                     $vuelta_actualizar = strtotime($u["vuelta_a_actualizar"]);
+                     if($vuelta_actualizar== 0)
+                        $sec_extra = 15;
+                     
+                     $vuelta_actualizar = strtotime($u["vuelta_a_actualizar"])+$sec_extra;
+                     var_dump($vuelta_actualizar);
+                     $now = strtotime(date("Y-m-d H:i:s"));
+                     if($now>$vuelta_actualizar){
+                        $u=CommandsUsuarioController::findUserWhithID($u["id"]);
+                        $u->vuelta_a_actualizar = date("Y-m-d H:i:s");
+                        $u->save();
+                        echo"\n Guardamos la actualización en bd";
+                        $reauth=$chatHandler->newReAuth();
+                        $chatHandler->send($reauth,$newSocketArrayResource); 
+                        echo"\n Sended reauth";
+                     }
+                     
+                  }
+                  echo"\n Fuera if";
                   break 2;
                }
+               echo "\nfuera foreach";
             } catch (\Throwable $th) {
+               echo"\n Erroresbumm";
                //throw $th;
             }
             
