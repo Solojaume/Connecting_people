@@ -131,7 +131,7 @@ class Mensajes extends \yii\db\ActiveRecord
         return $sql;*/
         return (new \yii\db\Query()) -> select("*") 
         -> from("mensajes") -> 
-        where("mensajes_match_id =:m_id && entregado=0 && mensajes_usuario_id!=:usu",["m_id"=>$match,":usu"=>$usu]);
+        where("mensajes_match_id =:m_id && entregado=0 && mensajes_usuario_id!=:usu",[":m_id"=>$match,":usu"=>$usu])->all();
         
     }
 

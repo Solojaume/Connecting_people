@@ -243,6 +243,7 @@ class ChatHandler {
 	{   
 		echo"\n Entrando en getActualizacion CHATS";
 		$u=CommandsUsuarioController::getUserWhithAuthToken($token);
+		CommandsUsuarioController::actualizarUsuario($u);
 		echo "\nGetUserWithAuthToken";
 		$message=["chat_user"=>"system",'chat_message'=>"Error, por favor inicie sesion de nuevo",'message_type'=>'auth_error'];
 		$return=["autenticacion"=>$u];
@@ -258,7 +259,9 @@ class ChatHandler {
 			  CommandsMensajesController::create($mensaje);
 			}
 		}
-		$message["chat_message"]= CommandsMatchController::getActualizacionChatsDeUsuario($token);
+		$message["chat_message"] = CommandsMatchController::getActualizacionChatsDeUsuario($token);
+		//$message["chat_message"] = CommandsMatchController::getChatsYMatches($token);
+
 		$message=$this->seal(json_encode($message));
 		$return["mensajes_devolver"]=$message;
 		
@@ -269,6 +272,12 @@ class ChatHandler {
 	public function newReAuth()
 	{
 		$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Cambiado Pagina Correctamente",'message_type'=>'reauth']));
+		return $message;
+	}
+	
+	public function estasEnLinea()
+	{
+		$message=$this->seal(json_encode(["chat_user"=>"system",'chat_message'=>"Cambiado Pagina Correctamente",'message_type'=>'estas']));
 		return $message;
 	}
 }

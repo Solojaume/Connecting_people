@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit {
     //console.log("Chat Usar:",this.chatUsar)
     
     const chatMessageDto = new ChatMessageDto(
-      this.token.getUser().token, 
+      this.token.getUser().id, 
       this.formularioEnvio.value.message, 
       "mensaje",
       this.webSocketService.chatUsar.match_id

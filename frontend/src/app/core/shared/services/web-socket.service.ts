@@ -132,6 +132,7 @@ export class WebSocketService {
           console.log(chatMessageDto);
           let token2=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
           let com2 = new Comunicacion("update_chats",{"auth":token2});
+          //let com2 = new Comunicacion("get_chats",token2);
           if(this.mensajes_sin_enviar.length>0){
             com2 = new Comunicacion("update_chats",{"auth":token2,"mensajes_nuevos":this.mensajes_sin_enviar});
             this.mensajes_sin_enviar=[];
@@ -144,7 +145,12 @@ export class WebSocketService {
           let com = new Comunicacion("get_chats",token);
           this.sendMessage(com);  
           break;
-        
+        case"estas":
+          console.log(chatMessageDto);
+          let token3=this.token.getToken()??JSON.parse(this.cookies.get('usuario')).token;
+          let com3 = new Comunicacion("get_chats",token3);
+          this.sendMessage(com3);  
+          break;
         case "mensaje":
           console.log("Nuevo mensaje:",chatMessageDto);
           if(this.chatUsar.hasOwnProperty("mensajes")){

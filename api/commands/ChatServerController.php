@@ -89,6 +89,21 @@ class ChatServerController extends Controller
                            }
                               
                            break;
+                        case"estoy":
+                           echo "\nMensage pre auth";
+                           $message = $chatHandler->auth($messageObj->objeto,$newSocketArrayResource);
+                        
+                           if($message["autenticacion"]==true){
+                              echo"\n Autentication True";
+                              $chatHandler->send($message["message"],$newSocketArrayResource);
+                              echo "\n Sended";
+                           }else{
+
+                              $chatHandler->send($message["message"],$newSocketArrayResource);
+                              $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler);
+                           }
+                              
+                           break;
                         case 'cambiar_pagina':
                            $this->disconectUser($newSocketArrayResource,$clientSocketArray,$ChatHandler,false);
                            break;
@@ -158,19 +173,21 @@ class ChatServerController extends Controller
                   }
                  
                   $u=CommandsUsuarioController::findUsuarioBySocket($newSocketArrayResource);
+                  $u = false;
                   //Esta variable sirve para sumar
-                  $sec_extra = 5;
-                  
+                  $sec_extra = 2;
+                  $reauth=$chatHandler->estasEnLinea();
+                  $chatHandler->send($reauth,$newSocketArrayResource); 
                   if($u==true){
                      $vuelta_actualizar = strtotime($u["vuelta_a_actualizar"]);
-                     if($vuelta_actualizar== 0)
+                     if($vuelta_actualizar == 0)
                         $sec_extra = 15;
                      
                      $vuelta_actualizar = strtotime($u["vuelta_a_actualizar"])+$sec_extra;
                      var_dump($vuelta_actualizar);
                      $now = strtotime(date("Y-m-d H:i:s"));
                      if($now>$vuelta_actualizar){
-                        $u=CommandsUsuarioController::findUserWhithID($u["id"]);
+                        $u = CommandsUsuarioController::findUserWhithID($u["id"]);
                         $u->vuelta_a_actualizar = date("Y-m-d H:i:s");
                         $u->save();
                         echo"\n Guardamos la actualización en bd";
@@ -186,7 +203,7 @@ class ChatServerController extends Controller
                echo "\nfuera foreach";
             } catch (\Throwable $th) {
                echo"\n Erroresbumm";
-               //throw $th;
+               throw $th;
             }
             
             

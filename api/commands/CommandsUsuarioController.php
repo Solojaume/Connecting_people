@@ -62,10 +62,7 @@ class   CommandsUsuarioController extends WebsocketController
     {
         echo"\n GetUserWithAuthToken";
         $u=Usuario::findIdentityByAccessToken($token);
-        $u->vuelta_a_actualizar = date("Y-m-d H:i:s");
-        if(isset($u->id))
-            $u->save();
-        echo"\n Guardamos la actualización en bd";
+        //self::actualizarUsuario($u);
         $con=$u->token==$token;
         echo "\nVar_dump con";
         var_dump($con);
@@ -78,6 +75,16 @@ class   CommandsUsuarioController extends WebsocketController
         return false;
     }
 
+    /*
+     */
+    public static function actualizarUsuario($u)
+    {
+        $u->vuelta_a_actualizar = date("Y-m-d H:i:s");
+        if(isset($u->id))
+            return $u->save();
+        echo"\n Guardamos la actualización en bd";
+        return false;
+    }
     public static function DesconectarPorToken($token,&$chathandler)
     {
         $u = self::getUserWhithAuthToken($token);

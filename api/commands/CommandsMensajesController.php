@@ -32,13 +32,24 @@ class CommandsMensajesController extends WebsocketController
     }
 
     public static function getMensajesNoEntregadoByMatchId($match_id,$u){
-
-        if($men = Mensajes::getNoRecivedMensajesByUserId($match_id,$u->id)){
-            $men= new ActiveDataProvider(['query'=>$men]);
+        echo"\n Var_dump match_id:";
+        var_dump($match_id);
+        echo"\n Var_dump u:";
+        var_dump($u);
+        $models=[];
+      
+        try {
+            $men = Mensajes::getNoRecivedMensajesByMatchId($match_id,$u->id);
+        } catch (\Throwable $th) {
+            $men = null;
+        }
+        
+        if(isset($men)){
+            //$men= new ActiveDataProvider(['query'=>$men]);
             echo"\n \n\n\n Var_dump mensaje";
             var_dump($men);
             //Modificamos los mensajes que no se hubieran entregado hasta ahora, para que su estado salga como entregados
-            $models=[];
+            
             try {
                 foreach ($men as $key) {
                     $mns=[];
@@ -65,8 +76,9 @@ class CommandsMensajesController extends WebsocketController
                 //throw $th;
                 return ["mensajes"=>null];
             }
-            return $models;
-        }
+          
+        }  
+        return $models;
     }
     
     public static function getByMatch($match_id,$u)
