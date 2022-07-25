@@ -61,9 +61,8 @@
 								</div>
 							</div>
 						-->
-							<div *ngFor="let chatMessage of webSocketService.chatMessages">
-								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="webSocketService.chatUsar.match_id_usu2"></app-mensaje>
-							</div>
+							
+							<app-mensajes [mensajes]="webSocketService.chatMessages" [u2]="webSocketService.chatUsar"></app-mensajes>
 						
 						</div>
 					</div>

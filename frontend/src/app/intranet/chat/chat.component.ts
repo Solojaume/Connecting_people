@@ -40,9 +40,28 @@ export class ChatComponent implements OnInit {
     }
    
   }
+  findIndexChat(){
+    for (let index = 0; index < this.webSocketService.chatRooms.length; index++) {
+      let chatUsar=this.webSocketService.chatUsar;
+      let chatRec=this.webSocketService.chatRooms[index];
+      if (chatUsar.match_id==chatRec.match_id) {
+        return {"type":"chat","in":index};
+      }
+      
+    }
+
+    for (let index = 0; index < this.webSocketService.matches.length; index++) {
+      let chatUsar=this.webSocketService.chatUsar;
+      let chatRec=this.webSocketService.matches[index];
+      if (chatUsar.match_id==chatRec.match_id) {
+        return {"type":"match","in":index};
+      }
+      
+    }
+    return {"type":"n","in":0}
+  }
 
   sendMessage() {
-    //console.log("Chat Usar:",this.chatUsar)
     
     const chatMessageDto = new ChatMessageDto(
       this.token.getUser().id, 
@@ -50,12 +69,33 @@ export class ChatComponent implements OnInit {
       "mensaje",
       this.webSocketService.chatUsar.match_id
     );
+    console.log("Mensaje nuevo:",chatMessageDto);
+
+    this.webSocketService.chatMessages.push(chatMessageDto);
+    var re=this.findIndexChat();
+    switch (re.type) {
+      case "chat":
+        this.webSocketService.chatRooms[re.in].mensajes?.push(chatMessageDto);
+        this.webSocketService.chatUsar.mensajes?.push(chatMessageDto);
+
+        break;
+      case "match":
+        let m=this.webSocketService.matches[re.in];
+        this.webSocketService.añadirMensajeAMatch(chatMessageDto);
+        this.webSocketService.chatUsar.mensajes?.push(chatMessageDto);
+
+        break;
+      default:
+        break;
+    }
     //const comunicaciones = new Comunicacion("send",chatMessageDto);
     //this.webSocketService.sendMessage(comunicaciones);
     this.webSocketService.mensajes_sin_enviar.push(chatMessageDto);
     this.formularioEnvio.value.message = "";
     this.formularioEnvio.reset();
+    
   }
+
   cargarChat(chat:any){
     console.log('Se ha cambiado el chat a:',chat); 
     this.webSocketService.chatUsar=chat;

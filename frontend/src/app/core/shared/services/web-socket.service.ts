@@ -241,7 +241,7 @@ export class WebSocketService {
     this.chatRooms = [];
   }
 
-  private añadirMensajeAChat(mensaje:any){
+  public añadirMensajeAChat(mensaje:any){
     for (let index = 0; index < this.chatRooms.length; index++) {
       const element = this.chatRooms[index];
       //Si tiene mensajes y esta en chat usar
@@ -259,7 +259,7 @@ export class WebSocketService {
     }
     return false;
   }
-  private añadirMensajeAMatch(mensaje:any){
+  public añadirMensajeAMatch(mensaje:any){
     for (let index = 0; index < this.matches.length; index++) {
       const element = this.matches[index];//
       //Si no tiene mensajes y no esta en chat usar
