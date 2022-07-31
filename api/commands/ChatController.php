@@ -14,13 +14,11 @@ class ChatController extends Controller{
             "host"=>$host
         ]);
         
-        
-        
-        
+        $GLOBALS["usocket"] = [];
+        $GLOBALS["users"] = [];       
         $io->on('connection', function ($socket) {
             $socket->addedUser = false;
-            $GLOBALS["usocket"] = [];
-            $GLOBALS["users"] = [];
+           
             
 
             // When the client emits 'new message', this listens and executes
@@ -52,6 +50,8 @@ class ChatController extends Controller{
                     $socket->broadcast->emit('user joined',$username,(count($users)-1));
                     echo"\n Users:";
                     var_dump($users);
+                    echo"\n Usocket:";
+                    //var_dump($usocket);
                 }
                
             });
@@ -71,11 +71,11 @@ class ChatController extends Controller{
             });
         
             // When the user disconnects, perform this
-            $socket->on('disconnect', function()use($socket){
+            $socket->on('disconnect', function($username)use($socket){
                 //Desconectar usuario
                 $usocket=&$GLOBALS["usocket"];
                 $users=&$GLOBALS["users"];
-                if(in_array($socket->username,$usocket)){
+                if(in_array($username,$usocket)){
                     unset($usocket[$socket->username]);
                     $users->splice($users->indexOf($socket->username), 1);
                 }
