@@ -71,19 +71,40 @@ class ChatController extends Controller{
             });
         
             // When the user disconnects, perform this
-            $socket->on('disconnect', function($username)use($socket){
+            $socket->on('disconnect', function($data)use($socket){
                 //Desconectar usuario
                 $usocket=&$GLOBALS["usocket"];
                 $users=&$GLOBALS["users"];
-                if(in_array($username,$usocket)){
+                echo"\nsocket:";
+                //var_dump($socket);
+                echo"\n SOCKET->username:";
+                var_dump($socket->username);
+
+                echo"\nIn array:";
+                var_dump(self::in_array($usocket,$socket->username));
+                if(self::in_array($usocket,$socket->username)){
+                    echo"\n Entra en el if";
                     unset($usocket[$socket->username]);
-                    $users->splice($users->indexOf($socket->username), 1);
+                    array_splice($users,array_search($socket->username,$users),count($users)-1);
+                    //unset($users[strrpos($users,$socket->username)]);
+                    //$users->splice($users->indexOf($socket->username), 1);
                 }
+                echo"\n Users deleted:";
                 var_dump($users);
                 $socket->broadcast->emit('user left',$socket->username);
             });
         });
         
         Worker::runAll();
+    }
+
+    public static function in_array($array,$object)
+    {
+        foreach ($array as $key=>$value ) {
+            if($key==$object){
+                return true;
+            }
+        }
+        return false;
     }
 }
