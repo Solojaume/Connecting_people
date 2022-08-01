@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MensajeComponent } from './mensaje.component';
+import { ServicesModule } from '../../services/services.module';
 
 
 
@@ -10,7 +11,7 @@ import { MensajeComponent } from './mensaje.component';
   ],
   imports: [
     CommonModule,
-
+    ServicesModule
   ],
   exports:[
     MensajeComponent,

@@ -6,6 +6,7 @@ import { Match } from 'src/app/core/models/match.model';
 import { AuthService } from 'src/app/core/shared/services/auth.service';
 import { MatchService } from 'src/app/core/shared/services/match.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
 
 @Component({
   selector: 'app-match',
@@ -19,7 +20,8 @@ export class MatchComponent implements OnInit {
     private token:TokenStorageService,
     private router:Router,
     private cookieService:CookieService, 
-    private apiService:AuthService) { }
+    private apiService:AuthService,
+    private webSocketService:WebSocketService) { }
   subscribe!:Subscription ;
   error:string="No hay más usuarios que mostrarte, vuelve más tarde";
   usuarios!:Match[];
@@ -79,6 +81,7 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();  
     this.subscriptionNewUsers();
     this.contUser=0;
   
@@ -145,5 +148,13 @@ export class MatchComponent implements OnInit {
     } else{
       this.usuarios=[];
     }
-}
+  }
+
+  
+  ngOnDestroy(){
+    if(this.webSocketService.getAutenticado()=="true"){
+      this.webSocketService.CambiarPagina();  
+    }
+   
+  }
 }

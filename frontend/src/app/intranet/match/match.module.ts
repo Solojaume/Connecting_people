@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatchComponent } from './match.component';
 import { MatchRoutingModule } from './match-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
+import { ServicesModule } from 'src/app/core/shared/services/services.module';
 
 
 
@@ -13,7 +14,8 @@ import { SharedModule } from 'src/app/core/shared/shared.module';
   imports: [
     CommonModule,
     MatchRoutingModule,
-    SharedModule
+    SharedModule,
+    ServicesModule
   ],
   exports:[
     MatchComponent

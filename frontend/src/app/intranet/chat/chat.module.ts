@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChatComponent } from './chat.component';
 import { ChatRoutingModule } from './chat-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
+import { ServicesModule } from 'src/app/core/shared/services/services.module';
 
 
 
@@ -13,7 +14,8 @@ import { SharedModule } from 'src/app/core/shared/shared.module';
   imports: [
     CommonModule,
     ChatRoutingModule,
-    SharedModule
+    SharedModule,
+    ServicesModule
   ],
   exports:[
     ChatComponent

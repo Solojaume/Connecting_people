@@ -270,6 +270,7 @@ class UsuarioController extends ApiController
         $params=json_decode(file_get_contents("php://input"), false);
         @$token=$params->token;
         $u=null;
+
         try {
             if(isset($token))
             $u=\app\models\Usuario::findIdentityByAccessToken($token);

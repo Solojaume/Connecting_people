@@ -67,9 +67,17 @@ class Mensajes extends \yii\db\ActiveRecord
             $this->mensajes_id=count(Mensajes::find()->asArray()->all())+1;
             $this->entregado=0;
             $this->timestamp = $now;
-            $this->mensajes_usuario_id=\app\controllers\MensajesController::getUserWhithAuthToken()["id"];
         }
         return parent::beforeSave($insert);
+    }
+    /*
+    *Encuentra un mensaje
+    */
+    public static function findIdentity($id)
+    {
+        echo "\n El id es: $id";
+        return static::findOne($id);
+
     }
     /**
      * Gets query for [[MensajesMatch]].
@@ -82,6 +90,13 @@ class Mensajes extends \yii\db\ActiveRecord
     }
     //Obtener  los mensages pasando
     public static function getMensajesByMatch($match){
+       // echo "\n GetMensajesBYMatch";
+        return (new \yii\db\Query())
+        ->select('*')
+        ->from('mensajes')
+        ->where("mensajes_match_id=:match",[":match"=>$match])
+        
+        ->all();
         $sql= Yii::$app->db->createCommand("SELECT * from mensajes where mensajes_match_id=$match")->queryAll();
         return $sql;
         //return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> where("mensajes_match_id = $match");

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import { LoginRoutingModule } from './login-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
+import { ServicesModule } from 'src/app/core/shared/services/services.module';
 
 
 
@@ -14,6 +15,7 @@ import { SharedModule } from 'src/app/core/shared/shared.module';
     CommonModule,
     LoginRoutingModule,
     SharedModule,
+    ServicesModule
   ],
   exports:[
     LoginComponent
