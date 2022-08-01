@@ -20,18 +20,6 @@ class ChatController extends Controller{
             $socket->addedUser = false;
            
             
-
-            // When the client emits 'new message', this listens and executes
-            $socket->on('send private message', function ($data) use ($socket) {
-                var_dump($socket);
-                // We tell the client to execute 'new message'
-                $socket->broadcast->emit('new message', array(
-                    'username' => $socket->username,
-                    'message' => $data
-                ));
-            });
-           
-         
             // When the client emits 'add user', this listens and executes
             $socket->on('new user', function ($username) use ($socket) {
                 echo "\n Nuevo usuario";
@@ -75,7 +63,7 @@ class ChatController extends Controller{
                 //Desconectar usuario
                 $usocket=&$GLOBALS["usocket"];
                 $users=&$GLOBALS["users"];
-                echo"\nsocket:";
+                echo"\nDesconectar Usuario:";
                 //var_dump($socket);
                 echo"\n SOCKET->username:";
                 var_dump($socket->username);
@@ -93,6 +81,28 @@ class ChatController extends Controller{
                 var_dump($users);
                 $socket->broadcast->emit('user left',$socket->username);
             });
+            
+            // When the client emits 'new message', this listens and executes
+            $socket->on('send private message', function($res){
+                echo "\n\n\n ENTRA EN SEND";
+                $usocket=&$GLOBALS["usocket"];
+                $users=&$GLOBALS["users"];
+                echo"\n Mensajes:";
+                var_dump($res);
+                echo "Users en 'Send private message':";
+                var_dump($users);
+                echo"\nUsocket[res->recipient]:";
+                //var_dump($usocket[$res["recipient"]]);
+                echo"\n self::in_array:";
+                var_dump(self::in_array($usocket,$res["recipient"]));
+             
+                if(self::in_array($usocket,$res["recipient"])) {
+                    echo "\nDentro del if de send";
+                    $usocket[$res["recipient"]]->emit('receive private message', $res);
+                }
+                echo "\n¡¡¡SALE DE SEND!!!\n\n\n";
+            });
+         
         });
         
         Worker::runAll();
