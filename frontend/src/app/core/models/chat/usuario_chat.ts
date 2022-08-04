@@ -1,6 +1,6 @@
 import { IChatModels } from "./Interfaces/IChatModels";
 
-export class usuario implements IChatModels{
+export class UsuarioChat implements IChatModels{
    id?: number | undefined;
    nombre!:string;
    edad!:number;
