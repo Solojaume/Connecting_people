@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, Subscription } from 'rxjs';
 import { UsuarioAPP } from 'src/app/core/models/usuario/usuario-app.model';
-import { AuthService } from 'src/app/core/shared/services/auth.service';
-import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
-import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
+import { AuthService } from 'src/app/core/shared/services/auth/auth.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/activate-recovery/web-socket/web-socket.service';
 
 @Component({
   selector: 'app-login',

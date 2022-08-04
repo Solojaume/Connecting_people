@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { ActivateRecoveryService } from 'src/app/core/shared/services/activate-recovery.service';
+import { ActivateRecoveryService } from 'src/app/core/shared/services/activate-recovery/activate-recovery.service';
 
 @Component({
   selector: 'app-activar',
@@ -11,7 +11,10 @@ export class ActivarComponent implements OnInit {
   token:any;
   mensaje!:string;
   error!:string;
-  constructor(private activatedRoute: ActivatedRoute, private activateService:ActivateRecoveryService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private activateService:ActivateRecoveryService
+  ) { }
 
   buttonIrLogin= {
     nombre: "Regresar al login",

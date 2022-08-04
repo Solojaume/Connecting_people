@@ -4,6 +4,7 @@ import { MatchComponent } from './match.component';
 import { MatchRoutingModule } from './match-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
 import { ServicesModule } from 'src/app/core/shared/services/services.module';
+import { SocketModule } from 'src/app/core/shared/services/activate-recovery/web-socket/socket-module/socket.module';
 
 
 
@@ -15,7 +16,8 @@ import { ServicesModule } from 'src/app/core/shared/services/services.module';
     CommonModule,
     MatchRoutingModule,
     SharedModule,
-    ServicesModule
+    ServicesModule,
+    SocketModule
   ],
   exports:[
     MatchComponent

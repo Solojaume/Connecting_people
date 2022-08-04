@@ -27,6 +27,8 @@ class ChatController extends Controller{
                 //global $usocket,$user ;
                 $usocket=&$GLOBALS["usocket"];
                 $users=&$GLOBALS["users"];
+                echo"\n !in_array(username,usocket):";
+                var_dump(!in_array($username,$usocket));
                 if(!in_array($username,$usocket)) {
                     // We store the username in the socket session for this client
                     $socket->username = $username;

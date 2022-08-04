@@ -4,8 +4,9 @@ import {FormControl, FormGroup, Validators, } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ChatMessageDto } from 'src/app/core/models/chat/chatMessageDto';
 import { Comunicacion } from 'src/app/core/models/chat/comunicacion';
-import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
-import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/activate-recovery/web-socket/web-socket.service';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 
 @Component({
   selector: 'app-chat',
@@ -25,7 +26,7 @@ export class ChatComponent implements OnInit {
    // public webSocketStorageService:WebSocketStorageService,
     private token:TokenStorageService,
     private cookies:CookieService,
-    public webSocketService:WebSocketService
+    public webSocketService:WebSocketService,
   ) { }
 
   ngOnInit(): void {

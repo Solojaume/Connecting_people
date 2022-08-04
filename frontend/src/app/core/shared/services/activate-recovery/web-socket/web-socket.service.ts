@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { ChatMessageDto } from '../../models/chat/chatMessageDto';
-import { ChatRoom } from '../../models/chat/chat_room';
-import { Comunicacion } from '../../models/chat/comunicacion';
-import { IChatModels } from '../../models/chat/Interfaces/IChatModels';
-import { Match } from '../../models/chat/Match';
-import { TokenStorageService } from './token-storage.service';
+import { ChatMessageDto } from '../../../../models/chat/chatMessageDto';
+import { ChatRoom } from '../../../../models/chat/chat_room';
+import { Comunicacion } from '../../../../models/chat/comunicacion';
+import { IChatModels } from '../../../../models/chat/Interfaces/IChatModels';
+import { Match } from '../../../../models/chat/Match';
+import { TokenStorageService } from '../../token-storage/token-storage.service';
 
 const WEB_SOCKET_KEY = 'Web-socket';
 const WEB_SOCKET_URL='ws://localhost:8080/demo/php-socket.php';

@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 import { Match } from 'src/app/core/models/match.model';
-import { AuthService } from 'src/app/core/shared/services/auth.service';
-import { MatchService } from 'src/app/core/shared/services/match.service';
-import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
-import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
+import { AuthService } from 'src/app/core/shared/services/auth/auth.service';
+import { MatchService } from 'src/app/core/shared/services/match/match.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/activate-recovery/web-socket/web-socket.service';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 
 @Component({
   selector: 'app-match',
@@ -21,7 +22,8 @@ export class MatchComponent implements OnInit {
     private router:Router,
     private cookieService:CookieService, 
     private apiService:AuthService,
-    private webSocketService:WebSocketService) { }
+    private webSocketService:WebSocketService,
+    ) { }
   subscribe!:Subscription ;
   error:string="No hay más usuarios que mostrarte, vuelve más tarde";
   usuarios!:Match[];

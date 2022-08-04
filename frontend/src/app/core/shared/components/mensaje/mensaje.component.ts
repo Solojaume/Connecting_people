@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChatMessageDto } from 'src/app/core/models/chat/chatMessageDto';
-import { TokenStorageService } from '../../services/token-storage.service';
+import { TokenStorageService } from '../../services/token-storage/token-storage.service';
 
 @Component({
   selector: 'app-mensaje',
