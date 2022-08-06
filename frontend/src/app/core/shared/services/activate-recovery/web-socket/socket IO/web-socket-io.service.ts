@@ -166,7 +166,7 @@ public mensajes_count:number=0;
     }
 
     close(){
-        this.emitEvent("disconnect", this.token.getToken())
+        this.emitEvent("disconnect-by-token", this.token.getToken())
     }
     
     /*

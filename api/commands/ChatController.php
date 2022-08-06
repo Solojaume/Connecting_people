@@ -164,6 +164,13 @@ class ChatController extends Controller{
                 $socket->broadcast->emit('user left',$users);
             });
             
+            $socket->on('disconnect-by-token', function($token)use($socket){ 
+                $chat_h = $GLOBALS["chathandler"];
+                if($chat_h->auth($token)["autenticacion"]==true){
+                    //$socket->disconnect();
+                }
+            });
+            
             
          
         });
