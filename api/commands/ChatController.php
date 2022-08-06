@@ -161,7 +161,7 @@ class ChatController extends Controller{
                 }
                 echo"\n ARRay Users tras borrar usuario:";
                 var_dump($users);
-                $socket->broadcast->emit('user left',$socket->usuario);
+                $socket->broadcast->emit('user left',$users);
             });
             
             

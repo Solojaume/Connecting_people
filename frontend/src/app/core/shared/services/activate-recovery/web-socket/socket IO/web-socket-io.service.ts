@@ -98,7 +98,6 @@ public mensajes_count:number=0;
             //this.usuarios.push(tname);
             //incomeHtml(tname,'src/img/head.jpg');
             console.log("user joined:",tname);
-            //this.usuarios.push(0);
             this.usuarios=tname.usuarios;
             
             this.modify_conection_status();
@@ -123,11 +122,11 @@ public mensajes_count:number=0;
         */
 
         // Miembro abandonado en medio de la supervisión
-        this.ioSocket.on('user left', (data:string) => {           
-            console.log('se desconecto:',data);
-            if(data in this.usuarios){
-               //this.usuarios.slice(this.usuarios.indexOf(data),this.usuarios.indexOf(data))
-            }
+        this.ioSocket.on('user left', (tname:UsuarioChat[]) => {           
+            console.log('se desconecto:',tname);
+            this.usuarios=tname;
+            
+            this.modify_conection_status();
         });
 
         
