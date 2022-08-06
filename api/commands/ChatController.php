@@ -60,7 +60,10 @@ class ChatController extends Controller{
                         echo"\n in_array(u,users):";
                         var_dump(in_array($u,$users));
                         
-                        $users[] = $u;
+                        if(!in_array($u,$users)){
+                            $users[] = $u;
+                        }
+                        
                         $devolver = CommandsMatchController::getChatsYMatches($token);
                         $devolver["usuarios"] = $users;
                         $devolver["mensajes_count"] = 0;
@@ -130,26 +133,29 @@ class ChatController extends Controller{
                 var_dump($socket->usuario);
 
                 if(isset($socket->usuario)){
+                    $usuario_borrado=$socket->usuario;
+                    unset($usuario_borrado["token"]);
                     echo"\nIn array by token:";
                     var_dump(self::in_array($usocket_by_token,"token"));
                     if(self::in_array($usocket_by_token,$socket->usuario["token"])){
                         echo"\n Entra en el if";
                         unset($usocket_by_token[$socket->usuario["token"]]);
-                        $search=array_search($socket->usuario,$users);
-                        array_splice($users,$search,$search+1);
+                        $search=array_search($usuario_borrado,$users);
+                        self::array_splice_remplazo($users,$search);
                         //unset($users[strrpos($users,$socket->username)]);
                         
                     }
                     if(self::in_array($usocket_by_id,$socket->usuario["id"])){
                         echo"\n Entra en el if";
                         unset($usocket_by_id[$socket->usuario["id"]]);
-                        array_splice($users,array_search($socket->usuario,$users),count($users)-1);
-                    
+                        //array_splice($users,array_search($socket->usuario,$users),count($users)-1);
+                        self::array_splice_remplazo($users,array_search($usuario_borrado,$users));
+
                     }
                 }else {
                     echo"\n Entra en el else";
                     unset($usocket_by_id[NULL]);
-                    array_splice($users,array_search(NULL,$users),count($users)-1);
+                    self::array_splice_remplazo($users,array_search(NULL,$users));
                 }
                 echo"\n ARRay Users tras borrar usuario:";
                 var_dump($users);
@@ -168,11 +174,13 @@ class ChatController extends Controller{
         $devolver=[];
         for ($i=0; $i<count($array) ; $i++) { 
             if ($nedle[$campo]==$array[$i][$campo]) {
+                return  $i;
                 $devolver=$i;
             }
         }
         return $devolver;
     }
+
     public static function in_array($array,$object)
     {   
         try {
@@ -183,8 +191,22 @@ class ChatController extends Controller{
             }
         } catch (\Throwable $th) {
             //throw $th;
+            return false;
         }
         
         return false;
+    }
+
+    /*
+    *Este metodo sirve para copiar ordenadamente el array a excepcion de la posicion pasada
+    */
+    public static function array_splice_remplazo(&$array,$position){
+        $ret=[];
+        for ($i=0; $i < count($array); $i++) { 
+           if($position!=$i){
+            $ret[]=$array[$i];
+           }
+        }
+        $array=$ret;
     }
 }
