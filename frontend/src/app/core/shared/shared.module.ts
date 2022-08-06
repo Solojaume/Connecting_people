@@ -9,6 +9,8 @@ import { ButtonsModule } from './components/buttons/buttons.module';
 import { ServicesModule } from './services/services.module';
 import { DesplegableComponent } from './components/desplegable/desplegable.component';
 import { DesplegableModule } from './components/desplegable/desplegable.module';
+import { MatchChatDesplegableComponent } from './components/match-chat-desplegable/match-chat-desplegable.component';
+import { MatchChatDesplegableModule } from './components/match-chat-desplegable/match-chat-desplegable.module';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { DesplegableModule } from './components/desplegable/desplegable.module';
     ReviewsModule, 
     MensajeModule,
     ButtonsModule,
-    DesplegableModule
+    DesplegableModule,
+    MatchChatDesplegableModule
+
   ],
   exports:[
     ReviewModule,
@@ -30,7 +34,8 @@ import { DesplegableModule } from './components/desplegable/desplegable.module';
     ReactiveFormsModule,
     MensajeModule,
     ButtonsModule,   
-    DesplegableModule    
+    DesplegableModule,
+    MatchChatDesplegableModule  
   ],
   providers:[]
 })

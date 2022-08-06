@@ -1,6 +1,7 @@
 <?php
 namespace app\commands;
 
+use app\commands\models\ChatHandler;
 use stdClass;
 use yii\console\Controller;
 use Workerman\Worker;
@@ -13,50 +14,81 @@ class ChatController extends Controller{
         [
             "host"=>$host
         ]);
-        
-        $GLOBALS["usocket"] = [];
+        $GLOBALS["chathandler"] = new ChatHandler();
+        $GLOBALS["usocket_by_id"] = [];
+        $GLOBALS["usocket_by_token"] = [];
         $GLOBALS["users"] = [];       
         $io->on('connection', function ($socket) {
             $socket->addedUser = false;
            
             
             // When the client emits 'add user', this listens and executes
-            $socket->on('new user', function ($username) use ($socket) {
+            $socket->on('new user', function ($token) use ($socket) {
                 echo "\n Nuevo usuario";
-                $socket->addedUser = true;
+                var_dump(date("H:i:s",time()));
                 //global $usocket,$user ;
-                $usocket=&$GLOBALS["usocket"];
-                $users=&$GLOBALS["users"];
-                echo"\n !in_array(username,usocket):";
-                var_dump(!in_array($username,$usocket));
-                if(!in_array($username,$usocket)) {
-                    // We store the username in the socket session for this client
-                    $socket->username = $username;
-                    // Add the client's socket to the user list
-                    $usocket[$username] = $socket;
-                    $users[] = $username;
-                    $socket->emit('login',$users);
-                    // echo globally (all clients) that a person has connected
-                    $socket->broadcast->emit('user joined',$username,(count($users)-1));
-                    echo"\n Users:";
-                    var_dump($users);
-                    echo"\n Usocket:";
-                    //var_dump($usocket);
+                $usocket_by_id=&$GLOBALS["usocket_by_id"];
+                $usocket_by_token=&$GLOBALS["usocket_by_token"];
+                $users = &$GLOBALS["users"];
+                $chat_h = $GLOBALS["chathandler"];
+                
+                $men = $chat_h->auth($token);
+                $u=$men["autenticacion"];
+              
+                if ($men["autenticacion"]==true) {
+                    echo"\n !in_array(token,usocket_by_token):";
+                    var_dump(!in_array($token,$usocket_by_id));
+                    echo"\nid:".$u['id'];
+                    echo"\n !in_array(id,usocket_by_id):";
+                    var_dump(!in_array("id_".$u["id"],$usocket_by_id));
+
+                    echo"Autenticacion:";
+                    var_dump($u);
+        
+                    if(!in_array($token,$usocket_by_token) && !in_array("id_".$u["id"],$usocket_by_id)) {
+                        echo"primer if";
+                        // We store the username in the socket session for this client
+                        $socket->usuario = $u;
+                        unset($u["token"]);
+                        // Add the client's socket to the usocket by token list
+                        $usocket_by_token[$token] = $socket;
+                        // Add the client's socket to the usocket by id list
+                        $usocket_by_id["id_".$u["id"]] = $socket;
+                        //Add user list
+                        $users[] = $u;
+                        $devolver = CommandsMatchController::getChatsYMatches($token);
+                        $devolver["usuarios"] = $users;
+                        $devolver["mensajes_count"] = 0;
+                        echo"\n usuarios añadido a devolver ";
+                        $socket->emit('login',$devolver);
+                        $socket->addedUser = true;
+                        echo"\n Emited login";
+                        // echo globally (all clients) that a person has connected
+                        //$socket->broadcast->emit('user joined',["usuario"=>$u,"count"=>(count($users)-1)]);
+                        //Este cambio se hace porque a un PUTO GENIO SE le ha ocurrido poner de parametro del push un never en vez de un jodido any
+                        $socket->broadcast->emit('user joined',["usuarios"=>$users,"count"=>(count($users)-1)]);
+                        echo"\n Emited broadcasting";
+
+                        echo"\n Users:";
+                        var_dump($users);
+                        echo"\n Usocket:";
+                        //var_dump($usocket);
+                    }
                 }
-               
+                
             });
         
             // When the client emits 'typing', we broadcast it to others
             $socket->on('typing', function () use ($socket) {
                 $socket->broadcast->emit('typing', array(
-                    'username' => $socket->username
+                    'username' => $socket->usuario["id"]
                 ));
             });
         
             // When the client emits 'stop typing', we broadcast it to others
             $socket->on('stop typing', function () use ($socket) {
                 $socket->broadcast->emit('stop typing', array(
-                    'username' => $socket->username
+                    'username' => $socket->usuario["id"]
                 ));
             });
         
@@ -84,25 +116,38 @@ class ChatController extends Controller{
             // When the user disconnects, perform this
             $socket->on('disconnect', function($data)use($socket){
                 //Desconectar usuario
-                $usocket=&$GLOBALS["usocket"];
+                $usocket_by_id=&$GLOBALS["usocket_by_id"];
+                $usocket_by_token=&$GLOBALS["usocket_by_token"];
                 $users=&$GLOBALS["users"];
                 echo"\nDesconectar Usuario:";
                 //var_dump($socket);
-                echo"\n SOCKET->username:";
-                var_dump($socket->username);
+                echo"\n SOCKET->usuario:";
+                var_dump($socket->usuario);
 
-                echo"\nIn array:";
-                var_dump(self::in_array($usocket,$socket->username));
-                if(self::in_array($usocket,$socket->username)){
-                    echo"\n Entra en el if";
-                    unset($usocket[$socket->username]);
-                    array_splice($users,array_search($socket->username,$users),count($users)-1);
-                    //unset($users[strrpos($users,$socket->username)]);
-                    //$users->splice($users->indexOf($socket->username), 1);
+                if(isset($socket->usuario)){
+                    echo"\nIn array by token:";
+                    var_dump(self::in_array($usocket_by_token,"token"));
+                    if(self::in_array($usocket_by_token,$socket->usuario["token"])){
+                        echo"\n Entra en el if";
+                        unset($usocket_by_token[$socket->usuario["token"]]);
+                        array_splice($users,array_search($socket->usuario,$users),count($users)-1);
+                        //unset($users[strrpos($users,$socket->username)]);
+                        
+                    }
+                    if(self::in_array($usocket_by_id,$socket->usuario["id"])){
+                        echo"\n Entra en el if";
+                        unset($usocket_by_id[$socket->usuario["id"]]);
+                        array_splice($users,array_search($socket->usuario,$users),count($users)-1);
+                    
+                    }
+                }else {
+                    echo"\n Entra en el else";
+                    unset($usocket_by_id[NULL]);
+                    array_splice($users,array_search(NULL,$users),count($users)-1);
                 }
-                echo"\n Users deleted:";
+                echo"\n ARRay Users tras borrar usuario:";
                 var_dump($users);
-                $socket->broadcast->emit('user left',$socket->username);
+                $socket->broadcast->emit('user left',$socket->usuario);
             });
             
             
@@ -113,12 +158,17 @@ class ChatController extends Controller{
     }
 
     public static function in_array($array,$object)
-    {
-        foreach ($array as $key=>$value ) {
-            if($key==$object){
-                return true;
+    {   
+        try {
+            foreach ($array as $key=>$value ) {
+                if($key==$object){
+                    return true;
+                }
             }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
+        
         return false;
     }
 }

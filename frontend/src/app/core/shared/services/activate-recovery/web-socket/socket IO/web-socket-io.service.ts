@@ -9,8 +9,9 @@ import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { Injectable, EventEmitter, Output} from "@angular/core";
 import { Socket } from 'ngx-socket-io';
-import { map } from 'rxjs/operators';
-import { TokenStorageService } from "../../../token-storage/token-storage.service";
+import { TokenStorageService } from '../../../token-storage/token-storage.service';
+import { ChatRoutingModule } from 'src/app/intranet/chat/chat-routing.module';
+import { Match } from 'src/app/core/models/chat/Match';
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +26,10 @@ export class WebSocketIOService extends Socket {
  * Declaramos un metodo de emitir el cual llamaremos "outEven"
  */
 @Output() outEven: EventEmitter<any> = new EventEmitter(); 
-users:string[]=[];
-mensajes:string[]=[];
+public matches:Match[]=[];
+public usuarios:[]=[];
+public mensajes:{}={};
+public mensajes_count:number=0;
 /**
  * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
  */
@@ -40,12 +43,6 @@ mensajes:string[]=[];
 
         super({
             url: environment.serverSocket,
-            /*options: {
-                query: {
-                    payload: cookieService.get('user')
-                }
-            }*/
-
         });
         
         //Mostramos url a la que nos conectamos
@@ -74,43 +71,62 @@ mensajes:string[]=[];
                 console.log("usuario nombre:",v.nombre);
                 console.log("usuario token:",v.token);
 
-                if(typeof(v.nombre)){
+                if(typeof(v.token)){
                     console.log("Conectado");
-                    this.ioSocket.emit("new user",v.nombre);
-
+                    this.ioSocket.emit("new user",v.token);
                 }
             }
         );
 
 
         // Inicie sesión por primera vez para recibir información de otros usuarios
-        this.ioSocket.on('login',( user:[])=>{ 
-            if(user.length>=1){
-                this.users=user;
-            }
-        });
-        /*
-        socket.on('login', function (user) {
-            if(user.length>=1){
-                for(var i =0;i<user.length;i++){
-                    incomeHtml(user[i],'src/img/head.jpg');
+        this.ioSocket.on('login',( user:{matches: Match[], mensajes: [], usuarios:[], mensajes_count:number})=>{ 
+            console.log("user:",user);
+            this.usuarios=user.usuarios;
+            console.log("usuarios:",this.usuarios)
+            this.mensajes = user.mensajes;
+            this.matches = user.matches;
+            this.mensajes_count = user.mensajes_count;
+            this.matches.forEach(match => {
+                console.log("Match:",match);
+                let propiedad="id_"+match["match_id_usu2"]["id"];
+                if(this.usuarios.hasOwnProperty(propiedad)){
+                    match["estado_conexion_u2"]="Conectado";
                 }
-            }
-        });*/
+                else{
+                    match["estado_conexion_u2"]="Desconectado";
+
+                }
+                
+            });
+        });
+       
 
 
         // Se ha unido un nuevo usuario
-        this.ioSocket.on('user joined', (tname:string) =>{
-            this.users.push(tname);
+        this.ioSocket.on('user joined', (tname:{usuarios:any,count:number}) =>{
+            //this.usuarios.push(tname);
             //incomeHtml(tname,'src/img/head.jpg');
-            console.log(tname+' se conecto');
-            //showNotice('src/img/head.jpg',tname,"上线了");
+            console.log("user joined:",tname);
+            //this.usuarios.push(0);
+            this.usuarios=tname.usuarios;
+            this.matches.forEach(match => {
+                console.log("Match:",match);
+                let propiedad="id_"+match["match_id_usu2"]["id"];
+                if(this.usuarios.hasOwnProperty(propiedad)){
+                    match["estado_conexion_u2"]="Conectado";
+                }
+                else{
+                    match["estado_conexion_u2"]="Desconectado";
 
+                }
+                
+            });
         });
        
         // Recibir mensajes de chat privados
         this.ioSocket.on('receive private message', (mensaje:string) =>{ 
-            this.mensajes.push(mensaje)
+            //this.mensajes.push(mensaje)
         });
         /*
         socket.on('receive private message', function (data) {
@@ -127,8 +143,8 @@ mensajes:string[]=[];
         // Miembro abandonado en medio de la supervisión
         this.ioSocket.on('user left', (data:string) => {           
             console.log(data+'se desconecto');
-            if(data in this.users){
-                this.users.slice(this.users.indexOf(data),this.users.indexOf(data))
+            if(data in this.usuarios){
+               //this.usuarios.slice(this.usuarios.indexOf(data),this.usuarios.indexOf(data))
             }
         });
 
@@ -136,6 +152,8 @@ mensajes:string[]=[];
 
         // La conexión falló
         this.ioSocket.on('disconnect', () => { 
+            this.usuarios=[];
+            this.matches=[];
             console.log('you have been disconnected');
         });
 
@@ -161,15 +179,14 @@ mensajes:string[]=[];
      * por nuestro backend.
      */
 
-    emitEvent = (event = 'default',payload = {}) => {
+    emitEvent = (event = 'default',payload:any= {}) => {
         console.log('emitiendo')
-        this.ioSocket.emit('default', {
-            cookiePayload:this.token.getToken(),
-            event,
-            payload
-        });
+        this.ioSocket.emit(event, payload);
     }
 
+    close(){
+        this.emitEvent("disconnect", this.token.getToken())
+    }
 
 
 }

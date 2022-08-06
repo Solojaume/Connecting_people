@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit {
     private token:TokenStorageService,
     private cookies:CookieService,
     public webSocketService:WebSocketService,
+    public socketService:WebSocketIOService
   ) { }
 
   ngOnInit(): void {
