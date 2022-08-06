@@ -24,7 +24,7 @@ class ChatController extends Controller{
             
             // When the client emits 'add user', this listens and executes
             $socket->on('new user', function ($token) use ($socket) {
-                echo "\n Nuevo usuario";
+                echo "\n\n\n\n\n\n\nNuevo usuario";
                 var_dump(date("H:i:s",time()));
                 //global $usocket,$user ;
                 $usocket_by_id=&$GLOBALS["usocket_by_id"];
@@ -37,11 +37,12 @@ class ChatController extends Controller{
               
                 if ($men["autenticacion"]==true) {
                     echo"\n !in_array(token,usocket_by_token):";
-                    var_dump(!in_array($token,$usocket_by_id));
+                    var_dump(!self::in_array($token,$usocket_by_token));
                     echo"\nid:".$u['id'];
                     echo"\n !in_array(id,usocket_by_id):";
                     var_dump(!in_array("id_".$u["id"],$usocket_by_id));
 
+                
                     echo"Autenticacion:";
                     var_dump($u);
         
@@ -50,11 +51,15 @@ class ChatController extends Controller{
                         // We store the username in the socket session for this client
                         $socket->usuario = $u;
                         unset($u["token"]);
+
                         // Add the client's socket to the usocket by token list
                         $usocket_by_token[$token] = $socket;
                         // Add the client's socket to the usocket by id list
                         $usocket_by_id["id_".$u["id"]] = $socket;
                         //Add user list
+                        echo"\n in_array(u,users):";
+                        var_dump(in_array($u,$users));
+                        
                         $users[] = $u;
                         $devolver = CommandsMatchController::getChatsYMatches($token);
                         $devolver["usuarios"] = $users;
@@ -130,7 +135,8 @@ class ChatController extends Controller{
                     if(self::in_array($usocket_by_token,$socket->usuario["token"])){
                         echo"\n Entra en el if";
                         unset($usocket_by_token[$socket->usuario["token"]]);
-                        array_splice($users,array_search($socket->usuario,$users),count($users)-1);
+                        $search=array_search($socket->usuario,$users);
+                        array_splice($users,$search,$search+1);
                         //unset($users[strrpos($users,$socket->username)]);
                         
                     }
@@ -157,6 +163,16 @@ class ChatController extends Controller{
         Worker::runAll();
     }
 
+    private static function array_search($nedle, $array, $campo="id")
+    {
+        $devolver=[];
+        for ($i=0; $i<count($array) ; $i++) { 
+            if ($nedle[$campo]==$array[$i][$campo]) {
+                $devolver=$i;
+            }
+        }
+        return $devolver;
+    }
     public static function in_array($array,$object)
     {   
         try {

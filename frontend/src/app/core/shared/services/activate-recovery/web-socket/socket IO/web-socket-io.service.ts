@@ -10,7 +10,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Injectable, EventEmitter, Output} from "@angular/core";
 import { Socket } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
-import { ChatRoutingModule } from 'src/app/intranet/chat/chat-routing.module';
 import { Match } from 'src/app/core/models/chat/Match';
 
 @Injectable({
