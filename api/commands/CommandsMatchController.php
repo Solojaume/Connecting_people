@@ -113,14 +113,14 @@ class CommandsMatchController extends WebsocketController
                     echo"\nU2 encontrado con gusto";    
                     $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre];
                     echo"\nU1 añadido con gusto";  
-                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"fotos"=>[],"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
                     echo"\nU2 añadido con gusto";  
                 } else if($match["match_id_usu2"] == $u->id){
                     echo "\nEntra en el else if";
                     $u2=Usuario::findIdentity($match["match_id_usu1"]);
                     $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre];
                     echo"\nU1 añadido con gusto";
-                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"fotos"=>[],"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
                     echo"\nU2 añadido con gusto";  
                     $estado_conexion = $match["estado_conexion_u1"];
                     $match["estado_conexion_u1"] = $match["estado_conexion_u2"];

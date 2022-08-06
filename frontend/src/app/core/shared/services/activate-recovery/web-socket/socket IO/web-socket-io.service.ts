@@ -11,6 +11,7 @@ import { Injectable, EventEmitter, Output} from "@angular/core";
 import { Socket } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
 import { Match } from 'src/app/core/models/chat/Match';
+import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class WebSocketIOService extends Socket {
  */
 @Output() outEven: EventEmitter<any> = new EventEmitter(); 
 public matches:Match[]=[];
-public usuarios:[]=[];
+public usuarios:UsuarioChat[]=[];
 public mensajes:{}={};
 public mensajes_count:number=0;
 /**
@@ -74,30 +75,20 @@ public mensajes_count:number=0;
                     console.log("Conectado");
                     this.ioSocket.emit("new user",v.token);
                 }
+               
             }
         );
 
 
         // Inicie sesión por primera vez para recibir información de otros usuarios
-        this.ioSocket.on('login',( user:{matches: Match[], mensajes: [], usuarios:[], mensajes_count:number})=>{ 
+        this.ioSocket.on('login',( user:{matches: Match[], mensajes: [], usuarios:UsuarioChat[], mensajes_count:number})=>{ 
             console.log("user:",user);
             this.usuarios=user.usuarios;
             console.log("usuarios:",this.usuarios)
             this.mensajes = user.mensajes;
             this.matches = user.matches;
             this.mensajes_count = user.mensajes_count;
-            this.matches.forEach(match => {
-                console.log("Match:",match);
-                let propiedad="id_"+match["match_id_usu2"]["id"];
-                if(this.usuarios.hasOwnProperty(propiedad)){
-                    match["estado_conexion_u2"]="Conectado";
-                }
-                else{
-                    match["estado_conexion_u2"]="Desconectado";
-
-                }
-                
-            });
+            this.modify_conection_status();
         });
        
 
@@ -109,24 +100,15 @@ public mensajes_count:number=0;
             console.log("user joined:",tname);
             //this.usuarios.push(0);
             this.usuarios=tname.usuarios;
-            this.matches.forEach(match => {
-                console.log("Match:",match);
-                let propiedad="id_"+match["match_id_usu2"]["id"];
-                if(this.usuarios.hasOwnProperty(propiedad)){
-                    match["estado_conexion_u2"]="Conectado";
-                }
-                else{
-                    match["estado_conexion_u2"]="Desconectado";
-
-                }
-                
-            });
+            
+            this.modify_conection_status();
         });
        
         // Recibir mensajes de chat privados
         this.ioSocket.on('receive private message', (mensaje:string) =>{ 
             //this.mensajes.push(mensaje)
         });
+
         /*
         socket.on('receive private message', function (data) {
             $('#ding')[0].play();
@@ -139,9 +121,10 @@ public mensajes_count:number=0;
             scrollToBottom(hex_md5(data.addresser));
         });
         */
+
         // Miembro abandonado en medio de la supervisión
         this.ioSocket.on('user left', (data:string) => {           
-            console.log(data+'se desconecto');
+            console.log('se desconecto:',data);
             if(data in this.usuarios){
                //this.usuarios.slice(this.usuarios.indexOf(data),this.usuarios.indexOf(data))
             }
@@ -186,6 +169,36 @@ public mensajes_count:number=0;
     close(){
         this.emitEvent("disconnect", this.token.getToken())
     }
+    
+    /*
+    *Este metodo modifica  el estado de conexion de los matches
+    */
+    modify_conection_status(){
+        this.matches.forEach(match => {
+            console.log("Match sin modificar:",match);
+            let match_usu2=match["match_id_usu2"];
+            
+            if(this.get_if_user_is_conected(match_usu2)){
+                match["estado_conexion_u2"]="Conectado";
+            }
+            else{
+                match["estado_conexion_u2"]="Desconectado";
 
-
+            }
+            console.log("Match modificado:",match);
+        });
+    }
+    /*
+    *Este metodo sirve para consultar en la lista usuarios si el usuario pasado por parametros existe en dicha lista
+    */
+    get_if_user_is_conected(usu:UsuarioChat){
+        for (let index = 0; index < this.usuarios.length; index++) {
+            
+            if(usu.id==this.usuarios[index].id && usu.edad==this.usuarios[index].edad ){
+                return true;
+            }
+            
+        }
+        return false;
+    }
 }

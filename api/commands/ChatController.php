@@ -51,6 +51,7 @@ class ChatController extends Controller{
                         // We store the username in the socket session for this client
                         $socket->usuario = $u;
                         unset($u["token"]);
+                        unset($u["rol"]);
 
                         // Add the client's socket to the usocket by token list
                         $usocket_by_token[$token] = $socket;
@@ -135,6 +136,7 @@ class ChatController extends Controller{
                 if(isset($socket->usuario)){
                     $usuario_borrado=$socket->usuario;
                     unset($usuario_borrado["token"]);
+                    unset($usuario_borrado["rol"]);
                     echo"\nIn array by token:";
                     var_dump(self::in_array($usocket_by_token,"token"));
                     if(self::in_array($usocket_by_token,$socket->usuario["token"])){
