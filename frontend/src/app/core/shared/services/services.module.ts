@@ -8,6 +8,7 @@ import { MatchService } from './match/match.service';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 import { WebSocketService } from './activate-recovery/web-socket/web-socket.service';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 
 @NgModule({

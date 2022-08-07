@@ -30,6 +30,11 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
+    if(this.token.getReload()=="false"||!this.token.getReload()) {
+      this.token.setReloadTrue();
+      window.location.reload();
+
+    }
     
     //this.webSocketService.openWebSocket();  
   }
@@ -40,8 +45,10 @@ export class IntranetComponent implements OnInit {
     this.cookieService.delete("usuario");
   
     this.token.signOut();
+    this.token.setReloadFalse();
     this.router.navigateByUrl("/");
-    this.socketService.close()
+    this.socketService.close();
+    
   }
   
   ngOnDestroy(){

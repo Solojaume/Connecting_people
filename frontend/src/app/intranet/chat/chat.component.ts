@@ -31,7 +31,6 @@ export class ChatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.webSocketService.openWebSocket();
     this.webSocketService.chatUsar = {match_id_usu2:this.token.getUser()}
    
   }

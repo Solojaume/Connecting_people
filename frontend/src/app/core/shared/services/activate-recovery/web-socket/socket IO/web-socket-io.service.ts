@@ -8,10 +8,21 @@
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { Injectable, EventEmitter, Output} from "@angular/core";
-import { Socket } from 'ngx-socket-io';
+import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
 import { Match } from 'src/app/core/models/chat/Match';
 import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
+
+const config: SocketIoConfig = { 
+    url: environment.serverSocket, 
+    options: {
+       // reconnectionDelay:1500,
+        reconnectionDelayMax:15000,
+        reconnection:true,
+        //autoConnect:false
+    } 
+};
+const AUTH_KEY = 'autenticacion';
 
 @Injectable({
     providedIn: 'root'
@@ -21,33 +32,32 @@ import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
  * Extendemos la clase "Socket" a nuestra clase
  */
 export class WebSocketIOService extends Socket { 
-   
-/**
- * Declaramos un metodo de emitir el cual llamaremos "outEven"
- */
-@Output() outEven: EventEmitter<any> = new EventEmitter(); 
-public matches:Match[]=[];
-public usuarios:UsuarioChat[]=[];
-public mensajes:{}={};
-public mensajes_count:number=0;
-/**
- * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
- */
+
+    /**
+     * Declaramos un metodo de emitir el cual llamaremos "outEven"
+     */
+    @Output() outEven: EventEmitter<any> = new EventEmitter(); 
+    public matches:Match[]=[];
+    public usuarios:UsuarioChat[]=[];
+    public mensajes:{}={};
+    public mensajes_count:number=0;
+
+    /**
+     * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
+     */
     constructor(private token: TokenStorageService) {
-
         /**
-         * En nuestro "super" declaramos la configuración inicial de conexión la cual hemos declarado en nuestro
-         * "environment.serverSocket",
-         * tambien vemos como pasamos el "payload" dentro de options y "query"
-         */
+        *  En nuestro "super" declaramos la configuración inicial de conexión la cual hemos declarado en nuestro
+        *  "environment.serverSocket",
+        *  tambien vemos como pasamos el "payload" dentro de options y "query"
+        */
 
-        super({
-            url: environment.serverSocket,
-        });
+        super(config);
         
         //Mostramos url a la que nos conectamos
         console.log(environment.serverSocket);
 
+      
         /**
          * ---------------- ESCUCHAMOS----------------
          * En este punto nuestro socket.io-client esta listo para recibir los eventos.
@@ -135,6 +145,7 @@ public mensajes_count:number=0;
         this.ioSocket.on('disconnect', () => { 
             this.usuarios=[];
             this.matches=[];
+            this.setAutenticadoFalse();
             console.log('you have been disconnected');
         });
 
@@ -165,10 +176,27 @@ public mensajes_count:number=0;
         this.ioSocket.emit(event, payload);
     }
 
+    /*
+    * ---------------- CERRAR CONEXION -----------------
+    * Este metodo emitira el evento "disconnect-by-token", una vez recivido este por el servidor nos desconectará.
+    * Se utilizara principalmente para cerrar sesion cuando le damos al boton logout.
+     */
     close(){
         this.emitEvent("disconnect-by-token", this.token.getToken())
     }
     
+
+    /**
+     * ---------------- Conectarse ------------------------
+     * Dado que he configurado el socket para que no se conecte nada más se genere, 
+     * tenemos que crear un metodo que conecte el socket y que podremos llamar en cualquier 
+     * lugar donde este importado este servicio
+     */
+    conectase_a_websocket() {
+        this.connect();
+        this.setAutenticadoTrue();
+    }
+
     /*
     *Este metodo modifica  el estado de conexion de los matches
     */
@@ -199,5 +227,19 @@ public mensajes_count:number=0;
             
         }
         return false;
+    }
+
+    private setAutenticadoTrue() {
+        window.sessionStorage.removeItem(AUTH_KEY);
+        window.sessionStorage.setItem(AUTH_KEY, "true");
+    }
+    
+    public setAutenticadoFalse(){
+        window.sessionStorage.removeItem(AUTH_KEY);
+        window.sessionStorage.setItem(AUTH_KEY, "false");
+    }
+      
+    public getAutenticado(){
+        return window.sessionStorage.getItem(AUTH_KEY);
     }
 }

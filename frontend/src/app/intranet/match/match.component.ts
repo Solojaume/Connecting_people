@@ -83,14 +83,13 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.webSocketService.openWebSocket();  
     this.subscriptionNewUsers();
     this.contUser=0;
   
     console.log(this.imagen);
     let to=this.token.getToken();
     let us=this.token.getUser();
-    this.token.setReloadFalse();
+    
     let usuario={token:""};
     try {
       usuario=JSON.parse(this.cookieService.get("usuario"))??"";
@@ -154,9 +153,7 @@ export class MatchComponent implements OnInit {
 
   
   ngOnDestroy(){
-    if(this.webSocketService.getAutenticado()=="true"){
-      this.webSocketService.CambiarPagina();  
-    }
+   
    
   }
 }
