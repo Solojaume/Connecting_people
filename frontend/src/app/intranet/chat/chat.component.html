@@ -13,7 +13,8 @@
 						</div>
 					</div>
 					
-					<app-match-chat-desplegable [matches]="socketService.matches" [usuarios]="socketService.usuarios" [mensajes]="socketService.mensajes"></app-match-chat-desplegable>
+					<app-desplegable [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public" (chatEvent)="cargarChat($event)" ></app-desplegable>
+					<app-desplegable [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)" ></app-desplegable>
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
@@ -23,10 +24,10 @@
 								<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
 							</div>
 							<div class="flex-grow-1 pl-3">
-								<strong>{{webSocketService.chatUsar.match_id_usu2.nombre}}</strong>
-								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Conectado'"> <em>Online</em> </div>
-								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Escriviendo'"> <em>Typing...</em></div>
-								<div class="text-muted small" *ngIf="webSocketService.chatUsar.estado_conexion_u2=='Desconectado'"> <em>Offline </em></div>
+								<strong>{{socketService.chatUsar.match_id_usu2.nombre}}</strong>
+								<div class="text-muted small" *ngIf="socketService.chatUsar.estado_conexion_u2=='Conectado'"> <em>Online</em> </div>
+								<div class="text-muted small" *ngIf="socketService.chatUsar.estado_conexion_u2=='Escriviendo'"> <em>Typing...</em></div>
+								<div class="text-muted small" *ngIf="socketService.chatUsar.estado_conexion_u2=='Desconectado'"> <em>Offline </em></div>
 							</div>
 							<div>
 								
@@ -60,10 +61,12 @@
 								</div>
 							</div>
 						-->
-							<div *ngFor="let chatMessage of webSocketService.chatMessages">
-								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="webSocketService.chatUsar.match_id_usu2"></app-mensaje>
-							</div>
 						
+						<!--
+							<div *ngFor="let chatMessage of socketService.chatMessages">
+								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="socketService.chatUsar.match_id_usu2"></app-mensaje>
+							</div>
+						-->
 						</div>
 					</div>
 

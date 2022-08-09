@@ -147,7 +147,7 @@ class CommandsMatchController extends WebsocketController
                 $matchesDevolver[] = $match;
                 echo "\nMatch DEVOLVER AÑADIDO";
                 var_dump($matchesDevolver);
-                $mensajesDevolver["match_id_".$match["match_id"]]=$mensajes ;
+                $mensajesDevolver[]=$mensajes ;
                 echo"\n MensajesDevolder";
             }
         }

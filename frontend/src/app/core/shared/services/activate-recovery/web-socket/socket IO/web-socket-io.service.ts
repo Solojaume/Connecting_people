@@ -12,6 +12,7 @@ import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
 import { Match } from 'src/app/core/models/chat/Match';
 import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
+import { MensajeModel } from 'src/app/core/models/mensaje.model';
 
 const config: SocketIoConfig = { 
     url: environment.serverSocket, 
@@ -37,11 +38,14 @@ export class WebSocketIOService extends Socket {
      * Declaramos un metodo de emitir el cual llamaremos "outEven"
      */
     @Output() outEven: EventEmitter<any> = new EventEmitter(); 
-    public matches:Match[]=[];
-    public usuarios:UsuarioChat[]=[];
-    public mensajes:{}={};
+    private matches:Match[]=[];
+    private usuarios:UsuarioChat[]=[];
+    private mensajes:[MensajeModel[]]=[[new MensajeModel(0,"mi ",0,0,0,"putita","20-00-20000")]];
+    public mensajes_public:MensajeModel[] = [];
     public mensajes_count:number=0;
-
+    public matches_public:Match[]=[];
+    public chats:Match[]=[];
+    public chatUsar!:any;
     /**
      * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
      */
@@ -91,13 +95,14 @@ export class WebSocketIOService extends Socket {
 
 
         // Inicie sesión por primera vez para recibir información de otros usuarios
-        this.ioSocket.on('login',( user:{matches: Match[], mensajes: [], usuarios:UsuarioChat[], mensajes_count:number})=>{ 
+        this.ioSocket.on('login',( user:{matches: Match[], mensajes: [MensajeModel[]], usuarios:UsuarioChat[], mensajes_count:number})=>{ 
             console.log("user:",user);
             this.usuarios=user.usuarios;
             console.log("usuarios:",this.usuarios)
             this.mensajes = user.mensajes;
             this.matches = user.matches;
             this.mensajes_count = user.mensajes_count;
+           
             this.modify_conection_status();
         });
        
@@ -201,6 +206,8 @@ export class WebSocketIOService extends Socket {
     *Este metodo modifica  el estado de conexion de los matches
     */
     modify_conection_status(){
+        this.matches_public=[];
+        this.chats=[];
         this.matches.forEach(match => {
             console.log("Match sin modificar:",match);
             let match_usu2=match["match_id_usu2"];
@@ -212,6 +219,27 @@ export class WebSocketIOService extends Socket {
                 match["estado_conexion_u2"]="Desconectado";
 
             }
+            let count=0;
+
+            for (let index = 0; index < this.mensajes.length; index++) {
+                const lista_mensajes_por_match=this.mensajes[index];
+                for (let index2 = 0; index2 < lista_mensajes_por_match.length; index2++) {
+                    const mensaje2 = lista_mensajes_por_match[index2];
+                    console.log("MENSAJE2",mensaje2);
+                    if (mensaje2.match_id==match["match_id"]) {
+                        count++;  
+                        this.mensajes_public.push(mensaje2);  
+                    }
+                    
+                }
+                
+            }
+          
+            if(count>0){
+                this.chats.push(match);
+            } else{
+                this.matches_public.push(match);
+            }
             console.log("Match modificado:",match);
         });
     }
@@ -220,8 +248,8 @@ export class WebSocketIOService extends Socket {
     */
     get_if_user_is_conected(usu:UsuarioChat){
         for (let index = 0; index < this.usuarios.length; index++) {
-            
-            if(usu.id==this.usuarios[index].id && usu.edad==this.usuarios[index].edad ){
+            let usuario = this.usuarios[index];
+            if(usu.id == usuario.id && usu.edad == usuario.edad ){
                 return true;
             }
             
