@@ -11,7 +11,7 @@ import { Model } from "./model.model";
 export class MensajeModel  {
     
     constructor(
-        @Inject(Number) public chat_usuario:number,
+        @Inject(Number) public chat_user:number,
         @Inject(String) public chat_message:string,
         @Inject(Number) public estado:number,
         @Inject(Number) public id:number,

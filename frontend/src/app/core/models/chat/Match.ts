@@ -10,7 +10,7 @@ export class Match implements IMatchModel,IChatModels {
     estado_conexion_u2!: string;
     match_fecha!: string;
     match_id!:number;
-    
+    match_position?:number=0;
     constructor(id:number, estado_u1:string="Online",estado_u2:string="Online", usuario_1:any, usuario_2:any, match_fecha: string) {
         this.id = id;
         this.match_id = id;

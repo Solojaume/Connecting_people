@@ -62,11 +62,11 @@
 							</div>
 						-->
 						
-						<!--
-							<div *ngFor="let chatMessage of socketService.chatMessages">
+						
+							<div *ngFor="let chatMessage of socketService.mensajes[socketService.chatUsar.match_position]">
 								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="socketService.chatUsar.match_id_usu2"></app-mensaje>
 							</div>
-						-->
+						
 						</div>
 					</div>
 
