@@ -15,7 +15,7 @@ export class MensajeModel  {
         @Inject(String) public chat_message:string,
         @Inject(Number) public estado:number,
         @Inject(Number) public id:number,
-        @Inject(Number) public match_id:number,
+        @Inject(Number) public match_id:any,
         @Inject(String) public message_type:string,
         @Inject(String) public timestamp:string
     )

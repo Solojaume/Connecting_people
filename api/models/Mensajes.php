@@ -88,6 +88,12 @@ class Mensajes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Mach::className(), ['match_id' => 'mensajes_match_id']);
     }
+
+    public static function count()
+    {
+        return (new \yii\db\Query()) -> select( count("mensajes_id")) -> from("mensajes")->queryAll();
+    }
+    
     //Obtener  los mensages pasando
     public static function getMensajesByMatch($match){
        // echo "\n GetMensajesBYMatch";

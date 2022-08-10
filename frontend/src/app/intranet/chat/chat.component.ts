@@ -8,6 +8,7 @@ import { TokenStorageService } from 'src/app/core/shared/services/token-storage/
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { Match } from 'src/app/core/models/chat/Match';
 import { fromEvent } from 'rxjs';
+import { MensajeModel } from 'src/app/core/models/mensaje.model';
 
 
 @Component({
@@ -49,16 +50,29 @@ export class ChatComponent implements OnInit {
 
   sendMessage() {
     //console.log("Chat Usar:",this.chatUsar)
-    const chatMessageDto = new ChatMessageDto(
-      this.token.getUser().token, 
-      this.formularioEnvio.value.message, 
+    const chatMessageDto = new MensajeModel(
+      this.token.getUser().id, 
+      this.formularioEnvio.value.message,
+      -1 ,
+      this.socketService.mensajes_count,
+      this.socketService.chatUsar.match_id,
       "mensaje",
-      this.socketService.chatUsar.match_id
+      new Date().toDateString()
     );
-    const comunicaciones = new Comunicacion("send",chatMessageDto);
+    let chatUsar = this.socketService.chatUsar;
+    this.socketService.mensajes[chatUsar.match_position].push(chatMessageDto);
+    let match_id_usu2 = chatUsar.match_id_usu2;
+    
+    this.socketService.emit("send private message",
+    {
+      token:this.token.getUser().token,
+      mensage:chatMessageDto,
+      usu_2:match_id_usu2.id
+    });
     //this.webSocketService.sendMessage(comunicaciones);
     this.formularioEnvio.value.message = "";
     this.formularioEnvio.reset();
+    this.setTyping("");
   }
 
   cargarChat(chat:any){

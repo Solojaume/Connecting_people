@@ -140,22 +140,11 @@ export class WebSocketIOService extends Socket {
         });
        
         // Recibir mensajes de chat privados
-        this.ioSocket.on('receive private message', (mensaje:string) =>{ 
-            //this.mensajes.push(mensaje)
+        this.ioSocket.on('receive private message', (mensaje:any) =>{ 
+            console.log("Mensaje recivido:",mensaje);
+            this.mensajes[0].push(mensaje);
         });
 
-        /*
-        socket.on('receive private message', function (data) {
-            $('#ding')[0].play();
-            if(data.addresser == data.recipient) return;
-            var head = 'src/img/head.jpg';
-            $('#'+hex_md5(data.addresser)+' .chat-msg').append('<li><img src="'+head+'"><span class="speak">'+data.body+'</span></li>');
-            if(document.hidden){
-                showNotice(head,data.addresser,data.body);
-            }
-            scrollToBottom(hex_md5(data.addresser));
-        });
-        */
 
         // Miembro abandonado en medio de la supervisión
         this.ioSocket.on('user left', (tname:UsuarioChat[]) => {           

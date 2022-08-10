@@ -2,6 +2,7 @@
 namespace app\commands;
 
 use app\commands\models\ChatHandler;
+use app\models\Mensajes;
 use stdClass;
 use yii\console\Controller;
 use Workerman\Worker;
@@ -145,24 +146,45 @@ class ChatController extends Controller{
             });
         
             // When the client emits 'new message', this listens and executes
-            $socket->on('send private message', function($res){
+            $socket->on('send private message', function($res) use ($socket){
                 echo "\n\n\n ENTRA EN SEND";
-                $usocket=&$GLOBALS["usocket"];
+                $usocket_by_token=$GLOBALS["usocket_by_token"];
+                $usocket_by_id=$GLOBALS["usocket_by_id"];
                 $users=&$GLOBALS["users"];
                 echo"\n Mensajes:";
                 var_dump($res);
                 echo "Users en 'Send private message':";
                 var_dump($users);
-                echo"\nUsocket[res['recipient']]:";
-                //var_dump($usocket[$res["recipient"]]);
-                echo"\n self::in_array:";
-                var_dump(self::in_array($usocket,$res["recipient"]));
+                $token = &$res["token"];
+                echo"\n isset(usocket_by_token[token]):";
+                var_dump( isset($usocket_by_token[$token]));
+                
              
-                if(self::in_array($usocket,$res["recipient"])) {
+                $mensaje = $res["mensage"];
+                if(isset($usocket_by_token[$token])) {
+                    unset($token);
                     echo "\nDentro del if de send";
-                    $usocket[$res["recipient"]]->emit('receive private message', $res);
+                    
+                    $mensajeBd = new Mensajes();
+                    echo"\n Post MensajeBd";
+                    $mensajeBd->mensaje_contenido = $mensaje["chat_message"];
+                    echo"\nPost MensajeBd->mensaje_contenido";
+                    $mensajeBd->entregado=0;
+                    echo"\nPost MensajeBd->estado";
+                    $mensajeBd->mensajes_usuario_id=$mensaje["chat_user"];
+                    echo"\nPost MensajeBd->mensajes_usuario_id";
+                    $mensajeBd->mensajes_match_id=$mensaje["match_id"];
+                    echo"\nPost MensajeBd->mensajes_match_id";
+                    if(isset($usocket_by_id["id_".$res["usu_2"]])){
+                        $socket2=$usocket_by_id["id_".$res["usu_2"]];
+                        $socket2->emit("receive private message",$mensaje);
+                        echo"\nRecived";
+                        $mensajeBd->entregado=1;
+                    }
+                    echo"\nModel->save:";
+                    var_dump($mensajeBd->save());
                 }
-                echo "\n¡¡¡SALE DE SEND!!!\n\n\n";
+                //echo "\n¡¡¡SALE DE SEND!!!\n\n\n";
             });
             
             // When the user disconnects, perform this
