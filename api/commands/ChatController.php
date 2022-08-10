@@ -88,17 +88,60 @@ class ChatController extends Controller{
             });
         
             // When the client emits 'typing', we broadcast it to others
-            $socket->on('typing', function () use ($socket) {
-                $socket->broadcast->emit('typing', array(
-                    'username' => $socket->usuario["id"]
-                ));
+            $socket->on('typing', function ($object) use ($socket) {
+                $usocket_by_id=&$GLOBALS["usocket_by_id"];
+                $usocket_by_token=&$GLOBALS["usocket_by_token"];
+                echo"\n\n\n\nTyping";
+
+                if(!isset($usocket_by_token[$object["token_usu"]])){
+                    $socket->disconnect();
+                }
+                unset($object["token_usu"]);
+                /* 
+                // ----- Debug -----
+                unset($object["token_usu"]);
+                echo"\nUnset y Var_dump:";
+                var_dump($object);
+                echo"\n isset(usocket_by_id['id_'.object[id_usu2]]):";
+                var_dump(isset($usocket_by_id["id_".$object["id_usu2"]]));
+                echo"\nPots var dump";
+                */
+                //Reviso que el token este en el array usocket by token de esta manera autentifico antes de hacer nada
+                if(isset($usocket_by_id["id_".$object["id_usu2"]])){
+                    $socket2=$usocket_by_id["id_".$object["id_usu2"]];
+                    //echo"\n socket2";
+                    $socket2->emit('typing', $object);
+                    //echo "\nEnviao";
+                }
+               
             });
         
             // When the client emits 'stop typing', we broadcast it to others
-            $socket->on('stop typing', function () use ($socket) {
-                $socket->broadcast->emit('stop typing', array(
-                    'username' => $socket->usuario["id"]
-                ));
+            $socket->on('stop typing', function ($object) use ($socket) {
+                $usocket_by_id=&$GLOBALS["usocket_by_id"];
+                $usocket_by_token=&$GLOBALS["usocket_by_token"];
+                echo"\n\n\n\nStop Typing";
+
+                if(!isset($usocket_by_token[$object["token_usu"]])){
+                    $socket->disconnect();
+                }
+                unset($object["token_usu"]);
+                /* 
+                // ----- Debug -----
+                unset($object["token_usu"]);
+                echo"\nUnset y Var_dump:";
+                var_dump($object);
+                echo"\n isset(usocket_by_id['id_'.object[id_usu2]]):";
+                var_dump(isset($usocket_by_id["id_".$object["id_usu2"]]));
+                echo"\nPots var dump";
+                */
+                //Reviso que el token este en el array usocket by token de esta manera autentifico antes de hacer nada
+                if(isset($usocket_by_id["id_".$object["id_usu2"]])){
+                    $socket2=$usocket_by_id["id_".$object["id_usu2"]];
+                    //echo"\n socket2";
+                    $socket2->emit('stop typing', $object);
+                    //echo "\nEnviao";
+                }
             });
         
             // When the client emits 'new message', this listens and executes

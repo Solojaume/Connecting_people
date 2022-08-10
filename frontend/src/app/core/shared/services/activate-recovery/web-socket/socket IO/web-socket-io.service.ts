@@ -107,7 +107,27 @@ export class WebSocketIOService extends Socket {
             this.modify_conection_status();
         });
        
+      
+        // Esta escriviendo otro usuario
+        this.ioSocket.on('typing', (data:  {
+            "match_id":number,
+            "id_usu_send":number,
+            "id_usu2":number
+            }) =>{
+            this.updateTyping(data);
+                     
+        });
 
+        // Deja de escrivir otro usuario
+        this.ioSocket.on('stop typing', (data:  {
+            "match_id":number,
+            "id_usu_send":number,
+            "id_usu2":number
+            }) =>{
+            this.updateTyping(data,"Conectado");
+                     
+        });
+        
 
         // Se ha unido un nuevo usuario
         this.ioSocket.on('user joined', (tname:{usuarios:any,count:number}) =>{
@@ -178,7 +198,8 @@ export class WebSocketIOService extends Socket {
      */
 
     emitEvent = (event = 'default',payload:any= {}) => {
-        console.log('emitiendo')
+        console.log("Event:",event)
+        console.log('emitiendo:',payload);
         this.ioSocket.emit(event, payload);
     }
 
@@ -250,47 +271,35 @@ export class WebSocketIOService extends Socket {
     */
     findMatch(match:Match){
         let count = this.matches.length;
-        let encontrado = false;        
-        let mitad=Math.round(count/2);
-        while (encontrado) {
-            let m_id = this.matches[mitad].match_id;
-            let m_id2 = match.match_id;
-            let con = m_id>m_id2;
-            let compro = 0;
-            if(m_id == m_id2){
-                compro ++;
-                encontrado = true;
-                console.log("Comprobaciones finales:", compro);
-                break;
-                return mitad;
-            }
-
-            compro ++;
-            //const con2 = (num:number)=>{num>0};
-            switch (con) {
-                case true:
-                    compro++;
-                    
-                    mitad = Math.round((mitad + (mitad/2))/2);
-                    break;
-                case false:
-                    compro++;
-                    mitad = Math.round((mitad-(mitad/2))/2);
-                    break;
+        for (let index = 0; index < count; index++) {
+            const m2 = this.matches[index].match_id;
+            if (match.match_id==m2) {
+                return index;
             }
             
-            //return mitad;
         }
         return -1;
     }
 
      /**
-    * ------ Find encontrar match ------
+    * ------ Cambiar estado match ------
     *  @param match
     *  @returns 
     */
-    findUsuario(match:Match){
+    updateTyping(data:  {
+        "match_id":number,
+        "id_usu_send":number,
+        "id_usu2":number
+        },
+        status="Escriviendo"
+    ){
+        let u = this.token.getToken();
+        console.log("user typing:",data);
 
+        let mp = this.findMatch(new Match(data.match_id,"e","2",u,u,""));
+        console.log("mp:",mp);
+        this.matches[mp].estado_conexion_u2=status;
+        console.log("Matches:",this.matches);
     }
 
     /**
