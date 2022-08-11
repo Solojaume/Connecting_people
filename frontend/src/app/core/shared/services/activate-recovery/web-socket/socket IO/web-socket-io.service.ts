@@ -142,7 +142,10 @@ export class WebSocketIOService extends Socket {
         // Recibir mensajes de chat privados
         this.ioSocket.on('receive private message', (mensaje:any) =>{ 
             console.log("Mensaje recivido:",mensaje);
-            this.mensajes[0].push(mensaje);
+            let u = this.token.getToken();
+
+            let pos = this.findMatch(new Match(mensaje.match_id,"e","2",u,u,""))
+            this.mensajes[pos].push(mensaje);
         });
 
 
@@ -175,7 +178,12 @@ export class WebSocketIOService extends Socket {
         this.ioSocket.on('reconnect_error', () => {             
             console.log('attempt to reconnect has failed');
         });
-
+        
+        this.ioSocket.on("connect_error", (err:any) => {
+            console.log(err instanceof Error); // true
+            console.log(err.message); // not authorized
+            console.log(err.data); // { content: "Please retry later" }
+          });
     }
 
     /**

@@ -187,6 +187,20 @@ class ChatController extends Controller{
                 //echo "\n¡¡¡SALE DE SEND!!!\n\n\n";
             });
             
+            $socket->on("update message",function ($data = null) use ($socket)
+            {
+                $usocket_by_id=&$GLOBALS["usocket_by_id"];
+                $usocket_by_token=&$GLOBALS["usocket_by_token"];
+                $users=&$GLOBALS["users"];
+                $token = $data["token"];
+                $mensaje = $data["message"];
+                if(isset($usocket_by_token[$token])){
+                    $mns = Mensajes::findOne("mensajes_id=:e",[":e"=>$mensaje["id"]]);
+                    $mns->entregado=2;
+                    $mns->save();
+                }
+                
+            });
             // When the user disconnects, perform this
             $socket->on('disconnect', function($data)use($socket){
                 //Desconectar usuario

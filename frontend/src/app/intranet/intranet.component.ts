@@ -40,14 +40,12 @@ export class IntranetComponent implements OnInit {
   }
   
   logout(){
-    this.webSocketService.closeWebSocket();
-    this.token.signOut();
+    this.socketService.close();
     this.cookieService.delete("usuario");
-  
     this.token.signOut();
     this.token.setReloadFalse();
     this.router.navigateByUrl("/");
-    this.socketService.close();
+   
     
   }
   
