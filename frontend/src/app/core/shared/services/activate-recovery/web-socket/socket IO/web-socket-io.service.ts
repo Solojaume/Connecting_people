@@ -144,7 +144,12 @@ export class WebSocketIOService extends Socket {
             console.log("Mensaje recivido:",mensaje);
             let u = this.token.getToken();
 
-            let pos = this.findMatch(new Match(mensaje.match_id,"e","2",u,u,""))
+            let pos = this.findMatch(new Match(mensaje.match_id,"e","2",u,u,""));
+            
+            if(this.chatUsar.match_id != this.matches[pos].match_id){
+                this.matches[pos].match_count_no_leidos = this.matches[pos].match_count_no_leidos+1;
+                
+            }
             this.mensajes[pos].push(mensaje);
         });
 
@@ -178,7 +183,7 @@ export class WebSocketIOService extends Socket {
         this.ioSocket.on('reconnect_error', () => {             
             console.log('attempt to reconnect has failed');
         });
-        
+
         this.ioSocket.on("connect_error", (err:any) => {
             console.log(err instanceof Error); // true
             console.log(err.message); // not authorized
@@ -246,7 +251,7 @@ export class WebSocketIOService extends Socket {
             }
            
             this.matches[index].match_position=index;
-
+            this.matches[index].match_count_no_leidos = 0;
             //Parte 4 - Pre for 2 y For2
            
             const lista_mensajes_por_match=this.mensajes[index];

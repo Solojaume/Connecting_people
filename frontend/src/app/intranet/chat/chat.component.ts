@@ -41,13 +41,6 @@ export class ChatComponent implements OnInit {
    
   }
 
-  ngOnDestroy(){
-    
-   
-  }
-  
-
-
   sendMessage() {
     //console.log("Chat Usar:",this.chatUsar)
     const chatMessageDto = new MensajeModel(
@@ -78,6 +71,7 @@ export class ChatComponent implements OnInit {
   cargarChat(chat:any){
     console.log('Se ha cambiado el chat a:',chat); 
     this.socketService.chatUsar = chat;
+    this.socketService.matches[chat.match_position].match_count_no_leidos=0;
     console.log("Mensajes:",this.socketService.mensajes[chat.match_position]);
    
   }

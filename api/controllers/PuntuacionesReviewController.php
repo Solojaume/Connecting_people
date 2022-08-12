@@ -75,15 +75,21 @@ class PuntuacionesReviewController extends ApiController
 
     static function getMediaPuntuaciones( $review = null)
     {
-        $m = new PuntuacionesReview();
-        $sumaPuntuaciones = 0;
-        $cantidad = $m->getCountPuntuaciones($review);
-        $punt = $m->getPuntuacionesReview();
-        unset($m);
-        for ($i=0; $i < count($punt); $i++) { 
-            $sumaPuntuaciones=$sumaPuntuaciones+$punt[$i]["puntuaciones_review_puntuacion"];
+        try {
+            $m = new PuntuacionesReview();
+            $sumaPuntuaciones = 0;
+            $cantidad = $m->getCountPuntuaciones($review);
+            $punt = $m->getPuntuacionesReview();
+            unset($m);
+            for ($i=0; $i < count($punt); $i++) { 
+                $sumaPuntuaciones=$sumaPuntuaciones+$punt[$i]["puntuaciones_review_puntuacion"];
+            }
+            return $sumaPuntuaciones/$cantidad;
+        } catch (\Throwable $th) {
+            //throw $th;
+            return 0;
         }
-        return $sumaPuntuaciones/$cantidad;
+        
     }
 
     /**

@@ -11,7 +11,9 @@ export class Match implements IMatchModel,IChatModels {
     match_fecha!: string;
     match_id!:number;
     match_position?:number=0;
-    constructor(id:number, estado_u1:string="Online",estado_u2:string="Online", usuario_1:any, usuario_2:any, match_fecha: string) {
+    match_count_no_leidos!:number;
+    constructor(id:number, estado_u1:string="Online",estado_u2:string="Online", usuario_1:any, usuario_2:any, match_fecha: string,
+    match_count_no_leidos=0) {
         this.id = id;
         this.match_id = id;
         this.estado_conexion_u1 = estado_u1;
@@ -19,5 +21,6 @@ export class Match implements IMatchModel,IChatModels {
         this.match_id_usu1 = usuario_1;
         this.match_id_usu2 = usuario_2;
         this.match_fecha = match_fecha;
+        this.match_count_no_leidos = 0;
     }
 }
