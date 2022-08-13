@@ -30,7 +30,7 @@ export class MatchComponent implements OnInit {
   imagen!:any;
   nombre!:any;
   timestamp_nacimiento!:any;
-  
+  bacio:any=false;
   subscriptionNewUsers(){
     this.match.getNewMatchUsers().subscribe(
       u =>
@@ -38,13 +38,13 @@ export class MatchComponent implements OnInit {
         if(u.length>=1){
           this.usuarios=u;
           this.contUser=0;
-          this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
+          this.imagen = this.usuarios[this.contUser].imagenes[0].imagen_src;
           this.nombre = this.usuarios[this.contUser].nombre;
           this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
           this.error="";
         }else{
-          this.usuarios=[];
-          this.contUser=0;
+          this.usuarios = [];
+          this.contUser = 0;
           this.imagen = "";
           this.nombre = "";
           this.timestamp_nacimiento = "";
@@ -56,29 +56,30 @@ export class MatchComponent implements OnInit {
   }
 
   likeDislikeS(estado:number){
-    this.subscribe=this.match.likeDislike(this.usuarios[this.contUser]["id"],estado).subscribe(s=>{
-      if(this.usuarios.length>1){
-        this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
-        this.nombre = this.usuarios[this.contUser].nombre;
-        this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
-        this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
-       // this.contUser=this.contUser+1;
-        //console.log(this.contUser);
-        this.error="";
-      }else if(this.usuarios.length<=1){
-        this.subscriptionNewUsers();
+    if(this.usuarios.length>1){
+      this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
+      this.nombre = this.usuarios[this.contUser].nombre;
+      this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+      this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
+     // this.contUser=this.contUser+1;
+      //console.log(this.contUser);
+      this.error="";
+    }else if(this.usuarios.length<=1){
+      this.subscriptionNewUsers();
+      this.contUser=0;
+      this.usuarios=[];
         this.contUser=0;
-        this.usuarios=[];
-          this.contUser=0;
-          this.imagen = "";
-          this.nombre = "";
-          this.timestamp_nacimiento = "";
-          this.error="No hay más usuarios que mostrarte, vuelve más tarde";
-      }
-      else{
-         this.contUser=0;
-         this.error="No hay más usuarios que mostrarte, vuelve más tarde";
-      }
+        this.imagen = "";
+        this.nombre = "";
+        this.timestamp_nacimiento = "";
+        this.error="No hay más usuarios que mostrarte, vuelve más tarde";
+    }
+    else{
+       this.contUser=0;
+       this.error="No hay más usuarios que mostrarte, vuelve más tarde";
+    }
+    this.subscribe=this.match.likeDislike(this.usuarios[this.contUser]["id"],estado).subscribe(s=>{
+    
     });
   }
 
@@ -146,6 +147,12 @@ export class MatchComponent implements OnInit {
  
     if ( i !== -1 ) {
         arr.splice( i, 1 );
+        if (arr.length<=1){
+          this.bacio=true;
+        }
+        if (arr.length<=1){
+          this.usuarios=[];
+        }
     } else{
       this.usuarios=[];
     }

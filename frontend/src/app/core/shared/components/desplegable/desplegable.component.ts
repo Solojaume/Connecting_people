@@ -18,13 +18,6 @@ export class DesplegableComponent implements OnInit {
   }
   //emited:boolean=false;
   ngOnChanges(){
-    /*
-    if(this.lista_objetos.length>=1 && this.emited == false){
-      this.cambiarChatOMatch(this.lista_objetos[0]);
-      this.emited = true;
-    }
-    */
-
     if(this.lista_objetos.length>=1){
       this.cambiarChatOMatch(this.lista_objetos[0]);
     }
@@ -36,10 +29,11 @@ export class DesplegableComponent implements OnInit {
     }
    
   }
-  con(objeto:any){
-    return  objeto.match_count_no_leidos>0;
 
+  con(objeto:any){
+    return objeto.match_count_no_leidos>0;
   }
+
   ocultar(){
     this.desplegado=false;
   }

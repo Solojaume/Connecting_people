@@ -188,7 +188,12 @@ export class WebSocketIOService extends Socket {
             console.log(err instanceof Error); // true
             console.log(err.message); // not authorized
             console.log(err.data); // { content: "Please retry later" }
-          });
+        });
+        
+        this.ioSocket.on("",(err:any) => {
+
+        });
+        
     }
 
     /**
