@@ -11,14 +11,17 @@ import { DesplegableComponent } from './components/desplegable/desplegable.compo
 import { DesplegableModule } from './components/desplegable/desplegable.module';
 import { MatchChatDesplegableComponent } from './components/match-chat-desplegable/match-chat-desplegable.component';
 import { MatchChatDesplegableModule } from './components/match-chat-desplegable/match-chat-desplegable.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
   declarations: [
-      ImagenesComponent,
+    ImagenesComponent,
+   
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
     ReviewModule,
     ReviewsModule, 
@@ -29,13 +32,15 @@ import { MatchChatDesplegableModule } from './components/match-chat-desplegable/
 
   ],
   exports:[
+    HttpClientModule,
     ReviewModule,
     ReviewsModule,
     ReactiveFormsModule,
     MensajeModule,
     ButtonsModule,   
     DesplegableModule,
-    MatchChatDesplegableModule  
+    MatchChatDesplegableModule,
+    
   ],
   providers:[]
 })

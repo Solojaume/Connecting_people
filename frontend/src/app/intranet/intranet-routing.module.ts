@@ -12,7 +12,11 @@ const routes: Routes = [
       {
         path:'chat',loadChildren: () => import('./chat/chat.module')
         .then(mod=>mod.ChatModule),
-      }
+      },
+      {
+        path:'personal',loadChildren: () => import('./personal/personal.module')
+        .then(mod=>mod.PersonalModule),
+      },
     ]
   }                         
 ];
