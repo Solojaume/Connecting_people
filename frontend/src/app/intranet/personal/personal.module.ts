@@ -5,8 +5,7 @@ import { PersonalRoutingModule } from './personal-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/core/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
-
-
+import { AngularFileUploaderModule } from "angular-file-uploader";
 
 @NgModule({
   declarations: [
@@ -17,7 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
     PersonalRoutingModule,
     ReactiveFormsModule, 
     SharedModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFileUploaderModule
   ],
   exports:[
     PersonalComponent

@@ -28,7 +28,7 @@ class ImagenController extends ApiController
                     'actions' => [
                         'delete' => ['POST'],
                         'getImagen'=>['POST'],
-                        'subirImagen'=>['POST']
+                        'subirImagen'=>['POST','FILES']
                     ],
                 ],
             ]
@@ -130,7 +130,23 @@ class ImagenController extends ApiController
 
     public function actionSubirImagen(){
         $model= new Imagen();
-        $model->imagen_src = UploadedFile::getInstance($model, 'imagen_src');  
+        //$model->imagen_src = UploadedFile::getInstance($model, 'imagen_src'); 
+        echo "FILES:";
+        var_dump($_FILES); 
+        $archivo = $_FILES["file0"];
+        echo  dirname(__FILE__)."\..\imagenes\\";
+        $resultado = move_uploaded_file($archivo["tmp_name"], dirname(__FILE__)."\..\imagenes\\".$archivo["name"]);
+        echo"Resultado:";
+        var_dump($resultado);
+        if ($resultado) {
+            return "Subido con éxito";
+            echo "Subido con éxito";
+        } else {
+            return "Error al subir archivo";
+            echo "Error al subir archivo";
+        }
+        
+        return ["muestrus"=>"correctuss"];
         if($model->load(\Yii::$app->request->post(),'')) {
         
            

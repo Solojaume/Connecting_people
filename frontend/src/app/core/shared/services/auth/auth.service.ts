@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioAPP } from '../../../models/usuario/usuario-app.model';
 import { Request } from '../../../models/request.model';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiBase!:string;
   constructor(private http:HttpClient) {
-    this.apiBase = "http://localhost/connectingpeople/api/web/"
+    this.apiBase = environment.apiBase;
   }
 
   usuarioLogin(password1:string,email1:string):Observable<UsuarioAPP>{
