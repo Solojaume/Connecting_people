@@ -164,25 +164,24 @@ class ImagenController extends ApiController
         
         if ($resultado) {
             return ["status"=>"ok"];
-            echo "Subido con éxito";
+            if($model->load(\Yii::$app->request->post(),'')) {
+                // var_dump($model->imagen_src);
+                // die();
+                
+                 $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
+                 
+                 $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
+     
+                if ($model->save()) {            
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }    
+            }
         } else {
-            return "Error al subir archivo";
-            echo "Error al subir archivo";
+            return ["error"=>"Error al subir archivo"];
         }
         
        
-        if($model->load(\Yii::$app->request->post(),'')) {
-           // var_dump($model->imagen_src);
-           // die();
-           
-            $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
-            
-            $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
 
-            if ($model->save()) {            
-            return $this->redirect(['view', 'id' => $model->id]);
-            }    
-        }
     }
      
     public function actionDeleteImagen(){
