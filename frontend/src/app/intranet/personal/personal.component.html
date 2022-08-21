@@ -6,6 +6,7 @@
      
       <angular-file-uploader 
         [config]="afuConfig"
+        (fileSelected)="compressFile($event)"
        >
       </angular-file-uploader>
     </div>

@@ -62,4 +62,8 @@ export class PersonalComponent implements OnInit {
       url:environment.apiBase+"imagen/subir-imagen"
     }
   }
+  
+  compressFile(archivo:any){
+    console.log("Archivo:",archivo);
+  }
 }

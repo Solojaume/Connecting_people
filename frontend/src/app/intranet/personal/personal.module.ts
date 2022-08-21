@@ -16,8 +16,6 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
     PersonalRoutingModule,
     ReactiveFormsModule, 
     SharedModule,
-    HttpClientModule,
-    AngularFileUploaderModule
   ],
   exports:[
     PersonalComponent

@@ -12,6 +12,7 @@ import { DesplegableModule } from './components/desplegable/desplegable.module';
 import { MatchChatDesplegableComponent } from './components/match-chat-desplegable/match-chat-desplegable.component';
 import { MatchChatDesplegableModule } from './components/match-chat-desplegable/match-chat-desplegable.module';
 import { HttpClientModule } from '@angular/common/http';
+import { FileUploadModule } from './components/file-upload/file-upload.module';
 
 
 @NgModule({
@@ -28,8 +29,8 @@ import { HttpClientModule } from '@angular/common/http';
     MensajeModule,
     ButtonsModule,
     DesplegableModule,
-    MatchChatDesplegableModule
-
+    MatchChatDesplegableModule,
+    FileUploadModule
   ],
   exports:[
     HttpClientModule,
@@ -40,7 +41,7 @@ import { HttpClientModule } from '@angular/common/http';
     ButtonsModule,   
     DesplegableModule,
     MatchChatDesplegableModule,
-    
+    FileUploadModule
   ],
   providers:[]
 })

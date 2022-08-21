@@ -131,28 +131,50 @@ class ImagenController extends ApiController
     public function actionSubirImagen(){
         $model= new Imagen();
         //$model->imagen_src = UploadedFile::getInstance($model, 'imagen_src'); 
+       
+        /*
+            //---------------------- DEV TOOLS ----------------------
         echo "FILES:";
         var_dump($_FILES); 
+        */
         $archivo = $_FILES["file0"];
-        echo  dirname(__FILE__)."\..\imagenes\\";
-        $resultado = move_uploaded_file($archivo["tmp_name"], dirname(__FILE__)."\..\imagenes\\".$archivo["name"]);
+        
+        switch ($archivo["type"]) {
+            case "image/jpeg":
+                $extension=".jpg";
+                break;
+            case "image/png":
+                $extension=".png";
+                break;
+                
+            default:
+                return ["error"=>"Por favor suba una imagen"];
+                break;
+        }
+        $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
+        $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
+        $resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
+
+
+        /*
+            //---------------------- DEV TOOLS ----------------------
         echo"Resultado:";
         var_dump($resultado);
+        */
+        
         if ($resultado) {
-            return "Subido con éxito";
+            return ["status"=>"ok"];
             echo "Subido con éxito";
         } else {
             return "Error al subir archivo";
             echo "Error al subir archivo";
         }
         
-        return ["muestrus"=>"correctuss"];
+       
         if($model->load(\Yii::$app->request->post(),'')) {
-        
-           
            // var_dump($model->imagen_src);
            // die();
-            $cod = uniqid();
+           
             $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
             
             $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
