@@ -28,7 +28,7 @@ class ImagenController extends ApiController
                     'actions' => [
                         'delete' => ['POST'],
                         'getImagen'=>['POST'],
-                        'subirImagen'=>['POST']
+                        'subirImagen'=>['POST','FILES']
                     ],
                 ],
             ]
@@ -130,21 +130,58 @@ class ImagenController extends ApiController
 
     public function actionSubirImagen(){
         $model= new Imagen();
-        $model->imagen_src = UploadedFile::getInstance($model, 'imagen_src');  
-        if($model->load(\Yii::$app->request->post(),'')) {
+        //$model->imagen_src = UploadedFile::getInstance($model, 'imagen_src'); 
+       
+        /*
+            //---------------------- DEV TOOLS ----------------------
+        echo "FILES:";
+        var_dump($_FILES); 
+        */
+        $archivo = $_FILES["file0"];
         
-           
-           // var_dump($model->imagen_src);
-           // die();
-            $cod = uniqid();
-            $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
-            
-            $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
-
-            if ($model->save()) {            
-            return $this->redirect(['view', 'id' => $model->id]);
-            }    
+        switch ($archivo["type"]) {
+            case "image/jpeg":
+                $extension=".jpg";
+                break;
+            case "image/png":
+                $extension=".png";
+                break;
+                
+            default:
+                return ["error"=>"Por favor suba una imagen"];
+                break;
         }
+        $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
+        $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
+        $resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
+
+
+        /*
+            //---------------------- DEV TOOLS ----------------------
+        echo"Resultado:";
+        var_dump($resultado);
+        */
+        
+        if ($resultado) {
+            return ["status"=>"ok"];
+            if($model->load(\Yii::$app->request->post(),'')) {
+                // var_dump($model->imagen_src);
+                // die();
+                
+                 $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
+                 
+                 $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
+     
+                if ($model->save()) {            
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }    
+            }
+        } else {
+            return ["error"=>"Error al subir archivo"];
+        }
+        
+       
+
     }
      
     public function actionDeleteImagen(){

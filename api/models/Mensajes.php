@@ -88,6 +88,7 @@ class Mensajes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Mach::className(), ['match_id' => 'mensajes_match_id']);
     }
+    
     //Obtener  los mensages pasando
     public static function getMensajesByMatch($match){
        // echo "\n GetMensajesBYMatch";

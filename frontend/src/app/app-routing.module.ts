@@ -15,6 +15,7 @@ const routes: Routes = [
     loadChildren: () => import('./intranet/intranet.module').then(mod=>mod.IntranetModule)
   },
   {path:'chat',redirectTo:'/intranet/chat'},
+  {path:'personal',redirectTo:'/intranet/personal'}
  
   /*{
     path:'',component:PublicComponent

@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, Subscription } from 'rxjs';
 import { UsuarioAPP } from 'src/app/core/models/usuario/usuario-app.model';
-import { AuthService } from 'src/app/core/shared/services/auth.service';
-import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
-import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
+import { AuthService } from 'src/app/core/shared/services/auth/auth.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
+import { WebSocketService } from 'src/app/core/shared/services/activate-recovery/web-socket/web-socket.service';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
+
 
 @Component({
   selector: 'app-login',
@@ -21,12 +23,14 @@ export class LoginComponent implements OnInit {
     private token:TokenStorageService,
     private router:Router, 
     private cookieService:CookieService,
-    private webSocketService:WebSocketService ) { 
+    private webSocketService:WebSocketService,
+    private socketService:WebSocketIOService ) { 
   }
  
   ngOnInit(): void {
     let usuario;
-    this.webSocketService.setAutenticadoFalse();
+    this.socketService.setAutenticadoFalse();
+   
     try {
       usuario=JSON.parse(this.cookieService.get("usuario"))??"";
     } catch (error) {
@@ -55,12 +59,13 @@ export class LoginComponent implements OnInit {
     if (this.token.getToken()&&this.token.getUser()) {
       let rol = this.token.getUser().roles;
       this.router.navigateByUrl("/home");
-    }else if(this.token.getReload()=="false"||!this.token.getReload()) {
-      this.token.setReloadTrue();
-      this.router.navigateByUrl("/");
     }else{
       this.token.setReloadFalse();
     }
+    
+   
+   
+    
   }
 
   formularioLogin = new FormGroup({
@@ -94,11 +99,12 @@ export class LoginComponent implements OnInit {
             this.cookieService.set('usuario',JSON.stringify(usuario),this.sumarDias(now, dias));
           else{
             this.cookieService.set('usuario',JSON.stringify(usuario));
-
           }
             
           this.token.saveToken(usuario.token);
           this.token.saveUser(usuario);
+          
+
           this.router.navigateByUrl("/home");
         }
         console.log(this.cookieService.get("usuario"));
@@ -133,9 +139,5 @@ export class LoginComponent implements OnInit {
   ngOnDestroy(){
     this.webSocketService.setAutenticadoFalse();
   }
-  
-  
- 
- 
 
 }

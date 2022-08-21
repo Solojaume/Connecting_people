@@ -99,7 +99,7 @@ class CommandsMatchController extends WebsocketController
         $u = $matchesBd["autenticacion"];
         $matchesBd = $matchesBd["matches"];
         $matchesDevolver = [];
-        $chatsDevolver = [];
+        $mensajesDevolver = [];
         if ($u && isset($matchesBd)){
             echo "\nDentro del if";
             foreach ($matchesBd as $match) {
@@ -107,17 +107,21 @@ class CommandsMatchController extends WebsocketController
 
               
                 $mensajes=CommandsMensajesController::getByMatch($match["match_id"],$u->id);
-                //unset($match["match_id"]);
-                if($match["match_id_usu1"] == $u->id){
+                if ($match["match_id_usu1"] == $u->id) {
                     echo "\nEntra en el primer if";
                     $u2=Usuario::findIdentity($match["match_id_usu2"]);
-                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
-                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
-                }else if($match["match_id_usu2"] == $u->id){
+                    echo"\nU2 encontrado con gusto";    
+                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre];
+                    echo"\nU1 añadido con gusto";  
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"fotos"=>[],"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    echo"\nU2 añadido con gusto";  
+                } else if($match["match_id_usu2"] == $u->id){
                     echo "\nEntra en el else if";
                     $u2=Usuario::findIdentity($match["match_id_usu1"]);
-                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre,"edad"=>Helper::calcularEdad($u->timestamp_nacimiento)];
-                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    $match["match_id_usu1"] = ["id"=>$u->id,"nombre"=>$u->nombre];
+                    echo"\nU1 añadido con gusto";
+                    $match["match_id_usu2"] = ["id"=>$u2->id,"nombre" => $u2->nombre,"fotos"=>[],"edad"=>Helper::calcularEdad($u2->timestamp_nacimiento)];
+                    echo"\nU2 añadido con gusto";  
                     $estado_conexion = $match["estado_conexion_u1"];
                     $match["estado_conexion_u1"] = $match["estado_conexion_u2"];
                     $match["estado_conexion_u2"] = $estado_conexion;
@@ -137,22 +141,19 @@ class CommandsMatchController extends WebsocketController
                     echo"\n Match_id_usu2 == u->id:";
                     var_dump($match["match_id_usu2"] == $u->id);
                 }
-                
-                //return ["Autentication"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
-                if(sizeof($mensajes)>0){
-                    echo "\nCHAT DEVOLVER AÑADIDO";
-                   $match["mensajes"]=$mensajes;
-                   $chatsDevolver[]=$match;
-    
-                }else{
-                    echo "\nMatch DEVOLVER AÑADIDO";
-                    $matchesDevolver[]=$match;
-                }
+                $key="id_usu_".$match["match_id_usu2"]["id"];
+                echo "\nPost key";
+                echo "\nMatch DEVOLVER PRE AÑADIDO";
+                $matchesDevolver[] = $match;
+                echo "\nMatch DEVOLVER AÑADIDO";
+                var_dump($matchesDevolver);
+                $mensajesDevolver[]=$mensajes ;
+                echo"\n MensajesDevolder";
             }
         }
-
+        echo"\n PREDEVOLVER";
         
-        return["Autenticacion"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
+        return["matches"=>$matchesDevolver,"mensajes"=>$mensajesDevolver];
     }
 
     /*

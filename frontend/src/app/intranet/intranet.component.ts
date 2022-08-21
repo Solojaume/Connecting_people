@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../core/shared/services/auth.service';
-import { TokenStorageService } from '../core/shared/services/token-storage.service';
-import { WebSocketStorageService } from '../core/shared/services/web-socket-storage.service';
-import { WebSocketService } from '../core/shared/services/web-socket.service';
+import { AuthService } from '../core/shared/services/auth/auth.service';
+import { TokenStorageService } from '../core/shared/services/token-storage/token-storage.service';
+import { WebSocketService } from '../core/shared/services/activate-recovery/web-socket/web-socket.service';
+import { WebSocketIOService } from '../core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 
 @Component({
   selector: 'app-intranet',
@@ -13,14 +13,15 @@ import { WebSocketService } from '../core/shared/services/web-socket.service';
   styleUrls: ['./intranet.component.scss']
 })
 export class IntranetComponent implements OnInit {
-  //webSocketService!:WebSocketService
 
   constructor( 
     private token:TokenStorageService, 
     private router:Router,
     private cookieService:CookieService, 
     private apiService:AuthService,
-    public webSocketService:WebSocketService) {
+    public webSocketService:WebSocketService,
+    private socketService:WebSocketIOService
+  ) {
 
    }
   subscribe!:Subscription ;
@@ -29,18 +30,25 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
+    if(this.token.getReload()=="false"||!this.token.getReload()) {
+      this.token.setReloadTrue();
+      window.location.reload();
+
+    }
+    
     //this.webSocketService.openWebSocket();  
   }
   
   logout(){
-    this.webSocketService.closeWebSocket();
-    this.token.signOut();
+    this.socketService.close();
     this.cookieService.delete("usuario");
-  
     this.token.signOut();
+    this.token.setReloadFalse();
     this.router.navigateByUrl("/");
-    this.webSocketService.Resetear();
+   
+    
   }
+  
   ngOnDestroy(){
     //this.webSocketService.CambiarPagina();  
   }

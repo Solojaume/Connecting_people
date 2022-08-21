@@ -6,7 +6,6 @@ import { SharedModule } from 'src/app/core/shared/shared.module';
 import { ServicesModule } from 'src/app/core/shared/services/services.module';
 
 
-
 @NgModule({
   declarations: [
     ChatComponent
@@ -15,7 +14,7 @@ import { ServicesModule } from 'src/app/core/shared/services/services.module';
     CommonModule,
     ChatRoutingModule,
     SharedModule,
-    ServicesModule
+    ServicesModule,
   ],
   exports:[
     ChatComponent
