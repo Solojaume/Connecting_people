@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { ActivateRecoveryService } from './activate-recovery.service';
-import { MatchService } from './match.service';
+import { ActivateRecoveryService } from './activate-recovery/activate-recovery.service';
+import { MatchService } from './match/match.service';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
-import { WebSocketService } from './web-socket.service';
-import { WebSocketStorageService } from './web-socket-storage.service';
-
+import { WebSocketService } from './activate-recovery/web-socket/web-socket.service';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    SocketIoModule
   ],
   exports:[
     HttpClientModule
@@ -26,7 +27,8 @@ import { WebSocketStorageService } from './web-socket-storage.service';
     CookieService,
     MatchService,
     WebSocketService,
-    authInterceptorProviders
+    authInterceptorProviders,
+    
   ]
 })
 export class ServicesModule { }

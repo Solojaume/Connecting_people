@@ -4,8 +4,12 @@ import {FormControl, FormGroup, Validators, } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ChatMessageDto } from 'src/app/core/models/chat/chatMessageDto';
 import { Comunicacion } from 'src/app/core/models/chat/comunicacion';
-import { TokenStorageService } from 'src/app/core/shared/services/token-storage.service';
-import { WebSocketService } from 'src/app/core/shared/services/web-socket.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
+import { Match } from 'src/app/core/models/chat/Match';
+import { fromEvent } from 'rxjs';
+import { MensajeModel } from 'src/app/core/models/mensaje.model';
+
 
 @Component({
   selector: 'app-chat',
@@ -14,55 +18,91 @@ import { WebSocketService } from 'src/app/core/shared/services/web-socket.servic
 })
 export class ChatComponent implements OnInit {
   formularioEnvio = new FormGroup({
-    user: new FormControl(''),
     message: new FormControl('')
   });
- //@Output() mensaje: EventEmitter<WebSocketService>;
+  
+  //@Output() mensaje: EventEmitter<WebSocketService>;
   //webSocketService!:WebSocketService;
   
-  chatUsar:any;
+  typingSended:any=false;
   constructor(
    // public webSocketStorageService:WebSocketStorageService,
     private token:TokenStorageService,
     private cookies:CookieService,
-    public webSocketService:WebSocketService
+    public socketService:WebSocketIOService
   ) { }
 
   ngOnInit(): void {
-    this.webSocketService.openWebSocket();
-    this.webSocketService.chatUsar = {match_id_usu2:this.token.getUser()}
-   
-  }
-
-  ngOnDestroy(){
-    if(this.webSocketService.getAutenticado()=="true"){
-      this.webSocketService.CambiarPagina();  
-    }
+    this.socketService.chatUsar = {match_id_usu2:this.token.getUser(),mensajes:[]};
+    this.formularioEnvio.valueChanges.subscribe(x => {
+      console.log("x:",x.message);
+      this.setTyping(""+x.message);
+    })
    
   }
 
   sendMessage() {
     //console.log("Chat Usar:",this.chatUsar)
-    
-    const chatMessageDto = new ChatMessageDto(
-      this.token.getUser().token, 
-      this.formularioEnvio.value.message, 
+    const chatMessageDto = new MensajeModel(
+      this.token.getUser().id, 
+      this.formularioEnvio.value.message,
+      -1 ,
+      this.socketService.mensajes_count,
+      this.socketService.chatUsar.match_id,
       "mensaje",
-      this.webSocketService.chatUsar.match_id
+      new Date().toDateString()
     );
-    const comunicaciones = new Comunicacion("send",chatMessageDto);
-    this.webSocketService.sendMessage(comunicaciones);
+    let chatUsar = this.socketService.chatUsar;
+    this.socketService.mensajes[chatUsar.match_position].push(chatMessageDto);
+    let match_id_usu2 = chatUsar.match_id_usu2;
+    
+    this.socketService.emit("send private message",
+    {
+      token:this.token.getUser().token,
+      mensage:chatMessageDto,
+      usu_2:match_id_usu2.id
+    });
+    //this.webSocketService.sendMessage(comunicaciones);
     this.formularioEnvio.value.message = "";
     this.formularioEnvio.reset();
+    this.setTyping("");
   }
+
   cargarChat(chat:any){
     console.log('Se ha cambiado el chat a:',chat); 
-    this.webSocketService.chatUsar=chat;
-    if(!chat.hasOwnProperty("mensajes")){
-      this.webSocketService.chatUsar.mensajes=[];
-    }
-    this.webSocketService.chatMessages=this.webSocketService.chatUsar.mensajes;
+    this.socketService.chatUsar = chat;
+    this.socketService.matches[chat.match_position].match_count_no_leidos=0;
+    console.log("Mensajes:",this.socketService.mensajes[chat.match_position]);
    
+  }
+
+  setTyping(message:string){ 
+    let chatUsar=this.socketService.chatUsar;
+    if(message!=""){
+      if (this.typingSended==false) {
+        this.socketService.emitEvent("typing",
+        {
+          "match_id":chatUsar.match_id,
+          "id_usu_send":this.token.getUser().id,
+          "token_usu":this.token.getToken(),
+          "id_usu2":chatUsar.match_id_usu2.id
+        }
+      );
+      }
+      
+      this.typingSended=true;
+    }else{
+      this.socketService.emitEvent("stop typing",
+        {
+          "match_id":chatUsar.match_id,
+          "id_usu_send":this.token.getUser().id,
+          "token_usu":this.token.getToken(),
+          "id_usu2":chatUsar.match_id_usu2.id
+        }
+      );
+      this.typingSended=false;
+    }
+    
   }
 }
 

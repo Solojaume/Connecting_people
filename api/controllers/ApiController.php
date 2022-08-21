@@ -47,7 +47,7 @@ class ApiController extends \yii\rest\ActiveController
 
         return $behaviors;
     }
-    private static function sha256($pass1 = null)
+    protected static function sha256($pass1 = null)
     {
         return hash("sha256",$pass1);
     }

@@ -15,7 +15,7 @@ import { ServicesModule } from 'src/app/core/shared/services/services.module';
     CommonModule,
     MatchRoutingModule,
     SharedModule,
-    ServicesModule
+    ServicesModule,
   ],
   exports:[
     MatchComponent

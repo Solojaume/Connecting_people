@@ -113,7 +113,7 @@ class Mach extends \yii\db\ActiveRecord
                 /*OBTENEMOS EL USUARIO CON LOS QUE HEMOS HECHO MACTH*/
                 (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERE match_id_usu1=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id OR  match_id_usu2=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id) AND EXISTS
                 /*La primera consulta es para que no aparezca mi propio usuario*/
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m on m.match_id_usu1 = u2.id where u2.id!=$usuario1 and u2.id=u.id)"
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m on m.match_id_usu1 = u2.id where u2.id!=$usuario1 and u2.id=u.id) Limit 50"
                 
             )->queryAll();
           
@@ -148,7 +148,7 @@ class Mach extends \yii\db\ActiveRecord
                     //La fecha de nacimiento se deve cacular en el registro
                     $key["timestamp_nacimiento"] = Helper::calcularEdad($key["timestamp_nacimiento"]);
                     $us[]=$key; 
-                 }  
+                }  
                 
                 //var_dump($key);
                 
@@ -157,8 +157,10 @@ class Mach extends \yii\db\ActiveRecord
         }
         
         //die();
-        
-        return $lista_usuarios;
+        if(count($lista_usuarios)>1){
+            return $lista_usuarios;
+        }
+        return [];
     }
 
     /**

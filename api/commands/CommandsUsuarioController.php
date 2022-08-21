@@ -16,19 +16,23 @@ class   CommandsUsuarioController extends WebsocketController
      * @param soket $soket
      * @return usuario 
      */
-    public static function auth($token,$ip_cliente="",$puerto_cliente="",$ip_servidor="",$puerto_servidor="",$socket=null )
+    public static function auth($token,$socket=null )
     {
-       
+        $u=self::getUserWhithAuthToken($token);
 		if(isset($socket)){
+            //Obtenemos ip remota y su puerto
+            socket_getpeername($socket,$ip_cliente, $puerto_cliente);
 
+            //Obtenemos la ip local y su puerto
+            socket_getpeername($socket,$ip_servidor,$puerto_servidor);
+            $u->ip_cliente = $ip_cliente;
+            $u->puerto_cliente = "".$puerto_cliente;
+            $u->ip_servidor = $ip_servidor;
+            $u->puerto_servidor = "".$puerto_servidor;
         }
 		//echo "\n ip ser";
        // var_dump($ip_cliente);
-        $u=self::getUserWhithAuthToken($token);
-        $u->ip_cliente = $ip_cliente;
-        $u->puerto_cliente = "".$puerto_cliente;
-        $u->ip_servidor = $ip_servidor;
-        $u->puerto_servidor = "".$puerto_servidor;
+       
         /*
         echo"\n var dump usu  u->save()";
         var_dump($u->save());

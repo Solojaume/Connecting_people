@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IntranetComponent } from './intranet.component';
 import { IntranetRoutingModule } from './intranet-routing.module';
 import { SharedModule } from '../core/shared/shared.module';
-import { WebSocketService } from '../core/shared/services/web-socket.service';
+import { WebSocketService } from '../core/shared/services/activate-recovery/web-socket/web-socket.service';
 import { ServicesModule } from '../core/shared/services/services.module';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { ServicesModule } from '../core/shared/services/services.module';
     CommonModule,
     IntranetRoutingModule,
     SharedModule, 
-    ServicesModule
+    ServicesModule,
   ],
   exports:[
     IntranetComponent
