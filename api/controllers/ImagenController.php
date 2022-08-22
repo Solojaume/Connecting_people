@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 use yii\rest\ActiveController;
+use yii\rest\ActiveDataProvider;
 use app\models\Imagen;
 use app\models\ImagenSearch;
 use yii\web\NotFoundHttpException;
@@ -34,22 +35,23 @@ class ImagenController extends ApiController
             ]
         );
     }
+    public function actions() {
+        $actions = parent::actions();
+        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+        unset($actions['delete'], $actions['create'],$actions['update']);
+        // Redefinimos el método que prepara los datos en el index
+        $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+        return $actions;
+    }
 
-    /**
-     * Lists all Imagen models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ImagenSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+    public function indexProvider() {
+        $uid=Yii::$app->user->identity->id;
+        return new ActiveDataProvider([
+            'query' => imagen::find()->where('imagen_usuario_id='.$uid)->orderBy('imagen_id')
         ]);
     }
+
+    
 
     /**
      * Displays a single Imagen model.
@@ -61,28 +63,6 @@ class ImagenController extends ApiController
     {
         return $this->render('view', [
             'model' => $this->findModel($imagen_id),
-        ]);
-    }
-
-    /**
-     * Creates a new Imagen model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Imagen();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'imagen_id' => $model->imagen_id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
         ]);
     }
 
@@ -113,9 +93,14 @@ class ImagenController extends ApiController
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($imagen_id)
+    public function actionDelete()
     {
-        $this->findModel($imagen_id)->delete();
+        $params=json_decode(file_get_contents("php://input"), false);
+        $imagen = $this->findOne("imagen_id = ".$params->imagen_id);
+        $dir_final = dirname(__FILE__)."\..\imagenes\\".$imagen->imagen_src;
+        unlink($dir_final);
+        $imagen->delete();
+       // $this->findModel($params->imagen_id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -153,8 +138,10 @@ class ImagenController extends ApiController
         }
         $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
-        $resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
+        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,400,750);
 
+        //$resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
+        
 
         /*
             //---------------------- DEV TOOLS ----------------------
@@ -163,19 +150,18 @@ class ImagenController extends ApiController
         */
         
         if ($resultado) {
-            return ["status"=>"ok"];
-            if($model->load(\Yii::$app->request->post(),'')) {
-                // var_dump($model->imagen_src);
-                // die();
+            $u = static::getUserWhithAuthToken();
+            $model->imagen_usuario_id = $u["id"];
+            $model->imagen_src = $cod;
+            
+            $model->imagen_localizacion_donde_subida="Interno";
+            if ($model->save()) {            
+                return ["status"=>"ok"];
                 
-                 $model->imagen_src->saveAs('../web/imagenes/' . $cod . '.' . $model->imagen_src->extension);
-                 
-                 $model->imagen_src = $cod . '.' . $model->imagen_src->extension;
-     
-                if ($model->save()) {            
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }    
             }
+            ///throw new Exception("Error");    
+            return ["status"=>"error","error"=>"Error al guardar archivo"];
+            
         } else {
             return ["error"=>"Error al subir archivo"];
         }
@@ -203,4 +189,39 @@ class ImagenController extends ApiController
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
+    /* 
+    * Función personalizada para comprimir y 
+    * subir una imagen mediante PHP
+    */ 
+    function compressImage($source, $destination, $quality, $with=500 ,$heitgh=500) { 
+        // Obtenemos la información de la imagen
+        $imgInfo = getimagesize($source); 
+        $mime = $imgInfo['mime']; 
+
+        // Creamos una imagen
+        switch($mime){ 
+            case 'image/jpeg': 
+                $image = imagecreatefromjpeg($source); 
+                break; 
+            case 'image/png': 
+                $image = imagecreatefrompng($source); 
+                break; 
+            case 'image/gif': 
+                $image = imagecreatefromgif($source); 
+                break; 
+            default: 
+                $image = imagecreatefromjpeg($source); 
+        } 
+        
+        //resizamos la imagen
+        $imagen_redimensionada=imagescale($image,$with,$heitgh)??$image;
+
+       
+        // Guardamos la imagen
+        imagejpeg($imagen_redimensionada, $destination, $quality); 
+        
+        // Devolvemos la imagen comprimida
+        return $destination; 
+    } 
 }
