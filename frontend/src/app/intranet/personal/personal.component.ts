@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { pipe } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { Imagen } from 'src/app/core/models/imagen';
+import { ImagenClass } from 'src/app/core/models/imagenClass';
+import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
 import { environment } from 'src/environments/environment';
 
@@ -13,12 +16,19 @@ import { environment } from 'src/environments/environment';
 })
 export class PersonalComponent implements OnInit {
   progress = 0;
+  img:ImagenClass[]=[];
+  constructor(private token:TokenStorageService,public imgService:ImagenesService) { 
+    this.img = imgService.imagenes;
 
-  constructor(private token:TokenStorageService) { }
+  }
  
   // @ts-nocheck
 
   ngOnInit(): void {
+    
+   
+    
+
   }
   /*
   afuConfig = {
@@ -57,13 +67,13 @@ export class PersonalComponent implements OnInit {
       sizeLimit: 'Size Limit'
     }
   };*/
+ 
+  srcImage: Imagen = this.img[0];
   afuConfig = {
     uploadAPI:{
       url:environment.apiBase+"imagen/subir-imagen"
     }
   }
   
-  compressFile(archivo:any){
-    console.log("Archivo:",archivo);
-  }
+ 
 }

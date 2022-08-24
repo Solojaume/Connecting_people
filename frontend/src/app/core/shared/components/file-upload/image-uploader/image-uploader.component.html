@@ -1,0 +1,11 @@
+<div class="border border-secondary">
+    <img *ngIf="srcImage != '' && !exits(srcImage) " class="img" [src]="srcImage" (click)="delete()">
+    <div  *ngIf="srcImage == '' || exits(srcImage)">
+        <p class="h5">
+            Por favor seleccione una imagen:
+        </p>
+        <angular-file-uploader [config]="config" (ApiResponse)="updateImage($event)"></angular-file-uploader>
+
+    </div>
+    
+</div>

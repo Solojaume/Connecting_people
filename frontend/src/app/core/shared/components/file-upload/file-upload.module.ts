@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { HttpClientModule } from '@angular/common/http';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
+import { ImageUploaderComponent } from './image-uploader/image-uploader.component';
 
 
 
 @NgModule({
   declarations: [
    
+  
+    ImageUploaderComponent
   ],
   imports: [
     AngularFileUploaderModule,
+    CommonModule,
+    
   ],
   exports:[
-    AngularFileUploaderModule
+    AngularFileUploaderModule,
+    ImageUploaderComponent
   ],
   providers:[]
 })

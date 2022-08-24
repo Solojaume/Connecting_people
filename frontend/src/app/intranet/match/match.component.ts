@@ -8,6 +8,8 @@ import { MatchService } from 'src/app/core/shared/services/match/match.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
 import { WebSocketService } from 'src/app/core/shared/services/activate-recovery/web-socket/web-socket.service';
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
+import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.service';
+import { Imagen } from 'src/app/core/models/imagen';
 
 @Component({
   selector: 'app-match',
@@ -23,6 +25,7 @@ export class MatchComponent implements OnInit {
     private cookieService:CookieService, 
     private apiService:AuthService,
     private webSocketService:WebSocketService,
+    private imagenService: ImagenesService
     ) { }
   subscribe!:Subscription ;
   error:string="No hay más usuarios que mostrarte, vuelve más tarde";
@@ -84,7 +87,15 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.subscriptionNewUsers();
+    this.imagenService.getImagenesDelServer().subscribe(
+      (img:Imagen[])=>{
+        this.imagenService.imagenes=img;
+        console.log("Imagen:",this.imagenService.imagenes);
+      }
+    );
+    this.imagenService.getImagenes();
     this.contUser=0;
   
     console.log(this.imagen);
