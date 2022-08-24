@@ -14,6 +14,8 @@ class ApiController extends \yii\rest\ActiveController
     public $enableCsrfValidation = false;
     public $authenable = true;//en los controladores que no queramos el token se pone en false
     public $modelClass="d";
+    public $frontendUrlBase = "localhost:4200";
+    public $ApiImagesUrl="http://localhost/connectingpeople/api/imagenes/";
 
     public function beforeAction($a)
     {

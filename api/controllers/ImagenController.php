@@ -38,7 +38,7 @@ class ImagenController extends ApiController
     public function actions() {
         $actions = parent::actions();
         //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
-        unset($actions['delete'], $actions['create'],$actions['update']);
+        unset($actions['delete'], $actions['create'],$actions['update'],$actions["get"]);
         // Redefinimos el método que prepara los datos en el index
         $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
         return $actions;
@@ -99,10 +99,12 @@ class ImagenController extends ApiController
         $imagen = $this->findOne("imagen_id = ".$params->imagen_id);
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$imagen->imagen_src;
         unlink($dir_final);
+        $img_ret = $imagen;
         $imagen->delete();
+        
        // $this->findModel($params->imagen_id)->delete();
 
-        return $this->redirect(['index']);
+        return $img_ret;
     }
 
     //Este metodo sirbe para obtener las imagenes de usuario
@@ -110,9 +112,9 @@ class ImagenController extends ApiController
         $u=self::getUserWhithAuthToken();
         $usu= isset($_POST["id_usu"])?$_POST["id_usu"]:$u["id"];
         $im= new Imagen();
-        return $im->getImagenUsuario();
+        return Imagen::getImagenUsuario($usu);
     }
-
+    
     public function actionSubirImagen(){
         $model= new Imagen();
         //$model->imagen_src = UploadedFile::getInstance($model, 'imagen_src'); 
@@ -155,8 +157,12 @@ class ImagenController extends ApiController
             $model->imagen_src = $cod;
             
             $model->imagen_localizacion_donde_subida="Interno";
-            if ($model->save()) {            
-                return ["status"=>"ok"];
+            if ($model->save()) { 
+                     
+                return [
+                    "status"=>"ok",
+                    "imagen"=>$model
+                ];
                 
             }
             ///throw new Exception("Error");    
@@ -170,9 +176,7 @@ class ImagenController extends ApiController
 
     }
      
-    public function actionDeleteImagen(){
-        return "";
-    }
+  
 
     /**                                             
      * Finds the Imagen model based on its primary key value.
