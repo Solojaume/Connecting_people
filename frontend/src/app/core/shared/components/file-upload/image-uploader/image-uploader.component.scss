@@ -47,16 +47,21 @@
         }
     }
 } 
-
+ 
+$max-heigt:250px;
+$max-width:150px;
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-    .border{
-        max-height: 560px;
-        max-width: 360px;
+    .border,.border-uploader{
+        max-height: $max-heigt;
+        max-width: $max-heigt;
         .img{
-            max-height: 550px;
-            max-width: 350px;
+            max-height: $max-heigt;
+            max-width: $max-width;
         }
+    }
+    .border-uploader{
+        max-width: $max-width;
     }
 }
 

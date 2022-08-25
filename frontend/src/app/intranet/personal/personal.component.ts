@@ -25,9 +25,6 @@ export class PersonalComponent implements OnInit {
   // @ts-nocheck
 
   ngOnInit(): void {
-    
-   
-    
 
   }
   /*
@@ -68,7 +65,7 @@ export class PersonalComponent implements OnInit {
     }
   };*/
  
-  srcImage: Imagen = this.img[0];
+
   afuConfig = {
     uploadAPI:{
       url:environment.apiBase+"imagen/subir-imagen"

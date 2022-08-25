@@ -89,12 +89,7 @@ export class MatchComponent implements OnInit {
   ngOnInit(): void {
     
     this.subscriptionNewUsers();
-    this.imagenService.getImagenesDelServer().subscribe(
-      (img:Imagen[])=>{
-        this.imagenService.imagenes=img;
-        console.log("Imagen:",this.imagenService.imagenes);
-      }
-    );
+   
     this.imagenService.getImagenes();
     this.contUser=0;
   

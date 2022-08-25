@@ -15,25 +15,31 @@ export class ImageUploaderComponent implements OnInit {
   imagen!:Imagen;
   constructor(private imgService:ImagenesService) { }
   
-  ngOnChange(){
-    this.srcImage = this.srcImage=="undefined"?"":environment.imagenesBase + this.srcImage;
+  ngOnChanges(){
+    console.log("SRCimage:", this.srcImage);
+    this.srcImage = this.srcImage=="undefined"?this.srcImage:environment.imagenesBase + this.srcImage.imagen_src;
   }
 
   ngOnInit(): void {
     console.log("Imagen src:",this.srcImage)
     this.imagen=this.srcImage;
-    this.srcImage = this.srcImage=="undefined"?"":environment.imagenesBase + this.srcImage.imagen_src;
+    this.srcImage = this.srcImage=="undefined"?this.srcImage:environment.imagenesBase + this.srcImage.imagen_src;
     
   }
 
   exits(vari:any){
     console.log("vari:",vari );
-    return vari === "undefined";
+    if(vari == "undefined")
+      return true;
+    if(vari == 'http://localhost/connectingpeople/api/imagenes/'){
+      return true;
+    }
+    return false;
   };
 
   delete(){
     console.log("Delete");
-    this.imgService.deleteImgen(this.imagen.imagen_id); 
+    this.imgService.deleteImagen(this.imagen.imagen_id); 
     this.srcImage="";
   }
   
