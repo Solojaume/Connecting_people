@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 use yii\rest\ActiveController;
-use yii\rest\ActiveDataProvider;
+use yii\data\ActiveDataProvider;
 use app\models\Imagen;
 use app\models\ImagenSearch;
 use yii\web\NotFoundHttpException;
@@ -16,6 +16,14 @@ class ImagenController extends ApiController
 {
     public $modelClass='app\models\Imagen';
 
+    public function actions() {
+        $actions = parent::actions();
+        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
+        unset($actions['delete'], $actions['create'],$actions['update'],$actions["get"]);
+        // Redefinimos el método que prepara los datos en el index
+        $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
+        return $actions;
+    }
     /**
      * @inheritDoc
      */
@@ -27,7 +35,7 @@ class ImagenController extends ApiController
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
-                        'delete' => ['POST'],
+                        'deleteImagen' => ['POST'],
                         'getImagen'=>['POST'],
                         'subirImagen'=>['POST','FILES']
                     ],
@@ -35,19 +43,13 @@ class ImagenController extends ApiController
             ]
         );
     }
-    public function actions() {
-        $actions = parent::actions();
-        //Eliminamos acciones de crear y eliminar apuntes. Eliminamos update para personalizarla
-        unset($actions['delete'], $actions['create'],$actions['update'],$actions["get"]);
-        // Redefinimos el método que prepara los datos en el index
-        $actions['index']['prepareDataProvider'] = [$this, 'indexProvider'];
-        return $actions;
-    }
+   
 
-    public function indexProvider() {
+    public function indexProvider($id) {
         $uid=Yii::$app->user->identity->id;
+
         return new ActiveDataProvider([
-            'query' => imagen::find()->where('imagen_usuario_id='.$uid)->orderBy('imagen_id')
+            'query' => Imagen::find()->where('imagen_id='.$id)->orderBy('imagen_id')
         ]);
     }
 
@@ -93,14 +95,22 @@ class ImagenController extends ApiController
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete()
+    public function actionDeleteImagen()
     {
         $params=json_decode(file_get_contents("php://input"), false);
-        $imagen = $this->findOne("imagen_id = ".$params->imagen_id);
+        echo "Params:";
+        var_dump($params);
+        $imagen =  Imagen::find()->where("imagen_id = :imagen_id ",[":imagen_id"=>$params->imagen_id])->all();
+        echo "image:";
+        var_dump($imagen[0]);
+        $imagen = $imagen[0];
+        
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$imagen->imagen_src;
         unlink($dir_final);
         $img_ret = $imagen;
-        $imagen->delete();
+        echo"imagen->delete()";
+        var_dump($imagen->delete());
+       
         
        // $this->findModel($params->imagen_id)->delete();
 
@@ -140,7 +150,7 @@ class ImagenController extends ApiController
         }
         $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
-        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,400,750);
+        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,550,750);
 
         //$resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
         
