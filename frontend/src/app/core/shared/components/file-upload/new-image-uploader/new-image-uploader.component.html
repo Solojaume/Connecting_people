@@ -1,0 +1,9 @@
+<div class="border">
+    <angular-file-uploader class="" [config]="config " 
+    *ngIf="!cond"
+    (ApiResponse)="updateImage($event)">
+    
+    </angular-file-uploader>
+    
+    <img class="img" [src]="imagen.imagen_src" *ngIf="cond">
+</div> 

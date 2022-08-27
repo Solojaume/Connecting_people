@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
 import { ImageUploaderComponent } from './image-uploader/image-uploader.component';
 import { ServicesModule } from '../../services/services.module';
+import { ImagesComponent } from './images/images.component';
+import { NewImageUploaderComponent } from './new-image-uploader/new-image-uploader.component';
 
 
 
 @NgModule({
   declarations: [
-    ImageUploaderComponent
+    ImageUploaderComponent,
+    ImagesComponent,
+    NewImageUploaderComponent,
   ],
   imports: [
     AngularFileUploaderModule,
@@ -17,7 +21,8 @@ import { ServicesModule } from '../../services/services.module';
   ],
   exports:[
     AngularFileUploaderModule,
-    ImageUploaderComponent
+    ImageUploaderComponent,
+    ImagesComponent
   ],
   providers:[]
 })

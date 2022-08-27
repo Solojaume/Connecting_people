@@ -69,7 +69,9 @@ export class PersonalComponent implements OnInit {
   afuConfig = {
     uploadAPI:{
       url:environment.apiBase+"imagen/subir-imagen"
-    }
+    }, 
+    autoUpload: true,
+    formatsAllowed: "images/*",
   }
   
  

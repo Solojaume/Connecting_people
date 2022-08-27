@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ImagenesService {
-  imagenes:ImagenClass[]=[new ImagenClass(0,"","",0)];
+  imagenes:ImagenClass[] = [new ImagenClass(0,"","",0)];
   imgSRC:ImagenClass = new ImagenClass(0,"","",0);
   constructor(private http:HttpClient) { 
     
@@ -25,11 +25,9 @@ export class ImagenesService {
     
   }
 
-  deleteImagen(id:number){
+  deleteImagen(id:number,posO:number){
     this.deleteImagenAPI(id).subscribe(()=>{
-      let posO =  this.imagenes.findIndex(object => { 
-        return object.imagen_id === id;
-      });
+     
       this.imagenes.slice(posO,posO+1);
       console.log("Imagenes después de eliminar:", this.imagenes);
     });

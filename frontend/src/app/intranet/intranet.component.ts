@@ -8,6 +8,7 @@ import { WebSocketService } from '../core/shared/services/activate-recovery/web-
 import { WebSocketIOService } from '../core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { ImagenesService } from '../core/shared/services/imagenes/imagenes.service';
 import { Imagen } from '../core/models/imagen';
+import { ImagenClass } from '../core/models/imagenClass';
 
 @Component({
   selector: 'app-intranet',
@@ -38,6 +39,15 @@ export class IntranetComponent implements OnInit {
       (img:Imagen[])=>{
         this.imagenService.imagenes=img;
         this.imagenService.imgSRC=img[0];
+        let count = this.imagenService.imagenes.length;
+        if(count<8){
+          let rest = 8-count;
+          for (let index = 0; index < rest; index++) {
+            this.imagenService.imagenes.push(new ImagenClass(-1,"","",0));
+            
+          }
+        }
+
         console.log("Imagen:",this.imagenService.imagenes);
       }
     );

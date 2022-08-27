@@ -100,7 +100,12 @@ class ImagenController extends ApiController
         $params=json_decode(file_get_contents("php://input"), false);
         echo "Params:";
         var_dump($params);
-        $imagen =  Imagen::find()->where("imagen_id = :imagen_id ",[":imagen_id"=>$params->imagen_id])->all();
+        try {
+            $imagen =  Imagen::find()->where("imagen_id = :imagen_id ",[":imagen_id"=>$params->imagen_id])->all();
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         echo "image:";
         var_dump($imagen[0]);
         $imagen = $imagen[0];

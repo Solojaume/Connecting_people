@@ -6,7 +6,6 @@ import { ServicesModule } from './shared/services/services.module';
 
 @NgModule({
   declarations: [
-    
   ],
   imports: [
     CommonModule,   
