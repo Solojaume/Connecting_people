@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AngularFileUploaderConfig } from 'angular-file-uploader';
 import { Imagen } from 'src/app/core/models/imagen';
 import { environment } from 'src/environments/environment';
+import { ImagenesService } from '../../../services/imagenes/imagenes.service';
 
 @Component({
   selector: 'app-new-image-uploader',
@@ -10,9 +11,13 @@ import { environment } from 'src/environments/environment';
 })
 export class NewImageUploaderComponent implements OnInit {
   @Input()  config!: AngularFileUploaderConfig;
-  imagen!:Imagen;
+  @Input() imagen!:Imagen;
   cond!:boolean;
-  constructor() { }
+  constructor(public imgService:ImagenesService) { }
+  ngOnChanges(){
+    this.cond = typeof this.imagen.imagen_src!=='undefined';
+
+  }
 
   ngOnInit(): void {
 
@@ -22,5 +27,13 @@ export class NewImageUploaderComponent implements OnInit {
     this.imagen = event.body.imagen;
     this.cond=typeof this.imagen.imagen_src!=='undefined';
     this.imagen.imagen_src = environment.imagenesBase + this.imagen.imagen_src;
+  }
+  
+  deleteI(){
+    this.imagen.imagen_src = undefined;
+    this.cond=typeof this.imagen.imagen_src!=='undefined';
+    console.log("typeof imagen_src:", typeof this.imagen.imagen_src);
+    this.imgService.deleteImagen(this.imagen.imagen_id); 
+
   }
 }

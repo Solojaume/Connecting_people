@@ -98,24 +98,24 @@ class ImagenController extends ApiController
     public function actionDeleteImagen()
     {
         $params=json_decode(file_get_contents("php://input"), false);
-        echo "Params:";
-        var_dump($params);
+        //echo "Params:";
+        //var_dump($params);
         try {
             $imagen =  Imagen::find()->where("imagen_id = :imagen_id ",[":imagen_id"=>$params->imagen_id])->all();
 
         } catch (\Throwable $th) {
             //throw $th;
         }
-        echo "image:";
-        var_dump($imagen[0]);
+        //echo "image:";
+        //var_dump($imagen[0]);
         $imagen = $imagen[0];
         
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$imagen->imagen_src;
         unlink($dir_final);
         $img_ret = $imagen;
-        echo"imagen->delete()";
-        var_dump($imagen->delete());
-       
+       // echo"imagen->delete()";
+        //var_dump($imagen->delete());
+        $imagen->delete();
         
        // $this->findModel($params->imagen_id)->delete();
 

@@ -1,5 +1,5 @@
 <div class="row">
     <div class="col-3 " *ngFor="let srcImagen of imagenes">
-        <app-new-image-uploader  [config]="config" ></app-new-image-uploader>
+        <app-new-image-uploader  [imagen]="srcImagen" [config]="config" ></app-new-image-uploader>
     </div>
 </div>

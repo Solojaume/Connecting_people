@@ -25,7 +25,7 @@ export class ImagenesService {
     
   }
 
-  deleteImagen(id:number,posO:number){
+  deleteImagen(id:number,posO:number=0){
     this.deleteImagenAPI(id).subscribe(()=>{
      
       this.imagenes.slice(posO,posO+1);
