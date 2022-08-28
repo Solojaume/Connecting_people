@@ -10,12 +10,12 @@ import { MatchChatDesplegableModule } from './components/match-chat-desplegable/
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from './components/file-upload/file-upload.module';
 import { ImagesComponent } from './components/file-upload/images/images.component';
+import { FormModule } from './components/form/form.module';
+
 
 
 @NgModule({
   declarations: [
-   
-   
   ],
   imports: [
     CommonModule,
@@ -26,7 +26,8 @@ import { ImagesComponent } from './components/file-upload/images/images.componen
     MensajeModule,
     ButtonsModule,
     DesplegableModule,
-    FileUploadModule
+    FileUploadModule,
+    FormModule
   ],
   exports:[
     HttpClientModule,
@@ -36,7 +37,8 @@ import { ImagesComponent } from './components/file-upload/images/images.componen
     MensajeModule,
     ButtonsModule,   
     DesplegableModule,
-    FileUploadModule
+    FileUploadModule,
+    FormModule
   ],
   providers:[]
 })

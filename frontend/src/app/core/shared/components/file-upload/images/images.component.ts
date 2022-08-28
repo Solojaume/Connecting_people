@@ -10,6 +10,7 @@ import { ImagenClass } from 'src/app/core/models/imagenClass';
 export class ImagesComponent implements OnInit {
   @Input() imagenes!:ImagenClass[];
   @Input()  config!: AngularFileUploaderConfig;
+ 
 
   constructor() { }
 
