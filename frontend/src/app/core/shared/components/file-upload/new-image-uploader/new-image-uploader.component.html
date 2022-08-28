@@ -1,9 +1,13 @@
-<div class="border" >
-    <angular-file-uploader class="" [config]="config " 
+<div class="border pt-1 " *ngIf="!cond">
+    
+    <angular-file-uploader [config]="config " 
     *ngIf="!cond"
     (ApiResponse)="updateImage($event)">
     
     </angular-file-uploader>
     
-    <img class="img" [src]="imagen.imagen_src" *ngIf="cond" (click)="deleteI()">
+    
 </div> 
+<div class=" border border-imagen pt-1" *ngIf="cond">
+    <img class="img" [src]="imagen.imagen_src" *ngIf="cond" (click)="deleteI()">
+</div>
