@@ -36,7 +36,7 @@ class UsuarioController extends ApiController
     public function indexProvider() {
         $uid=Yii::$app->user->identity->id;
         return new ActiveDataProvider ([
-            'query' => Apuntes::find()->where('usuarios_id='.$uid )->orderBy('id')
+            'query' => Usuario::find()->where('usuarios_id='.$uid )->orderBy('id')
         ]);
     }
     public function behaviors()
@@ -50,15 +50,17 @@ class UsuarioController extends ApiController
                         'delete' => ['POST'],
                         'login'=>['POST'],
                         'activate'=>['POST'],
-                        'create'=>['POST'],
+                        'create2'=>['POST'],
                         'cambiarContrasenya'=>['POST'],
                         'recuperar'=>['GET','POST'],
-                        'autenticate' => ['POST']
+                        'autenticate' => ['POST'],
+                        'update2'=>['POST'],
+
                     ],
                 ],  
                 'authenticator' => [//token
                     'class' => HttpBearerAuth::className(),
-                    'except' => ['login','create',"activate","recuperar",'autenticate'],
+                    'except' => ['login','create2',"activate","recuperar",'autenticate'],
                 ]
             ]
         );
@@ -95,7 +97,7 @@ class UsuarioController extends ApiController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate2()
     {
         $model = new Usuario();
 
@@ -122,8 +124,24 @@ class UsuarioController extends ApiController
             if(!isset($params->nombre)|$params->nombre==""){
                 return ["error"=>"El nombre es un campo requerido","errorType"=>"nombre"];
             }
+           
+            
             if(!isset($params->fecha_na)|$params->fecha_na==""){
                 return ["error"=>"La fecha nacimiento es un campo requerido","errorType"=>"fecha"];
+            }
+            $edad = $params->fecha_na;
+            $now = strtotime(date("Y-m-d H:i:s"));
+            $edadF=0;
+            try {
+                $edad=strtotime($edad);
+                $edadF = ($now - $edad)/31536000;
+            } catch (\Throwable $th) {
+               $edadF = 0;
+            }
+            if($edad>$now){
+                return ["error"=>"La fecha nacimiento no puede ser mayor que la fecha actual","errorType"=>"fecha"];
+            }else if($edadF<18){
+                return ["error"=>"No puedes ser menor de 18","errorType"=>"fecha"];
             }
             
             //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
@@ -173,17 +191,80 @@ class UsuarioController extends ApiController
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate2()
     {
-        $model = $this->findModel($id);
+        $model = self::getUserWhithAuthToken("object");
+        $params=json_decode(file_get_contents("php://input"), false);
+        
+        if ($this->request->isPost) {
+            $post=$this->request->post();
+            //return $post;
+            //Comprovamos que los campos que vamos a utilizar existan en el params
+            if(isset($params->cambiarEmail)&& $params->cambiarEmail==true){
+                if(!isset($params->email)|$params->email==""){
+                    return ["error"=>"El email es un campo requerido","errorType"=>"email"];
+                }else if (static::is_valid_email($params->email)==false) {
+                    return ["error"=>"El email no es valido, introduce un email valido","errorType"=>"email"];
+                }
+            }
+           
+            if (isset($params->cambiarContrasenya)&& $params->cambiarContrasenya===true) {
+                if(!isset($params->passO)|$params->passO==""){
+                    return ["error"=>"La antigua contraseña es un campo requerido","errorType"=>"password"];
+                }else if(self::sha256($params->passO)!=$model->password){
+                    return ["error"=>"La contraseña antigua ha de coincidir con la existente","errorType"=>"password"];
+                }
+                if(!isset($params->password)|$params->password==""){
+                    return ["error"=>"La nueva contraseña es un campo requerido","errorType"=>"password"];
+                }else if(isset($params->passO)&&$params->passO==$params->password){
+                    return ["error"=>"La nueva contraseña no puede coincidir con la antigua","errorType"=>"password"];
+                }else if(strlen($params->password)<6){
+                    return ["error"=>"La contraseña ha de tener mínimo 6 caracteres","errorType"=>"password"];
+                }
+                if(!isset($params->pass2)|$params->pass2==""){
+                    return ["error"=>"La confirmación de contraseña es un campo requerido","errorType"=>"password2"];
+                }else if($params->password!=$params->pass2){
+                    return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
+                }
+            }          
+            
+            //Se declara las variables de los compos que se van a usar, es decir las dos password para poder compararlas entre si
+            $email=$params->email;
+            $password=$params->password;
+            $password2= $params->pass2;
+         
+           
+            //Comprovamos que las contraseñas sean iguales
+            $cond=$password==$password2;
+            
+            if ($cond && $params->cambiarContrasenya==true) {
+                $model->password=self::sha256($password);
+                //return ["error"=>$model->password,"status"=>"-"];
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                if($model->save()){
+                    return ["mensaje"=>"Se ha cambiado la password correctamente"];
+                }else{
+                    return ["error"=>"No se puede cambiar por la misma contraseña","errorType"=>"general"];
+                }
+            } else if($email && $email!= $model->email=$email){
+                $model->email=$email;
+                $model->activo=0;
+                if($model->save()){
+                    $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$model->email,"url"=>"http://localhost:4200"])["url"];
+                    $this->sendMail($model->email,"Canbio de email - Connecting People", $text);
+                    return ["mensaje"=>"Se ha cambiado email correctamente, se ha enviado un email con un enlace de verificacion al correo electronico"];
+                }else{
+                    return ["error"=>"Ya existe un usuario con el email introducido, inicie sesion o prueve con otro email","errorType"=>"general"];
+                }
+            }
+            else if(!$cond){
+                return ["error" =>"Las contraseñas no coinciden","errorType"=>"password2"];
+            }
+        } else {
+            echo "ddd";
+            $model->loadDefaultValues();
+            return ["error"=>"Contacte con el soporte"];
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
