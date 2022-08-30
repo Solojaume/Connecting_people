@@ -437,9 +437,11 @@ class UsuarioController extends ApiController
         //->replyTo('fabien@example.com')
         //->priority(Email::PRIORITY_HIGH)
         ->subject($subject)
-        ->text("Si has recivido el email sin que te corresponda, eliminalo. Este es el link de connecting people: $text")
-        ->html('<p>'."Si has recivido el email sin que te corresponda, eliminalo.
-            <br> Este es el link de connecting people para $text".'</p>');
+        ->text(" Este es el link de connecting people: $text Si has recibido este email sin que te corresponda, elimínalo, eliminalo.")
+        ->html('<p>'."
+            <br> Este es el link de Connecting People $text".'</p>'.
+            "<p>Si has recibido este email sin que te corresponda, elimínalo.</p>"
+        );
 
          return $mailer->send($email);
     }
@@ -489,7 +491,7 @@ class UsuarioController extends ApiController
                             $u->save();
                         }
                     
-                        return ["error"=>"Haz click el enlace que encontraras en tu correo electronico, si no lo encuentras solicite otro"];
+                        return ["error"=>"Haz click en el enlace que encontrarás en tu correo electrónico, si no lo encuentrás solicita otro"];
                     }
                
                 }
@@ -530,7 +532,7 @@ class UsuarioController extends ApiController
                 $u->cad_token_recuperar_pass=null;
                 $u->token_recuperar_pass=null;
                 $u->save();
-                return ["status"=>"ok","mensaje"=>"Ha sido activado satisfactoriamente"];
+                return ["status"=>"ok","mensaje"=>"Tu cuenta ha sido activada satisfactoriamente"];
             }
             else if(isset($u)){
                 $text=" para activar tu cuenta: ".$this->actionRecuperar(["sub_action"=>"generate","email"=>$u->email,"url"=>"http://localhost:4200"])["url"];
