@@ -11,7 +11,10 @@ use Yii;
  * @property int $imagen_usuario_id
  * @property string $imagen_src
  * @property string $imagen_timestamp
- *
+ * @property string $imagen_localizacion_donde_subida 
+ * Esta properti puede ser "Interno" haciendo referencia a que estan en la carpeta de imagenes del proyecto o 
+ * "Externo" que se guardan en un servidor de terceros y bajo otro dominio.
+ * 
  * @property Usuario $imagenUsuario
  */
 class Imagen extends \yii\db\ActiveRecord
@@ -33,8 +36,9 @@ class Imagen extends \yii\db\ActiveRecord
             [['imagen_usuario_id', 'imagen_src'], 'required'],
             [['imagen_id', 'imagen_usuario_id'], 'integer'],
             [['imagen_timestamp'], 'safe'],
-            //[['imagen_src'], 'string', 'max' => 50],
-            [['imagen_src'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+            [['imagen_src'], 'string', 'max' => 100],
+            [['imagen_localizacion_donde_subida'], 'string', 'max' => 12],
+            //[['imagen_src'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, gif'],
             [['imagen_id'], 'unique'],
             [['imagen_usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['imagen_usuario_id' => 'id']],
         ];
@@ -50,6 +54,7 @@ class Imagen extends \yii\db\ActiveRecord
             'imagen_usuario_id' => 'Imagen Usuario ID',
             'imagen_src' => 'Imagen Src',
             'imagen_timestamp' => 'Imagen Timestamp',
+            "imagen_localizacion_donde_subida" => "Imagen Localizacion Donde Subida"
         ];
     }
 

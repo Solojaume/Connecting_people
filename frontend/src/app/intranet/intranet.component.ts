@@ -6,6 +6,10 @@ import { AuthService } from '../core/shared/services/auth/auth.service';
 import { TokenStorageService } from '../core/shared/services/token-storage/token-storage.service';
 import { WebSocketService } from '../core/shared/services/activate-recovery/web-socket/web-socket.service';
 import { WebSocketIOService } from '../core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
+import { ImagenesService } from '../core/shared/services/imagenes/imagenes.service';
+import { Imagen } from '../core/models/imagen';
+import { ImagenClass } from '../core/models/imagenClass';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-intranet',
@@ -20,7 +24,8 @@ export class IntranetComponent implements OnInit {
     private cookieService:CookieService, 
     private apiService:AuthService,
     public webSocketService:WebSocketService,
-    private socketService:WebSocketIOService
+    private socketService:WebSocketIOService,
+    private imagenService:ImagenesService
   ) {
 
    }
@@ -30,6 +35,26 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
+    
+    this.imagenService.getImagenesDelServer().subscribe(
+      (img:Imagen[])=>{
+        this.imagenService.imagenes=img;
+        this.imagenService.imagenes.forEach((o)=>{
+          o.imagen_src = environment.imagenesBase + o.imagen_src;
+        });
+        this.imagenService.imgSRC=img[0];
+        let count = this.imagenService.imagenes.length;
+        if(count<8){
+          let rest = 8-count;
+          for (let index = 0; index < rest; index++) {
+            this.imagenService.imagenes.push(new ImagenClass(-1,undefined,"",0));
+            
+          }
+        }
+
+        console.log("Imagen:",this.imagenService.imagenes);
+      }
+    );
     if(this.token.getReload()=="false"||!this.token.getReload()) {
       this.token.setReloadTrue();
       window.location.reload();

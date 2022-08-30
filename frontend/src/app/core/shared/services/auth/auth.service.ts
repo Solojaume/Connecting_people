@@ -25,7 +25,7 @@ export class AuthService {
 
   usuarioRegistro(email:string,pass1:string,pass2:string,nombre:string,fecha_na:string){
     return this.http.post<Request>(
-      this.apiBase+"usuario/create",JSON.stringify({
+      this.apiBase+"usuario/create2",JSON.stringify({
         email:email,
         password:pass1,
         pass2:pass2,
