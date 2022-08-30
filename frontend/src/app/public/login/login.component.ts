@@ -23,13 +23,11 @@ export class LoginComponent implements OnInit {
     private token:TokenStorageService,
     private router:Router, 
     private cookieService:CookieService,
-    private webSocketService:WebSocketService,
-    private socketService:WebSocketIOService ) { 
+    ) { 
   }
  
   ngOnInit(): void {
     let usuario;
-    this.socketService.setAutenticadoFalse();
    
     try {
       usuario=JSON.parse(this.cookieService.get("usuario"))??"";
@@ -137,7 +135,7 @@ export class LoginComponent implements OnInit {
   };
 
   ngOnDestroy(){
-    this.webSocketService.setAutenticadoFalse();
+   
   }
 
 }
