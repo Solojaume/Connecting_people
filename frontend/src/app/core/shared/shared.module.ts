@@ -11,6 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from './components/file-upload/file-upload.module';
 import { ImagesComponent } from './components/file-upload/images/images.component';
 import { FormModule } from './components/form/form.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbdModalFocus } from './components/modals/modals-focus';
 
 
 
@@ -28,6 +30,7 @@ import { FormModule } from './components/form/form.module';
     DesplegableModule,
     FileUploadModule,
     FormModule
+    
   ],
   exports:[
     HttpClientModule,
@@ -39,6 +42,7 @@ import { FormModule } from './components/form/form.module';
     DesplegableModule,
     FileUploadModule,
     FormModule
+
   ],
   providers:[]
 })
