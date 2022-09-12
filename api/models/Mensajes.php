@@ -62,11 +62,17 @@ class Mensajes extends \yii\db\ActiveRecord
     {
         if ($this->isNewRecord) {
             $fecha_actual = date("Y-m-d H:i:s");
-            $now = date("Y-m-d H:i:s",strtotime($fecha_actual."+ 1 second")); 
+            $now = date("Y-m-d H:i:s", strtotime($fecha_actual . "+ 1 second"));
             //$now=\app\controllers\UsuarioController::generarCadToken("+ 1 secon");
-            $this->mensajes_id=count(Mensajes::find()->asArray()->all())+1;
-            $this->entregado=0;
+            $this->mensajes_id = count(Mensajes::find()->asArray()->all()) + 1;
+            echo "\nMensajes_id:";
+            var_dump($this->mensajes_id);
+            $this->entregado = 0;
+            echo "\nEntregado:";
+            var_dump($this->entregado);
             $this->timestamp = $now;
+            echo "\nTimestamp:";
+            var_dump($this->timestamp);
         }
         return parent::beforeSave($insert);
     }
@@ -77,7 +83,6 @@ class Mensajes extends \yii\db\ActiveRecord
     {
         echo "\n El id es: $id";
         return static::findOne($id);
-
     }
     /**
      * Gets query for [[MensajesMatch]].
@@ -88,57 +93,59 @@ class Mensajes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Mach::className(), ['match_id' => 'mensajes_match_id']);
     }
-    
+
     //Obtener  los mensages pasando
-    public static function getMensajesByMatch($match){
-       // echo "\n GetMensajesBYMatch";
+    public static function getMensajesByMatch($match)
+    {
+        // echo "\n GetMensajesBYMatch";
         return (new \yii\db\Query())
-        ->select('*')
-        ->from('mensajes')
-        ->where("mensajes_match_id=:match",[":match"=>$match])
-        
-        ->all();
-        $sql= Yii::$app->db->createCommand("SELECT * from mensajes where mensajes_match_id=$match")->queryAll();
+            ->select('*')
+            ->from('mensajes')
+            ->where("mensajes_match_id=:match", [":match" => $match])
+
+            ->all();
+        $sql = Yii::$app->db->createCommand("SELECT * from mensajes where mensajes_match_id=$match")->queryAll();
         return $sql;
         //return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> where("mensajes_match_id = $match");
     }
 
-    public static function getMensajesByUserId($usu){
-       // $q=new \yii\db\Query();
-        $sql= Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)" )->queryAll();
+    public static function getMensajesByUserId($usu)
+    {
+        // $q=new \yii\db\Query();
+        $sql = Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)")->queryAll();
         return $sql;
         /*return new \yii\data\ActiveDataProvider([
         'query'=>
             $q->select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado")->from("mensajes")->innerJoin("mach","mensajes_match_id=match_id")->where("match_id_usu1= $usu || match_id_usu2= $usu")
         ]);*/
     }
-    
-    public static function getNoRecivedMensajesByUserId($usu){
-        $sql=Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)
+
+    public static function getNoRecivedMensajesByUserId($usu)
+    {
+        $sql = Yii::$app->db->createCommand("SELECT mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu)
         AND entregado=0 AND mensajes_usuario_id!=$usu")->queryAll();
         return $sql;
         /*return (new \yii\db\Query()) -> select("mensajes_id,mensajes_match_id,mensaje_contenido,timestamp,mensajes_usuario_id,entregado") -> from("mensajes") -> innerJoin("mach","mensajes_match_id=match_id") -> 
         where("(match_id_usu1= $usu && entregado = 0 ) || (match_id_usu2= $usu && entregado = 0)");
         */
     }
-    public static function getCountMensajesByUserId($usu){
-        return (new \yii\db\Query()) -> count("mensajes_id") -> from("mensajes") -> innerJoin("mach","mensajes_match_id=match_id") -> 
-        where("match_id_usu1= $usu || match_id_usu2= $usu");
+    public static function getCountMensajesByUserId($usu)
+    {
+        return (new \yii\db\Query())->count("mensajes_id")->from("mensajes")->innerJoin("mach", "mensajes_match_id=match_id")->where("match_id_usu1= $usu || match_id_usu2= $usu");
     }
-    
-    public static function getCountNoRecivedMensagesByUserId($usu){
-        $sql= Yii::$app->db->createCommand("SELECT count(mensajes_id) FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu) AND entregado=0")->queryAll();
+
+    public static function getCountNoRecivedMensagesByUserId($usu)
+    {
+        $sql = Yii::$app->db->createCommand("SELECT count(mensajes_id) FROM `mensajes` INNER JOIN MACH  on mensajes_match_id=match_id where (match_id_usu2=$usu or match_id_usu1=$usu) AND entregado=0")->queryAll();
         return $sql;
-        return (new \yii\db\Query()) -> select( count("mensajes_id")) -> from("mensajes") -> innerJoin("mach","mensajes_match_id=match_id") -> 
-        where("(match_id_usu1= $usu && entregado = 0 ) || (match_id_usu2= $usu && entregado = 0)");
-
+        return (new \yii\db\Query())->select(count("mensajes_id"))->from("mensajes")->innerJoin("mach", "mensajes_match_id=match_id")->where("(match_id_usu1= $usu && entregado = 0 ) || (match_id_usu2= $usu && entregado = 0)");
     }
-    public static function getCountMensajesByMatch($match){
-        return (new \yii\db\Query())-> count("mensajes_id") -> from("mensajes") -> where("mensajes_match_id = $match");
+    public static function getCountMensajesByMatch($match)
+    {
+        return (new \yii\db\Query())->count("mensajes_id")->from("mensajes")->where("mensajes_match_id = $match");
     }
-    public static function getCountMensajes(){
-        return (new \yii\db\Query()) -> count("mensajes_id") -> from("mensajes");
+    public static function getCountMensajes()
+    {
+        return (new \yii\db\Query())->count("mensajes_id")->from("mensajes");
     }
-
-    
 }
