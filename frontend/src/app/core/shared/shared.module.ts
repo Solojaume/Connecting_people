@@ -13,11 +13,14 @@ import { ImagesComponent } from './components/file-upload/images/images.componen
 import { FormModule } from './components/form/form.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdModalFocus } from './components/modals/modals-focus';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 
 @NgModule({
   declarations: [
+  
+    FooterComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +44,8 @@ import { NgbdModalFocus } from './components/modals/modals-focus';
     ButtonsModule,   
     DesplegableModule,
     FileUploadModule,
-    FormModule
+    FormModule,
+    FooterComponent
 
   ],
   providers:[]
