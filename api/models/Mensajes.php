@@ -38,7 +38,7 @@ class Mensajes extends \yii\db\ActiveRecord
             [['mensajes_id', 'mensajes_match_id', 'entregado', 'mensajes_usuario_id'], 'integer'],
             [['timestamp'], 'safe'],
             [['mensaje_contenido'], 'string', 'max' => 256],
-            [['mensajes_id'], 'unique'],
+            //[['mensajes_id'], 'unique'],
             [['mensajes_match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Mach::className(), 'targetAttribute' => ['mensajes_match_id' => 'match_id']],
         ];
     }
@@ -64,9 +64,9 @@ class Mensajes extends \yii\db\ActiveRecord
             $fecha_actual = date("Y-m-d H:i:s");
             $now = date("Y-m-d H:i:s", strtotime($fecha_actual . "+ 1 second"));
             //$now=\app\controllers\UsuarioController::generarCadToken("+ 1 secon");
-            $this->mensajes_id = count(Mensajes::find()->asArray()->all()) + 1;
+            /*$this->mensajes_id = count(Mensajes::find()->asArray()->all()) + 1;
             echo "\nMensajes_id:";
-            var_dump($this->mensajes_id);
+            var_dump($this->mensajes_id);*/
             $this->entregado = 0;
             echo "\nEntregado:";
             var_dump($this->entregado);
