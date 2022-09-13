@@ -3,6 +3,7 @@ import { AngularFileUploaderConfig } from 'angular-file-uploader';
 import { Imagen } from 'src/app/core/models/imagen';
 import { environment } from 'src/environments/environment';
 import { ImagenesService } from '../../../services/imagenes/imagenes.service';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-new-image-uploader',

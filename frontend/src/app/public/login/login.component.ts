@@ -114,14 +114,14 @@ export class LoginComponent implements OnInit {
     
   }
   buttonLogueame={
-    nombre: "Logueame",
+    nombre: "Loguearme",
     link: " ",
     classCSS:"btn-terciario",
     type: "submit"
   };
   
   buttonRegistrame= {
-    nombre: "Registrame",
+    nombre: "Registrarme",
     link: "/register",
     classCSS:"btn-vacio-terciario ",
     type: "button"

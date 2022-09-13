@@ -181,7 +181,12 @@ class ChatController extends Controller{
                         echo"\nRecived";
                         $mensajeBd->entregado=1;
                     }
+                    echo"\nMensajeBd";
+                    var_dump($mensajeBd);
                     echo"\nModel->save:";
+                    if($mensajeBd->save()){
+                        echo "\nGUARDADOOO WIIIIIIIIIIIIIIIIIIIIIIII";
+                    }
                     var_dump($mensajeBd->save());
                 }
                 //echo "\n¡¡¡SALE DE SEND!!!\n\n\n";

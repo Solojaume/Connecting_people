@@ -13,7 +13,7 @@ import { authInterceptorProviders } from './core/shared/_helpers/auth.intercepto
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
-
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
 //Colors
 $primary:#BD00F5;
 $secondary:#18F584;
@@ -110,3 +111,5 @@ $cuaternario-l:#FA0DA590;
 
     }
 }
+
+
