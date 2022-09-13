@@ -5,6 +5,7 @@ import { IntranetRoutingModule } from './intranet-routing.module';
 import { SharedModule } from '../core/shared/shared.module';
 import { WebSocketService } from '../core/shared/services/activate-recovery/web-socket/web-socket.service';
 import { ServicesModule } from '../core/shared/services/services.module';
+import { RouterLinkActive } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ServicesModule } from '../core/shared/services/services.module';
     IntranetRoutingModule,
     SharedModule, 
     ServicesModule,
+    
   ],
   exports:[
     IntranetComponent

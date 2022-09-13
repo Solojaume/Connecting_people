@@ -78,3 +78,7 @@
         }
     }
 }
+.active{
+    @extend .active;
+    color:#00A4AD !important;
+}
