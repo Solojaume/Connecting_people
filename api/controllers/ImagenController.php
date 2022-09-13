@@ -229,6 +229,9 @@ class ImagenController extends ApiController
             case 'image/gif': 
                 $image = imagecreatefromgif($source); 
                 break; 
+            case 'image/webp': 
+                $image = imagecreatefromwebp($source); 
+                break;     
             default: 
                 $image = imagecreatefromjpeg($source); 
         } 
