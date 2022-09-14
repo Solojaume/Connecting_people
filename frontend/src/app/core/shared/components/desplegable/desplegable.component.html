@@ -13,7 +13,12 @@
         <div class="badge bg-success float-right" *ngIf="con(objeto)">{{objeto.match_count_no_leidos}}</div>
         
         <div class="d-flex align-items-start">
-            <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
+            <app-imagenes [config]="config" [imagen_src]="objeto.fotos[0]" *ngIf="objeto.fotos"></app-imagenes>
+            
+            <app-imagenes [config]="config" [imagen_src]="imagen_por_defecto" *ngIf="!objeto.fotos"></app-imagenes>
+            <!--
+                <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
+            -->
             <div class="flex-grow-1 ml-3">
                {{objeto.match_id_usu2.nombre}}
                 <div class="status" *ngIf="objeto.estado_conexion_u2=='Conectado'"> <i class="fa fa-circle online" ></i> Online </div>

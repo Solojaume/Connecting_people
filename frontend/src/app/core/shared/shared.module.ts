@@ -14,6 +14,7 @@ import { FormModule } from './components/form/form.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdModalFocus } from './components/modals/modals-focus';
 import { FooterComponent } from './components/footer/footer.component';
+import { ImagenesModule } from './components/imagenes/imagenes.module';
 
 
 
@@ -32,7 +33,8 @@ import { FooterComponent } from './components/footer/footer.component';
     ButtonsModule,
     DesplegableModule,
     FileUploadModule,
-    FormModule
+    FormModule,
+    ImagenesModule
     
   ],
   exports:[
@@ -45,7 +47,8 @@ import { FooterComponent } from './components/footer/footer.component';
     DesplegableModule,
     FileUploadModule,
     FormModule,
-    FooterComponent
+    FooterComponent,
+    ImagenesModule
 
   ],
   providers:[]

@@ -13,17 +13,19 @@
 						</div>
 					</div>
 					
-					<app-desplegable [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public" (chatEvent)="cargarChat($event)" ></app-desplegable>
-					<app-desplegable [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)" ></app-desplegable>
-					<hr class="d-block d-lg-none mt-1 mb-0">
+					<app-desplegable class="" [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public" (chatEvent)="cargarChat($event)" *ngIf="socketService.matches_public.length != 0" ></app-desplegable>
+					<app-desplegable class="m-2" [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)"  *ngIf="socketService.chats.length != 0 && socketService.matches_public.length != 0"></app-desplegable>
+					
+					<app-desplegable class="" [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)"  *ngIf="socketService.chats.length != 0 && socketService.matches_public.length == 0"></app-desplegable><hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
 					<div class="py-2 px-4 border-bottom d-none d-lg-block">
 						<div class="d-flex align-items-center py-1">
 							<div class="position-relative">
-								<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+								<app-imagenes [config]="config"  ></app-imagenes>
+
 							</div>
-							<div class="flex-grow-1 pl-3">
+							<div class="flex-grow-1 pl-3 m-2">
 								<strong>{{socketService.chatUsar.match_id_usu2.nombre}}</strong>
 								<div class="text-muted small" *ngIf="socketService.chatUsar.estado_conexion_u2=='Conectado'"> <em>Online</em> </div>
 								<div class="text-muted small" *ngIf="socketService.chatUsar.estado_conexion_u2=='Escriviendo'"> <em>Typing...</em></div>
@@ -37,31 +39,7 @@
 					</div>
 
 					<div class="position-relative">
-						<div class="chat-messages p-4">
-							<!--
-							<div class="chat-message-right pb-4">
-								<div>
-									<img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
-									<div class="text-muted small text-nowrap mt-2">2:33 am</div>
-								</div>
-								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-									<div class="font-weight-bold mb-1">You</div>
-									Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
-								</div>
-							</div>
-
-							<div class="chat-message-left pb-4">
-								<div>
-									<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
-									<div class="text-muted small text-nowrap mt-2">2:34 am</div>
-								</div>
-								<div class="flex-shrink-1 bg-cuaternario-ligero rounded py-2 px-3 ml-3">
-									<div class="font-weight-bold mb-1">Sharon Lessman</div>
-									Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
-								</div>
-							</div>
-						-->
-						
+						<div class="chat-messages p-4">					
 						
 							<div *ngFor="let chatMessage of socketService.mensajes[socketService.chatUsar.match_position]">
 								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="socketService.chatUsar.match_id_usu2"></app-mensaje>

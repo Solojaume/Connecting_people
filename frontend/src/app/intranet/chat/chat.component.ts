@@ -9,6 +9,7 @@ import { WebSocketIOService } from 'src/app/core/shared/services/activate-recove
 import { Match } from 'src/app/core/models/chat/Match';
 import { fromEvent } from 'rxjs';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
+import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
 
 
 @Component({
@@ -23,7 +24,9 @@ export class ChatComponent implements OnInit {
   
   //@Output() mensaje: EventEmitter<WebSocketService>;
   //webSocketService!:WebSocketService;
-  
+  config: IImagenesComponentConfig = {
+    type: 'rounded',
+  };
   typingSended:any=false;
   constructor(
    // public webSocketStorageService:WebSocketStorageService,

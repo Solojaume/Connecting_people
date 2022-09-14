@@ -1,0 +1,12 @@
+.margin{
+    margin-left: 1em;
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+.rounded-circle{
+    @extend .rounded-circle;
+    max-width: 2.65em;
+    max-height: 2.65em;
+  
+}
+
