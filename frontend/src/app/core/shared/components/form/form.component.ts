@@ -39,19 +39,19 @@ export class FormComponent implements OnInit {
   buttonGuardar={
     nombre: "Guardar cambios",
     link: " ",
-    classCSS:"btn-terciario",
+    classCSS:"btn btn-success",
     type: "submit"
   };  
   buttonCambiarContrasenya={
     nombre: "Cambiar Contraseña",
     link: " ",
-    classCSS:"btn-primario mt-1",
+    classCSS:" btn  btn-outline-terciario mt-1",
     type: "button"
   };
   buttonCambiarEmail={
     nombre: "Cambiar Email",
     link: " ",
-    classCSS:"btn-primario mt-1",
+    classCSS:"btn  btn-outline-dark mt-1",
     type: "button"
   };
 
