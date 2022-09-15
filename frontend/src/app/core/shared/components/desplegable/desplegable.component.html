@@ -1,9 +1,13 @@
-<div class="row text-center " id="ocultar-chat" *ngIf='desplegado==true' (click)="ocultar()">
+<div class="row text-center " id="no-hay-chat" *ngIf=' lista_objetos.length == 0' (click)="ocultar()">
+    <strong class="col-6">No hay {{tipo_objeto}}</strong>
+</div>
+
+<div class="row text-center " id="ocultar-chat" *ngIf='desplegado==true && lista_objetos.length != 0' (click)="ocultar()">
     <strong class="col-6">Ocultar {{tipo_objeto}}</strong>
     <i class="bi bi-caret-up-fill col-2"></i>	
 </div>
 
-<div class="row text-center" id="mostrar-chat" *ngIf="desplegado==false" (click)="mostrar()">
+<div class="row text-center" id="mostrar-chat" *ngIf="desplegado==false && lista_objetos.length != 0" (click)="mostrar()">
     <strong class="col-6">Mostrar {{tipo_objeto}}</strong>
     <i class="bi bi-caret-down-fill col-2"></i>	
 </div>
@@ -13,7 +17,7 @@
         <div class="badge bg-success float-right" *ngIf="con(objeto)">{{objeto.match_count_no_leidos}}</div>
         
         <div class="d-flex align-items-start">
-            <app-imagenes [config]="config" [imagen_src]="objeto.fotos[0]" *ngIf="objeto.fotos"></app-imagenes>
+            <app-imagenes [config]="config" [imagen_src]="objeto.fotos[0].imagen_src" *ngIf="objeto.fotos"></app-imagenes>
             
             <app-imagenes [config]="config" [imagen_src]="imagen_por_defecto" *ngIf="!objeto.fotos"></app-imagenes>
             <!--

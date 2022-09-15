@@ -13,10 +13,9 @@
 						</div>
 					</div>
 					
-					<app-desplegable class="" [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public" (chatEvent)="cargarChat($event)" *ngIf="socketService.matches_public.length != 0" ></app-desplegable>
-					<app-desplegable class="m-2" [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)"  *ngIf="socketService.chats.length != 0 && socketService.matches_public.length != 0"></app-desplegable>
+					<app-desplegable class="" [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public" (chatEvent)="cargarChat($event)"  ></app-desplegable>
+					<app-desplegable class="m-2" [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)"  ></app-desplegable>
 					
-					<app-desplegable class="" [tipo_objeto]="'chats'"  [lista_objetos]="socketService.chats" (chatEvent)="cargarChat($event)"  *ngIf="socketService.chats.length != 0 && socketService.matches_public.length == 0"></app-desplegable><hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
 					<div class="py-2 px-4 border-bottom d-none d-lg-block">
