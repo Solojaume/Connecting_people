@@ -1,6 +1,6 @@
 <div class="form-signin justify-content-center">
     <form id="register-form" [formGroup]="formularioRegistro" (ngSubmit)="submit()">
-      <app-buttons [button]="buttonCambiarContrasenya" (click)="cambiarContrasenya()"></app-buttons>
+      <app-buttons [button]="buttonCambiarContrasenya" (click)="cambiarContrasenya()" *ngIf="mostraCambiarEmail != true"></app-buttons>
       <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
         <input type="password" formControlName="passO" class="form-control" id="floatingPassword" placeholder="Password">
         <label for="floatingPassword">
@@ -31,7 +31,7 @@
           <span class="color-red" *ngIf="pass2==''">(requerido)</span>
         </label>
       </div>
-      <app-buttons [button]="buttonCambiarEmail" (click)="cambiarEmail()"></app-buttons>
+      <app-buttons [button]="buttonCambiarEmail" (click)="cambiarEmail()" *ngIf="mostraCambiarContrasenya != true"></app-buttons>
         <div class="form-floating" *ngIf="mostraCambiarEmail == true">
           <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
           <label for="floatingInput">

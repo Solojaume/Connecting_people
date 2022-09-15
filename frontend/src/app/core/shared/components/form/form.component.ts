@@ -58,9 +58,11 @@ export class FormComponent implements OnInit {
   cambiarContrasenya(){
     if(this.mostraCambiarContrasenya==true){
       this.buttonCambiarContrasenya.nombre="Cambiar Contraseña";
+      this.buttonCambiarContrasenya.classCSS="btn btn-outline-terciario mt-1";
       this.mostraCambiarContrasenya=false;
     }else{
       this.buttonCambiarContrasenya.nombre="No Cambiar Contraseña";
+      this.buttonCambiarContrasenya.classCSS="btn btn-danger";
       this.mostraCambiarContrasenya=true;
     }
     console.log("MostrarContraseña",this.mostraCambiarContrasenya);
@@ -68,9 +70,11 @@ export class FormComponent implements OnInit {
   cambiarEmail(){
     if(this.mostraCambiarEmail==true){
       this.buttonCambiarEmail.nombre="Cambiar Email";
+      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-1";
       this.mostraCambiarEmail=false;
     }else{
       this.buttonCambiarEmail.nombre="No Cambiar Email";
+      this.buttonCambiarEmail.classCSS="btn btn-danger";
 
       this.mostraCambiarEmail=true;
     }
