@@ -1,3 +1,6 @@
-<img class=" rounded-circle mr-1" [src]="imagen_src" *ngIf="config.type=='rounded'" >
 
-<img class="rounded-circle margin  mr-1" [src]="imagen_src" *ngIf="config.type=='rounded-with-margin'" >
+<!-- _____________________________________ Rounded ________________________________ -->
+<img class=" rounded-circle mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type=='rounded' && existFotosEnArray()" >
+<img class=" rounded-circle mr-1" [src]="imagen_src" *ngIf="config.type=='rounded' && !existFotosEnArray()" >
+<img class="rounded-circle margin  mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type=='rounded-with-margin' && existFotosEnArray()" >
+<img class="rounded-circle margin  mr-1" [src]="imagen_src" *ngIf="config.type=='rounded-with-margin' && !existFotosEnArray()" >

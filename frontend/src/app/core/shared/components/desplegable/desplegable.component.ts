@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IMatchModel } from 'src/app/core/models/chat/Interfaces/IMatchModel';
+import { Match } from 'src/app/core/models/chat/Match';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
 import { WebSocketIOService } from '../../services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 
@@ -12,7 +13,7 @@ export class DesplegableComponent implements OnInit {
   desplegado: boolean = true;
 
   @Input() tipo_objeto!: string;
-  @Input() lista_objetos!: any[];
+  @Input() lista_objetos!: Match[];
   @Output() chatEvent = new EventEmitter<any>();
 
   config: IImagenesComponentConfig = {
@@ -57,6 +58,13 @@ export class DesplegableComponent implements OnInit {
       }
     } catch (error) {
       return false;
+    }
+    return false;
+  }
+
+  existFotosEnObjeto(objeto:any){
+    if(objeto[0]){
+      return true;
     }
     return false;
   }
