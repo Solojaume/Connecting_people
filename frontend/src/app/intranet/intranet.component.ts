@@ -39,8 +39,11 @@ export class IntranetComponent implements OnInit {
     this.imagenService.getImagenesDelServer().subscribe(
       (img:Imagen[])=>{
         this.imagenService.imagenes=img;
-        this.imagenService.imagenes.forEach((o)=>{
-          o.imagen_src = environment.imagenesBase + o.imagen_src;
+        this.imagenService.imagenes.forEach((o:Imagen)=>{
+          if(o.imagen_localizacion_donde_subida=="Interno"){
+            o.imagen_src = environment.imagenesBase + o.imagen_src;
+
+          }
         });
         this.imagenService.imgSRC=img[0];
         let count = this.imagenService.imagenes.length;
