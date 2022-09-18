@@ -1,7 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/dist/css/bootstrap.css";
+
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+
 //Colors
 $primary: #bd00f5;
 $secondary: #18f584;
@@ -83,6 +85,10 @@ $cuaternario-l: #fa0da590;
 .color-red {
   @include color($color: #ff0000);
 }
+.text-success{
+  color: $secondary !important;
+}
+
 .margin-0 {
   margin: 0;
 }
