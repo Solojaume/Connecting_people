@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MensajeComponent } from './mensaje.component';
 import { ServicesModule } from '../../services/services.module';
+import { ImagenesModule } from '../imagenes/imagenes.module';
 
 
 
@@ -11,7 +12,8 @@ import { ServicesModule } from '../../services/services.module';
   ],
   imports: [
     CommonModule,
-    ServicesModule
+    ServicesModule,
+    ImagenesModule
   ],
   exports:[
     MensajeComponent,

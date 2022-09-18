@@ -15,6 +15,9 @@ export class ImagenesComponent implements OnInit {
 
   imagen_src: string = 'https://bootdey.com/img/Content/avatar/avatar5.png';
   constructor() {}
+  ngOnChange():void{
+    console.log("Algo cambio aquí tienes las imagenes",this.imagenes);
+  }
 
   ngOnInit(): void {
     console.log('imagen_src:', this.imagen_src);
@@ -22,10 +25,16 @@ export class ImagenesComponent implements OnInit {
 
   existFotosEnArray() {
     try {
+      console.log("Entra en try");
+      console.log("this.imagenes[0]",this.imagenes[0]);
+
       if (this.imagenes[0]) {
+        console.log("En el if");
+
         return true;
       }
     } catch (error) {
+      console.log("errors",error);
       return false;
     }
     return false;

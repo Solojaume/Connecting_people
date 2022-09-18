@@ -8,15 +8,21 @@ class CommandsImagenController extends WebsocketController{
         $imagenes = Imagen::getImagenUsuario($id);
         echo "\nHemos obtenido las imagenes y son:";
         var_dump($imagenes);
+        $imagenes_d = [];
         foreach ($imagenes as $key) {
             
-            if($key["imagen_localizacion_donde_subida"]=="interno"){
+            if($key["imagen_localizacion_donde_subida"]=="Interno"){
                 echo"Entramos en el puñetero if";
-                $key->imagen_src = $GLOBALS["base_imagenes"].$key->imagen_src;
+                echo "\n Base imagenes:";
+                var_dump($GLOBALS["base_imagenes"]);
+                $key["imagen_src"] = $GLOBALS["base_imagenes"].$key["imagen_src"];
             }
+            $imagenes_d[] = $key;
         }
         echo"\n Salimos de for";
-        return $imagenes;
+        unset($imagenes);
+        var_dump($imagenes_d);
+        return $imagenes_d;
 
     }
 
