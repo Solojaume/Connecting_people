@@ -1,37 +1,3 @@
-.margin {
-  margin-left: 1em;
-  margin-right: 5px;
-  margin-bottom: 2px;
-}
-.rounded-circle {
-  @extend .rounded-circle;
-  max-width: 2.65em;
-  max-height: 2.65em;
-}
-
-.carousel-caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left:0;
-  padding-top: 1.25rem;
-  padding-bottom:0;
-  color: #fff;
-  text-align: start;
-  padding-left: 0;
-  p{
-    padding-left: 1.25rem;
-    padding-bottom: 0.06rem;
-  }
-  .row{
-    padding-top: 1.2rem;
-    padding-bottom: 1.2rem;
-  }
-}
-
-
-
-
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) {
   .image {
@@ -113,38 +79,3 @@
     min-height: 500px;
   }
 }
-
-@mixin like_dislike($color) {
-  border-color:$color ;
-  color:$color;
-  font-size: 1.5em;
-  .bi{
-    font-size: 1.26em;
-  }
-  &:hover{
-    .bi{
-      font-size: 2em;
-    }
-  }
- 
-
-}
-.circulo {
-  width: 3em;
-  height: 3em;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  background: transparent;
-  &.dislike{
-    @include like_dislike($color:red);
- 
-  }
-  
-  &.like{
-    @include like_dislike($color:#5cb85c); 
-  }
-
- 
-}
-

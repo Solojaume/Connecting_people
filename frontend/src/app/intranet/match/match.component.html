@@ -10,16 +10,11 @@
 						<div class="d-flex" *ngIf="error==''">
 							<div class="align-items-center text-end"  *ngIf="error==''">
 								<div class="row align-items-center"  *ngIf="error==''"> 						
-									<div class="col-12" *ngIf="error==''">
-										<img [src]="imagen" class="img-fluid image" alt="" *ngIf="error==''">
+									<div class="col-12 align-items-end text-end slider  " *ngIf="error==''">
+										<app-slider  (like)="like()" (dislike)="dislike()"></app-slider>
 									</div>
-								
-									<div class="col-12 align-items-end text-end ms-1" *ngIf="con()==true">
-										<button (click)="dislike()" class="btn btn-danger col-2" *ngIf="con()==true">Dislike</button>
-										<strong class="col-2" id="Name" *ngIf="error==''">Nombre: {{nombre}}, </strong>
-										<strong class="col-1" id="Edad" *ngIf="error==''"> Edad: {{timestamp_nacimiento}} </strong>
-										<button (click)="like()" class="btn btn-success col-2" *ngIf="error==''">Like</button>
-									</div>
+									<p></p>
+									<p></p>
 								</div>
 							</div>		
 						</div>

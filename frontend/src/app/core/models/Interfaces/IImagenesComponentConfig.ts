@@ -1,5 +1,9 @@
 
 export interface IImagenesComponentConfig{
     
-    type?:string
+    type:string,
+    username?:string,
+    edad?:number,
+    like_dislike_button?:boolean,
+    actived?:boolean|null;
 }

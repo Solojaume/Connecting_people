@@ -4,3 +4,30 @@
 <img class=" rounded-circle mr-1" [src]="imagen_src" *ngIf="config.type=='rounded' && !existFotosEnArray()" >
 <img class="rounded-circle margin  mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type=='rounded-with-margin' && existFotosEnArray()" >
 <img class="rounded-circle margin  mr-1" [src]="imagen_src" *ngIf="config.type=='rounded-with-margin' && !existFotosEnArray()" >
+
+
+<!--__________________________ Imagen en carrusel ________________________________-->
+<div class="carousel-item active" *ngIf="config.type=='slider-imagen'">
+    <img class="d-block w-100" src="https://cdn.pixabay.com/photo/2014/12/06/19/46/girl-559307_960_720.jpg" alt="First slide">
+    <div class="carousel-caption d-none d-md-block" *ngIf="config.username && config.edad">
+        <p class="h3">
+            <span class="fw-bold">{{config.username}}</span>
+            <span class="fw-lighter m-2">{{config.edad}}</span>
+        </p>
+        <p></p>
+        
+        <div class="row bg-dark" *ngIf="config.like_dislike_button==true">
+            <div class="col"></div>
+            <button class="circulo dislike col" (click)="dislikeM()">
+                <i class="bi bi-x "></i>
+            </button>
+            <div class="col"></div>
+            <button class="circulo like col" (click)="likeM()">
+                <i class="bi bi-suit-heart-fill"></i>
+            </button>
+            <div class="col"></div>
+        </div>
+    </div>    
+
+     
+</div>
