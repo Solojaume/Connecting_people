@@ -8,12 +8,10 @@ import { Router } from '@angular/router';
 })
 export class ButtonsComponent implements OnInit {
  @Input () button!:{nombre:string, link:string, classCSS:string, type:string};
-  constructor(private router:Router) { 
-    
-  }
+  constructor(private router:Router) {}
 
   ngOnInit(): void {
-    
+    console.log("Nuevo Button");
   }
   
   redirectTo(){

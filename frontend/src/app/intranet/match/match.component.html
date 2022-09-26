@@ -11,7 +11,7 @@
 							<div class="align-items-center text-end"  *ngIf="error==''">
 								<div class="row align-items-center"  *ngIf="error==''"> 						
 									<div class="col-12 align-items-end text-end slider  " *ngIf="error==''">
-										<app-slider  (like)="like()" (dislike)="dislike()"></app-slider>
+										<app-slider [config]="configSlider" (like)="like()" (dislike)="dislike()"></app-slider>
 									</div>
 									<p></p>
 									<p></p>

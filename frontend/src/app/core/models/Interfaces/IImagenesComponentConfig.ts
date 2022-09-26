@@ -1,6 +1,5 @@
 
 export interface IImagenesComponentConfig{
-    
     type:string,
     username?:string,
     edad?:number,

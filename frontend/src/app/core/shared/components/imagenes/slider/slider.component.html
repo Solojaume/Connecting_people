@@ -6,15 +6,18 @@
       <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
-       <app-imagenes [config]="configIm" (likeDislike)="likeDislikeM($event)"></app-imagenes>
+     
+       <app-imagenes [configAvanzada]="sliderService.configImagen" (likeDislike)="likeDislikeM($event)" ></app-imagenes>
         
     </div>
+    <!--___________________________________ Botones ocultos por que no funcionan____________________________
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" (click)="cambiarImagen()">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
+  -->
   </div>

@@ -31,3 +31,34 @@
 
      
 </div>
+
+<!--__________________________ Imagen en carrusel config avanzada ____________________________-->
+<div class="carousel-item" *ngIf="configAvanzada.config.type=='slider-imagen'" [class]="actived">
+    <img class="d-block w-100" src="https://cdn.pixabay.com/photo/2014/12/06/19/46/girl-559307_960_720.jpg" alt="First slide">
+    <div class="carousel-caption d-none d-md-block" >
+        <p class="h3"
+            >
+            <span class="fw-bold"*ngIf="
+            configAvanzada.config.username">
+                {{configAvanzada.config.username}}
+            </span>
+            <span class="fw-lighter m-2"*ngIf=" 
+            configAvanzada.config.edad">
+                {{configAvanzada.config.edad}}
+            </span>
+        </p>
+        <p></p>
+        
+        <div class="row bg-dark" *ngIf="configAvanzada.config.like_dislike_button==true">
+            <div class="col"></div>
+            <button class="circulo dislike col" (click)="dislikeM()">
+                <i class="bi bi-x "></i>
+            </button>
+            <div class="col"></div>
+            <button class="circulo like col" (click)="likeM()">
+                <i class="bi bi-suit-heart-fill"></i>
+            </button>
+            <div class="col"></div>
+        </div>
+    </div> 
+</div>

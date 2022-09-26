@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Imagen } from 'src/app/core/models/imagen';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
+import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
 
 @Component({
   selector: 'app-imagenes',
@@ -12,22 +13,27 @@ export class ImagenesComponent implements OnInit {
     type: '',
   };
   @Input() imagenes: Imagen[]=[];
-  @Input() configAvanzada:any | null=null;
+  @Input() configAvanzada!:IImagenesComponentConfigAvanzada;
   @Output() likeDislike:EventEmitter<string> = new EventEmitter<string>();
   imagen_src: string = 'https://bootdey.com/img/Content/avatar/avatar5.png';
+  actived = "active";
   constructor() {}
   ngOnChange():void{
     console.log("Algo cambio aquí tienes las imagenes",this.imagenes);
-    console.log("CONFIG AVANZADA:",this.configAvanzada);
-    if(typeof this.configAvanzada!=null ){
-      alert("entra carjos")
-      this.config = this.configAvanzada.config;
-      this.imagenes = [this.configAvanzada.img];
+    console.log("CONFIG AVANZADA en imagen component:",this.configAvanzada);
+    if(this.configAvanzada!=null && this.configAvanzada.config.actived==false){
+      this.actived = "";
+
+    }else{
+      this.actived = "active";
+
     }
   }
 
   ngOnInit(): void {
     console.log('imagen_src:', this.imagen_src);
+    console.log("CONFIG AVANZADA en imagen component onInit:",this.configAvanzada);
+
   }
 
   dislikeM(){

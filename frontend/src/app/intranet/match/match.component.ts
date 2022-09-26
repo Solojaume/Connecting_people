@@ -10,6 +10,7 @@ import { WebSocketService } from 'src/app/core/shared/services/activate-recovery
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.service';
 import { Imagen } from 'src/app/core/models/imagen';
+import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
 
 @Component({
   selector: 'app-match',
@@ -34,6 +35,7 @@ export class MatchComponent implements OnInit {
   nombre!:any;
   timestamp_nacimiento!:any;
   bacio:any=false;
+  configSlider:IImagenesComponentConfigAvanzada[]=[];
   subscriptionNewUsers(){
     this.match.getNewMatchUsers().subscribe(
       u =>
@@ -41,9 +43,26 @@ export class MatchComponent implements OnInit {
         if(u.length>=1){
           this.usuarios=u;
           this.contUser=0;
-          this.imagen = this.usuarios[this.contUser].imagenes[0].imagen_src;
+          this.imagen = this.usuarios[this.contUser].imagenes;
           this.nombre = this.usuarios[this.contUser].nombre;
           this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+          for (let index = 0; index < this.imagen.length; index++) {
+            const imagen = this.imagen[index];
+            console.log( "IMAGEN:",imagen);
+            let configIm={
+              type:"slider-imagen",
+              edad:this.timestamp_nacimiento,
+              username:this.nombre,
+              like_dislike_button:true,
+              actived:true
+            };
+            let configAvanzada={
+              config:configIm,
+              img:imagen
+            }
+            this.configSlider.push(configAvanzada);
+          }
+          console.log("configSlider:",this.configSlider)
           this.error="";
         }else{
           this.usuarios = [];

@@ -39,7 +39,7 @@ export class FormComponent implements OnInit {
   buttonGuardar={
     nombre: "Guardar cambios",
     link: " ",
-    classCSS:"btn btn-success",
+    classCSS:"btn btn-success mt-3 mb-2",
     type: "submit"
   };  
   buttonCambiarContrasenya={
@@ -51,7 +51,7 @@ export class FormComponent implements OnInit {
   buttonCambiarEmail={
     nombre: "Cambiar Email",
     link: " ",
-    classCSS:"btn  btn-outline-dark mt-1",
+    classCSS:"btn  btn-outline-dark mt-2",
     type: "button"
   };
 
@@ -70,7 +70,7 @@ export class FormComponent implements OnInit {
   cambiarEmail(){
     if(this.mostraCambiarEmail==true){
       this.buttonCambiarEmail.nombre="Cambiar Email";
-      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-1";
+      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-2";
       this.mostraCambiarEmail=false;
     }else{
       this.buttonCambiarEmail.nombre="No Cambiar Email";
