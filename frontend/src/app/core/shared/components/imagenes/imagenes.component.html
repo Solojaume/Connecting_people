@@ -33,7 +33,7 @@
 </div>
 
 <!--__________________________ Imagen en carrusel config avanzada ____________________________-->
-<div class="carousel-item" *ngIf="configAvanzada.config.type=='slider-imagen'" [class]="actived">
+<div class="carousel-item" *ngIf="configAvanzada!=null && configAvanzada.config.type=='slider-imagen'" [class]="actived">
     <img class="d-block w-100" src="https://cdn.pixabay.com/photo/2014/12/06/19/46/girl-559307_960_720.jpg" alt="First slide">
     <div class="carousel-caption d-none d-md-block" >
         <p class="h3"

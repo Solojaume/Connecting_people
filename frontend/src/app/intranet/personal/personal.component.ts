@@ -71,6 +71,7 @@ export class PersonalComponent implements OnInit {
       url:environment.apiBase+"imagen/subir-imagen"
     }, 
     autoUpload: true,
+    hideResetBtn: true,
     formatsAllowed: "images/*",
   }
   
