@@ -1,10 +1,10 @@
-<p class="color-red"  *ngIf="error!=''">
+<p class="color-red"  *ngIf="error!==''">
     {{error}}
 </p>
-<p  class="color-white" *ngIf="mensaje!=''">
+<p  class="color-white" *ngIf="mensaje!==''">
     {{mensaje}}
 </p>
 <app-buttons [button]="buttonIrLogin"
- *ngIf="mensaje=='Tu cuenta ha sido activada satisfactoriamente'||error=='Petición incorrecta, puede que ya se haya activado prueve a iniciar sesion'">
+ *ngIf="mensaje==='Tu cuenta ha sido activada satisfactoriamente'||error==='Petición incorrecta, puede que ya se haya activado prueve a iniciar sesion'">
     
 </app-buttons>

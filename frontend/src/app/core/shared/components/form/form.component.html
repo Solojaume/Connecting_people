@@ -1,65 +1,119 @@
 <div class="form-signin justify-content-center">
-    <form id="register-form" [formGroup]="formularioRegistro" (ngSubmit)="submit()">
-      <app-buttons [button]="buttonCambiarContrasenya" (click)="cambiarContrasenya()" *ngIf="mostraCambiarEmail != true"></app-buttons>
-      <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
-        <input type="password" formControlName="passO" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">
-          <span class="color-red" *ngIf="errorType=='passwordO' || password==''">*</span>
-          Contraseña Antigua
-          <span *ngIf="passwordOriginal!=''">(requerido)</span>
-          <span class="color-red" *ngIf="passwordOriginal==''">(requerido)</span>
-        </label>
-      </div>
-      <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
-        <input type="password" formControlName="pass1" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">
-          <span class="color-red" *ngIf="errorType=='password' || password==''">*</span>
-          Nueva Contraseña
-          <span *ngIf="passwordL!=true">(mínimo 6 caracteres)</span>
-          <span class="color-red" *ngIf="passwordL==true">(mínimo 6 caracteres)</span>
-    
-          <span *ngIf="password!=''">(requerido)</span>
-          <span class="color-red" *ngIf="password==''">(requerido)</span>
-        </label>
-      </div>
-      <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
-        <input type="password" formControlName="pass2" class="form-control" id="floatingPassword2" placeholder="Password">
-        <label for="floatingPassword2">
-          <span class="color-red" *ngIf="errorType=='password2' || pass2==''">*</span>
-          Confirmar Nueva Contraseña
-          <span *ngIf="pass2!=''">(requerido)</span>
-          <span class="color-red" *ngIf="pass2==''">(requerido)</span>
-        </label>
-      </div>
-      <app-buttons [button]="buttonCambiarEmail" (click)="cambiarEmail()" *ngIf="mostraCambiarContrasenya != true"></app-buttons>
-        <div class="form-floating" *ngIf="mostraCambiarEmail == true">
-          <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">
-            <span class="color-red" *ngIf="errorType=='email' || email==''">*</span>
-            Correo electrónico 
-            <span class="color-red" *ngIf="email==''">(requerido)</span>
-            <span *ngIf="email!=''">(requerido)</span>
-          </label>
-        </div>
+  <form
+    id="register-form"
+    [formGroup]="formularioRegistro"
+    (ngSubmit)="submit()"
+  >
+    <app-buttons
+      [button]="buttonCambiarContrasenya"
+      (click)="cambiarContrasenya()"
+      *ngIf="mostraCambiarEmail !== true"
+    ></app-buttons>
+    <div class="form-floating" *ngIf="mostraCambiarContrasenya === true">
+      <input
+        type="password"
+        formControlName="passO"
+        class="form-control"
+        id="floatingPassword"
+        placeholder="Password"
+      />
+      <label for="floatingPassword">
+        <span
+          class="color-red"
+          *ngIf="errorType === 'passwordO' || password === ''"
+          >*</span
+        >
+        Contraseña Antigua
+        <span *ngIf="passwordOriginal !== ''">(requerido)</span>
+        <span class="color-red" *ngIf="passwordOriginal === ''"
+          >(requerido)</span
+        >
+      </label>
+    </div>
+    <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
+      <input
+        type="password"
+        formControlName="pass1"
+        class="form-control"
+        id="floatingPassword"
+        placeholder="Password"
+      />
+      <label for="floatingPassword">
+        <span
+          class="color-red"
+          *ngIf="errorType === 'password' || password === ''"
+          >*</span
+        >
+        Nueva Contraseña
+        <span *ngIf="passwordL != true">(mínimo 6 caracteres)</span>
+        <span class="color-red" *ngIf="passwordL == true"
+          >(mínimo 6 caracteres)</span
+        >
 
-      
-        <app-buttons [button]="buttonGuardar" *ngIf="mostraCambiarContrasenya==true || mostraCambiarEmail == true"></app-buttons>
-      
-      
-      </form>
-      
+        <span *ngIf="password !== ''">(requerido)</span>
+        <span class="color-red" *ngIf="password === ''">(requerido)</span>
+      </label>
+    </div>
+    <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
+      <input
+        type="password"
+        formControlName="pass2"
+        class="form-control"
+        id="floatingPassword2"
+        placeholder="Password"
+      />
+      <label for="floatingPassword2">
+        <span
+          class="color-red"
+          *ngIf="errorType == 'password2' || pass2 === ''"
+          >*</span
+        >
+        Confirmar Nueva Contraseña
+        <span *ngIf="pass2 !== ''">(requerido)</span>
+        <span class="color-red" *ngIf="pass2 === ''">(requerido)</span>
+      </label>
+    </div>
+    <app-buttons
+      [button]="buttonCambiarEmail"
+      (click)="cambiarEmail()"
+      *ngIf="mostraCambiarContrasenya != true"
+    ></app-buttons>
+    <div class="form-floating" *ngIf="mostraCambiarEmail == true">
+      <input
+        type="email"
+        formControlName="email"
+        class="form-control"
+        id="floatingInput"
+        placeholder="name@example.com"
+      />
+      <label for="floatingInput">
+        <span class="color-red" *ngIf="errorType === 'email' || email === ''"
+          >*</span
+        >
+        Correo electrónico
+        <span class="color-red" *ngIf="email === ''">(requerido)</span>
+        <span *ngIf="email !== ''">(requerido)</span>
+      </label>
+    </div>
+
+    <app-buttons
+      [button]="buttonGuardar"
+      *ngIf="mostraCambiarContrasenya == true || mostraCambiarEmail == true"
+    ></app-buttons>
+  </form>
+
   <div class="color-white" *ngIf="error">
-    <span class="color-red" *ngIf="errorType==''">*</span>
-    {{error}}
-  </div>  
+    <span class="color-red" *ngIf="errorType === ''">*</span>
+    {{ error }}
+  </div>
 
-  <div *ngIf="error==''">
-    <div class="color-white row ml-3" *ngFor="let e of errors" >
-    <!-- <span class="color-red" *ngIf="errorType==''">*</span> -->
-      {{e}}
+  <div *ngIf="error === ''">
+    <div class="color-white row ml-3" *ngFor="let e of errors">
+      <!-- <span class="color-red" *ngIf="errorType==''">*</span> -->
+      {{ e }}
     </div>
   </div>
   <div class="color-white" *ngIf="mensaje">
-    {{mensaje}}
+    {{ mensaje }}
   </div>
 </div>
