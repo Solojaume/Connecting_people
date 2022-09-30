@@ -23,6 +23,7 @@ export class ReviewComponent implements OnInit {
   
   
   ngOnInit(): void {
+    console.log("Review:",this.datos);
     this.ver_mas=true;
     this.ver_menos=false;
   }

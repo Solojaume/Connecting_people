@@ -15,7 +15,7 @@ import { WebSocketIOService } from 'src/app/core/shared/services/activate-recove
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit{
   subscribe!:Subscription ;
   error:string="";
 
@@ -134,8 +134,5 @@ export class LoginComponent implements OnInit {
     type: "button"
   };
 
-  ngOnDestroy(){
-   
-  }
 
 }

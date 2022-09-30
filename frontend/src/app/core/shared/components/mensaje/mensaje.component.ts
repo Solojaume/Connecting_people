@@ -11,7 +11,7 @@ import { ImagenesModule } from '../imagenes/imagenes.module';
   templateUrl: './mensaje.component.html',
   styleUrls: ['./mensaje.component.scss'],
 })
-export class MensajeComponent implements OnInit {
+export class MensajeComponent {
   @Input() mensaje!: MensajeModel; //[fecha]
   @Input() u2?: any;
   usuario!: any;
@@ -26,5 +26,4 @@ export class MensajeComponent implements OnInit {
     this.usuario = token.getUser();
   }
 
-  ngOnInit(): void {}
 }

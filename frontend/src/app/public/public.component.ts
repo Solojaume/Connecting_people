@@ -5,12 +5,8 @@ import { Router} from '@angular/router';
   templateUrl: './public.component.html',
   styleUrls: ['./public.component.scss']
 })
-export class PublicComponent implements OnInit {
+export class PublicComponent{
 
   constructor(){}
-
-
-  ngOnInit(): void {
-  }
 
 }

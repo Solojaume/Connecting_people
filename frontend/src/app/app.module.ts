@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { authInterceptorProviders } from './core/shared/_helpers/auth.interceptor';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { authInterceptorProviders } from './core/shared/_helpers/auth.intercepto
     BrowserModule,
     AppRoutingModule,
     CoreModule,
+    NoopAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

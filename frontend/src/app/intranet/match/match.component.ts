@@ -42,6 +42,7 @@ export class MatchComponent implements OnInit {
       {
         if(u.length>=1){
           this.usuarios=u;
+          console.log("Usuarios:",this.usuarios);
           this.contUser=0;
           this.imagen = this.usuarios[this.contUser].imagenes;
           this.nombre = this.usuarios[this.contUser].nombre;
@@ -106,9 +107,9 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+  
     this.subscriptionNewUsers();
-   
+  
     this.imagenService.getImagenes();
     this.contUser=0;
   
@@ -181,11 +182,5 @@ export class MatchComponent implements OnInit {
     } else{
       this.usuarios=[];
     }
-  }
-
-  
-  ngOnDestroy(){
-   
-   
   }
 }

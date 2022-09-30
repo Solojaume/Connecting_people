@@ -5,7 +5,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
   templateUrl: './match-chat-desplegable.component.html',
   styleUrls: ['./match-chat-desplegable.component.scss']
 })
-export class MatchChatDesplegableComponent implements OnInit {
+export class MatchChatDesplegableComponent  {
   @Input() matches!:any[];
   @Input() mensajes!:{};
   @Input() usuarios!:{};
@@ -16,11 +16,9 @@ export class MatchChatDesplegableComponent implements OnInit {
     
   }
 
-  ngOnInit(): void {
-    
-  }
+ 
   
   cargarChat($event:Event) {
- $event;
+    $event;
   }
 }

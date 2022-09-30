@@ -5,13 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './politicas.component.html',
   styleUrls: ['./politicas.component.scss']
 })
-export class PoliticasComponent implements OnInit {
+export class PoliticasComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-   
-
-  }
 
 }

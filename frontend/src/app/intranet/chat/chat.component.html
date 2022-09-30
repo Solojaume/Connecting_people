@@ -37,13 +37,26 @@
 					</div>
 
 					<div class="position-relative">
+						<!--
 						<div class="chat-messages p-4">					
 						
 							<div *ngFor="let chatMessage of socketService.mensajes[socketService.chatUsar.match_position]">
 								<app-mensaje class="position-relative" [mensaje]="chatMessage" [u2]="socketService.chatUsar.match_id_usu2"></app-mensaje>
 							</div>
 						
-						</div>
+						</div>	
+						-->
+						
+						<cdk-virtual-scroll-viewport  itemSize="100" cdkScrollable  class="chat-messages2 p-4">
+						
+							<app-mensaje *ngFor="let chatMessage of socketService.mensajes[socketService.chatUsar.match_position]" 
+							class="position-relative ml-1y"
+							 [mensaje]="chatMessage" 
+							 [u2]="socketService.chatUsar.match_id_usu2">
+							</app-mensaje>
+
+						</cdk-virtual-scroll-viewport>
+						
 					</div>
 
 					<form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio">

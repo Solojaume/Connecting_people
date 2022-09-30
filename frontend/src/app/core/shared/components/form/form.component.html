@@ -30,7 +30,7 @@
         >
       </label>
     </div>
-    <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
+    <div class="form-floating" *ngIf="mostraCambiarContrasenya === true">
       <input
         type="password"
         formControlName="pass1"
@@ -45,8 +45,8 @@
           >*</span
         >
         Nueva Contraseña
-        <span *ngIf="passwordL != true">(mínimo 6 caracteres)</span>
-        <span class="color-red" *ngIf="passwordL == true"
+        <span *ngIf="passwordL !== true">(mínimo 6 caracteres)</span>
+        <span class="color-red" *ngIf="passwordL === true"
           >(mínimo 6 caracteres)</span
         >
 
@@ -54,7 +54,7 @@
         <span class="color-red" *ngIf="password === ''">(requerido)</span>
       </label>
     </div>
-    <div class="form-floating" *ngIf="mostraCambiarContrasenya == true">
+    <div class="form-floating" *ngIf="mostraCambiarContrasenya === true">
       <input
         type="password"
         formControlName="pass2"
@@ -65,7 +65,7 @@
       <label for="floatingPassword2">
         <span
           class="color-red"
-          *ngIf="errorType == 'password2' || pass2 === ''"
+          *ngIf="errorType === 'password2' || pass2 === ''"
           >*</span
         >
         Confirmar Nueva Contraseña
@@ -76,9 +76,9 @@
     <app-buttons
       [button]="buttonCambiarEmail"
       (click)="cambiarEmail()"
-      *ngIf="mostraCambiarContrasenya != true"
+      *ngIf="mostraCambiarContrasenya !== true"
     ></app-buttons>
-    <div class="form-floating" *ngIf="mostraCambiarEmail == true">
+    <div class="form-floating" *ngIf="mostraCambiarEmail === true">
       <input
         type="email"
         formControlName="email"
@@ -98,7 +98,7 @@
 
     <app-buttons
       [button]="buttonGuardar"
-      *ngIf="mostraCambiarContrasenya == true || mostraCambiarEmail == true"
+      *ngIf="mostraCambiarContrasenya === true || mostraCambiarEmail === true"
     ></app-buttons>
   </form>
 

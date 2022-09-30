@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
-export class PersonalComponent implements OnInit {
+export class PersonalComponent  {
   progress = 0;
   img:ImagenClass[]=[];
   constructor(private token:TokenStorageService,public imgService:ImagenesService) { 
@@ -24,9 +24,6 @@ export class PersonalComponent implements OnInit {
  
   // @ts-nocheck
 
-  ngOnInit(): void {
-
-  }
   /*
   afuConfig = {
     uploadAPI:  {

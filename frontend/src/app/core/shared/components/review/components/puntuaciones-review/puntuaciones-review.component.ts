@@ -5,12 +5,10 @@ import { Component, Input, OnInit } from '@angular/core';
   templateUrl: './puntuaciones-review.component.html',
   styleUrls: ['./puntuaciones-review.component.scss']
 })
-export class PuntuacionesReviewComponent implements OnInit {
+export class PuntuacionesReviewComponent  {
   @Input() puntuaciones:any;
   
   constructor() { }
 
-  ngOnInit(): void {
-  }
 
 }

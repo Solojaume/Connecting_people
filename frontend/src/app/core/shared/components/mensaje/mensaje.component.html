@@ -1,7 +1,7 @@
 <!-- Este muestra los mensajes cuando el usuario que lo envia es distinto que lo usa-->
 <div
   class="chat-message-left pb-4 mr-3 start-0"
-  *ngIf="usuario.id != mensaje.chat_user"
+  *ngIf="usuario.id !== mensaje.chat_user"
 >
   <div>
     <app-imagenes [config]="config" [imagenes]="u2.fotos"></app-imagenes>
@@ -16,7 +16,7 @@
 <!-- Este muestra los mensajes cuando el usuario que lo envia es el mismo que lo usa-->
 <div
   class="chat-message-ritgh pb-4 ml-3 end-0"
-  *ngIf="usuario.id == mensaje.chat_user"
+  *ngIf="usuario.id === mensaje.chat_user"
 >
   <div>
     <app-imagenes

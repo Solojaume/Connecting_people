@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { IMatchModel } from 'src/app/core/models/chat/Interfaces/IMatchModel';
 import { Match } from 'src/app/core/models/chat/Match';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
@@ -9,7 +9,7 @@ import { WebSocketIOService } from '../../services/activate-recovery/web-socket/
   templateUrl: './desplegable.component.html',
   styleUrls: ['./desplegable.component.scss'],
 })
-export class DesplegableComponent implements OnInit {
+export class DesplegableComponent implements OnInit,OnChanges {
   desplegado: boolean = true;
 
   @Input() tipo_objeto!: string;

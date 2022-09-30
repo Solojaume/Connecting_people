@@ -14,8 +14,8 @@
     <label for="floatingPassword">
       <span class="color-red" *ngIf="errorType==='password' || password===''">*</span>
       Contraseña
-      <span *ngIf="passwordL!=true">(mínimo 6 caracteres)</span>
-      <span class="color-red" *ngIf="passwordL==true">(mínimo 6 caracteres)</span>
+      <span *ngIf="passwordL!==true">(mínimo 6 caracteres)</span>
+      <span class="color-red" *ngIf="passwordL===true">(mínimo 6 caracteres)</span>
 
       <span *ngIf="password!==''">(requerido)</span>
       <span class="color-red" *ngIf="password===''">(requerido)</span>
