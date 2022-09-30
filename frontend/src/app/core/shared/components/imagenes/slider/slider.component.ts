@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
 import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
 import { SliderService } from './slider.service';
@@ -8,7 +8,7 @@ import { SliderService } from './slider.service';
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
 })
-export class SliderComponent implements OnInit {
+export class SliderComponent implements OnInit,OnChanges {
   @Input() config: IImagenesComponentConfigAvanzada[] = [];
   configImagen!: IImagenesComponentConfigAvanzada;
   @Output() like = new EventEmitter<string>();
@@ -36,10 +36,12 @@ export class SliderComponent implements OnInit {
   }
 
   constructor(public sliderService: SliderService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("LikeDislike hecho");
+  }
 
   ngOnInit(): void {
-    this.configImagen = this.config[this.imagenPosition];
-    this.sliderService.setSliderImagen(this.config[this.imagenPosition]);
+    console.log("Slider Cargado");
   }
 
   cambiarImagen() {

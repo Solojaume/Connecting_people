@@ -52,7 +52,7 @@
 							<app-mensaje *ngFor="let chatMessage of socketService.mensajes[socketService.chatUsar.match_position]" 
 							class="position-relative ml-1y"
 							 [mensaje]="chatMessage" 
-							 [u2]="socketService.chatUsar.match_id_usu2">
+							 [u2]="socketService.chatUsar.match_id_usu2" (imprimido)="scrollEnd()">
 							</app-mensaje>
 
 						</cdk-virtual-scroll-viewport>

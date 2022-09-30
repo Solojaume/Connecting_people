@@ -48,7 +48,11 @@ export class ChatComponent implements OnInit {
     });
   }
 
-
+  scrollEnd(){
+    this.cdkScrollable.scrollTo({
+      bottom: 0,
+    });
+  }
 
   sendMessage() {
     //console.log("Chat Usar:",this.chatUsar)

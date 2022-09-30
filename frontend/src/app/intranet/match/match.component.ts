@@ -47,23 +47,7 @@ export class MatchComponent implements OnInit {
           this.imagen = this.usuarios[this.contUser].imagenes;
           this.nombre = this.usuarios[this.contUser].nombre;
           this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
-          for (let index = 0; index < this.imagen.length; index++) {
-            const imagen = this.imagen[index];
-            console.log( "IMAGEN:",imagen);
-            let configIm={
-              type:"slider-imagen",
-              edad:this.timestamp_nacimiento,
-              username:this.nombre,
-              like_dislike_button:true,
-              actived:true
-            };
-            let configAvanzada={
-              config:configIm,
-              img:imagen
-            }
-            this.configSlider.push(configAvanzada);
-          }
-          console.log("configSlider:",this.configSlider)
+          this.setConfigSlider();
           this.error="";
         }else{
           this.usuarios = [];
@@ -78,12 +62,35 @@ export class MatchComponent implements OnInit {
     );
   }
 
+  setConfigSlider(){
+    this.configSlider=[];
+    for (let index = 0; index < this.imagen.length; index++) {
+      const imagen = this.imagen[index];
+      console.log( "IMAGEN:",imagen);
+      let configIm={
+        type:"slider-imagen",
+        edad:this.timestamp_nacimiento,
+        username:this.nombre,
+        like_dislike_button:true,
+        actived:true
+      };
+      let configAvanzada={
+        config:configIm,
+        img:imagen
+      }
+      this.configSlider.push(configAvanzada);
+    }
+    console.log("ConfigSlider:",this.configSlider);
+  }
+
   likeDislikeS(estado:number){
     if(this.usuarios.length>1){
-      this.imagen=this.usuarios[this.contUser].imagenes[0].imagen_src;
-      this.nombre = this.usuarios[this.contUser].nombre;
-      this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+      this.imagen=this.usuarios[this.contUser+1].imagenes;
+      this.nombre = this.usuarios[this.contUser+1].nombre;
+      this.timestamp_nacimiento = this.usuarios[this.contUser+1].timestamp_nacimiento;
+      this.setConfigSlider();
       this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
+    
      // this.contUser=this.contUser+1;
       //console.log(this.contUser);
       this.error="";
@@ -146,15 +153,12 @@ export class MatchComponent implements OnInit {
 
  //Recive por parametro si ha sido like o no 
  //Si es like recive true si no false
-  likedislike(like:number){
-    if(this.usuarios.length==1){
-      this.subscriptionNewUsers();
-    }
+  likeDislike(like:number){
+    this.imagen=this.usuarios[this.contUser].imagenes;
+    this.nombre = this.usuarios[this.contUser].nombre;
+    this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+    this.setConfigSlider();
     this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
-    
-    console.log("ContUser:"+this.contUser);
-    this.likeDislikeS(like);
-    //this.subscribe.unsubscribe();
   }
   
   like(){
