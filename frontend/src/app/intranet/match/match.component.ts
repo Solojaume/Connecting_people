@@ -45,8 +45,11 @@ export class MatchComponent implements OnInit {
           console.log("Usuarios:",this.usuarios);
           this.contUser=0;
           this.imagen = this.usuarios[this.contUser].imagenes;
+          console.log("imagen:",this.imagen);
           this.nombre = this.usuarios[this.contUser].nombre;
+          console.log("NOMBRE WEY:",this.nombre);
           this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+          console.log("Fecha nacimiento:",this.timestamp_nacimiento);
           this.setConfigSlider();
           this.error="";
         }else{
@@ -65,8 +68,8 @@ export class MatchComponent implements OnInit {
   setConfigSlider(){
     this.configSlider=[];
     for (let index = 0; index < this.imagen.length; index++) {
-      const imagen = this.imagen[index];
-      console.log( "IMAGEN:",imagen);
+      const imagenA = this.imagen[index];
+      console.log( "IMAGEN:",imagenA);
       let configIm={
         type:"slider-imagen",
         edad:this.timestamp_nacimiento,
@@ -76,7 +79,7 @@ export class MatchComponent implements OnInit {
       };
       let configAvanzada={
         config:configIm,
-        img:imagen
+        img:imagenA
       }
       this.configSlider.push(configAvanzada);
     }
@@ -85,12 +88,12 @@ export class MatchComponent implements OnInit {
 
   likeDislikeS(estado:number){
     if(this.usuarios.length>1){
-      this.imagen=this.usuarios[this.contUser+1].imagenes;
-      this.nombre = this.usuarios[this.contUser+1].nombre;
-      this.timestamp_nacimiento = this.usuarios[this.contUser+1].timestamp_nacimiento;
-      this.setConfigSlider();
+     
       this.removeItemFromArr(this.usuarios,this.usuarios[this.contUser]);
-    
+      this.imagen=this.usuarios[this.contUser].imagenes;
+      this.nombre = this.usuarios[this.contUser].nombre;
+      this.timestamp_nacimiento = this.usuarios[this.contUser].timestamp_nacimiento;
+      this.setConfigSlider();
      // this.contUser=this.contUser+1;
       //console.log(this.contUser);
       this.error="";

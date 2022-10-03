@@ -36,7 +36,7 @@ class Mach extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['match_id', 'match_id_usu1', 'match_id_usu2', 'match_estado_u1'], 'required'],
+            [[ 'match_id_usu1', 'match_id_usu2', 'match_estado_u1'], 'required'],
             [['match_id', 'match_id_usu1', 'match_id_usu2', 'match_estado_u1', 'match_estado_u2'], 'integer'],
             [['match_fecha'], 'safe'],
             [['match_id'], 'unique'],
@@ -204,7 +204,7 @@ class Mach extends \yii\db\ActiveRecord
     }
     public function beforeSave($insert){
         if ($this->isNewRecord) {
-            $this->match_id=count(Mach::find()->asArray()->all());
+            //$this->match_id=count(Mach::find()->asArray()->all());
         }
         return parent::beforeSave($insert);
     }

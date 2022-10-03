@@ -176,7 +176,7 @@ class MachController extends ApiController
         }
         if($m==null){
             $m=new Mach();
-            $m->match_id=count(Mach::find()->asArray()->all());
+            //$m->match_id=count(Mach::find()->asArray()->all());
             $m->match_id_usu1=$u->id;
             $m->match_id_usu2=$u2->id;
             $m->match_estado_u1=$estado;

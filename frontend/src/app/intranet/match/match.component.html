@@ -23,7 +23,7 @@
 				</div>
 				<div class="col-12 col-lg-5 col-xl-4 border-letf" *ngIf="error===''">
 
-					<div class="px-4 d-none d-md-block" >
+					<div class="px-4 d-none d-md-block" *ngIf="usuarios[contUser].reviews !==null&&usuarios[contUser].reviews.length!==0" >
 						<app-reviews [reviews]="usuarios[contUser].reviews"  ></app-reviews>
 					</div>
 

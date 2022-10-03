@@ -38,6 +38,7 @@ export class SliderComponent implements OnInit,OnChanges {
   constructor(public sliderService: SliderService) {}
   ngOnChanges(changes: SimpleChanges): void {
     console.log("LikeDislike hecho");
+    console.log("slider imagenes:",this.config)
   }
 
   ngOnInit(): void {
