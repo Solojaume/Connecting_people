@@ -174,6 +174,7 @@ class MachController extends ApiController
             $m->match_estado_u2=$estado;
             $m->match_fecha=$now;
         }
+       
         if($m==null){
             $m=new Mach();
             //$m->match_id=count(Mach::find()->asArray()->all());
