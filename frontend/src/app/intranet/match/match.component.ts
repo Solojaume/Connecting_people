@@ -85,7 +85,7 @@ export class MatchComponent implements OnInit {
 
   likeDislikeS(estado: number) {
     if (this.usuarios.length > 1) {
-      alert("mayor que uno y usario.length:"+this.usuarios.length );
+      //alert("mayor que uno y usario.length:"+this.usuarios.length );
       this.subscribe = this.match
         .likeDislike(this.usuarios[this.contUser]['id'], estado)
         .subscribe((s) => {});
@@ -104,9 +104,9 @@ export class MatchComponent implements OnInit {
         this.usuarios[this.contUser].timestamp_nacimiento;
       this.setConfigSlider();
       this.error = '';
-      alert("salida mayor que uno usario.length:"+this.usuarios.length );
+      //alert("salida mayor que uno usario.length:"+this.usuarios.length );
     } else if (this.usuarios.length == 1) {
-      alert("Uno y usario.length:"+this.usuarios.length );
+      //alert("Uno y usario.length:"+this.usuarios.length );
       this.subscribe = this.match
         .likeDislike(this.usuarios[this.contUser]['id'], estado)
         .subscribe((s) => {});
@@ -127,7 +127,7 @@ export class MatchComponent implements OnInit {
       // this.contUser=this.contUser+1;
       //console.log(this.contUser);
       this.error = '';
-      alert("salida Uno y usario.length:"+this.usuarios.length );
+      //alert("salida Uno y usario.length:"+this.usuarios.length );
     } else {
       this.subscriptionNewUsers();
       this.contUser = 0;

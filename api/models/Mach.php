@@ -101,8 +101,7 @@ class Mach extends \yii\db\ActiveRecord
                 (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and m2.match_id_usu1=$usuario1 and u2.id=u.id)
                 AND NOT EXISTS
                 /*Esto saca a los usuarios los cuales les has dado like en segundo lugar*/
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and u2.id=$usuario1 and u2.id=u.id) 
-                AND NOT EXISTS 
+                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu1 = u2.id WHERE m2.match_estado_u2=1 and m2.match_id_usu2=$usuario1 and m2.match_id_usu1=u.id and u.id!=$usuario1)                AND NOT EXISTS 
                 /*Esto saca a los usuarios los cuales les has dado dislike en primer lugar*/         
                 (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m3 on m3.match_id_usu1 = u2.id WHERe m3.match_estado_u1=2 and u2.id=$usuario1 and u2.id=u.id) AND NOT EXISTS 
                 /*usuario a los cuales te han dado dislike en Segundo lugar */
