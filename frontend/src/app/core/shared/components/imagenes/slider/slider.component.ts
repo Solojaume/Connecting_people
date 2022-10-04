@@ -24,7 +24,8 @@ export class SliderComponent implements OnInit,OnChanges {
 
   likeDislikeM(l_d: string) {
     switch (l_d) {
-      case 'dilike':
+      case 'dislike':
+
         this.dislike.emit();
         break;
       case 'like':

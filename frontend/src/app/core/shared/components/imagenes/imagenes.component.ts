@@ -41,6 +41,7 @@ export class ImagenesComponent implements OnInit,OnChanges {
   }
 
   dislikeM(){
+    
     this.likeDislike.emit("dislike");
   }
   likeM(){
