@@ -11,6 +11,7 @@ import { WebSocketIOService } from 'src/app/core/shared/services/activate-recove
 import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.service';
 import { Imagen } from 'src/app/core/models/imagen';
 import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-match',
@@ -65,7 +66,11 @@ export class MatchComponent implements OnInit {
   setConfigSlider() {
     this.configSlider = [];
     for (let index = 0; index < this.imagen.length; index++) {
-      const imagenA = this.imagen[index];
+      let imagenA = this.imagen[index];
+      if (imagenA.imagen_localizacion_donde_subida == 'Interno') {
+        imagenA.imagen_src = environment.imagenesBase + imagenA.imagen_src;
+      }
+      console.log("THIS.imagen['index']:", this.imagen[index]);
       console.log('IMAGEN:', imagenA);
       let configIm = {
         type: 'slider-imagen',
@@ -90,15 +95,18 @@ export class MatchComponent implements OnInit {
         .likeDislike(this.usuarios[this.contUser]['id'], estado)
         .subscribe((s) => {});
       this.removeItemFromArr(this.usuarios, this.usuarios[this.contUser]);
-      if (this.usuarios[this.contUser].hasOwnProperty('imagenes')) {
-        this.imagen = this.usuarios[this.contUser].imagenes;
-      }
+
       this.imagen = [
         {
           imagen_id: 0,
           imagen_src: '',
         },
       ];
+      if (this.usuarios[this.contUser].hasOwnProperty('imagenes')) {
+        this.imagen = this.usuarios[this.contUser].imagenes;
+        console.log('Imagen actualizada dentro del if');
+      }
+
       this.nombre = this.usuarios[this.contUser].nombre;
       this.timestamp_nacimiento =
         this.usuarios[this.contUser].timestamp_nacimiento;

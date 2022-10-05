@@ -155,7 +155,7 @@ class ImagenController extends ApiController
         }
         $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
-        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,550,750);
+        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,750,950);
 
         //$resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
         
@@ -213,7 +213,7 @@ class ImagenController extends ApiController
     * Función personalizada para comprimir y 
     * subir una imagen mediante PHP
     */ 
-    function compressImage($source, $destination, $quality, $with=500 ,$heitgh=500) { 
+    function compressImage($source, $destination, $quality, $with=1080 ,$heitgh=1080) { 
         // Obtenemos la información de la imagen
         $imgInfo = getimagesize($source); 
         $mime = $imgInfo['mime']; 

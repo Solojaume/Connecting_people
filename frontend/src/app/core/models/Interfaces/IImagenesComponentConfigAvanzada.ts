@@ -3,5 +3,5 @@ import { IImagenesComponentConfig } from "./IImagenesComponentConfig";
 
 export interface IImagenesComponentConfigAvanzada{
     config:IImagenesComponentConfig,
-    img?:Imagen
+    img:Imagen
 }

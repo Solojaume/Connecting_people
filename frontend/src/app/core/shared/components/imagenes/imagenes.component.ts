@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Imagen } from 'src/app/core/models/imagen';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
 import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-imagenes',
