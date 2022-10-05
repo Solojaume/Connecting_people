@@ -146,9 +146,9 @@ class MachController extends ApiController
 
     public function actionGet_new_match_users_list(){
         
-        $m= new Mach();
-        $m= $m->getUsersNoMostrados();
-        $c=0;
+        $m = new Mach();
+        $m = $m->getUsersNoMostrados();
+        $c = 0;
   
         //return ["status"=>"error"];
         return $m;

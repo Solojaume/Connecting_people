@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+
 use yii\filters\Cors;
 use yii\filters\auth\HttpBearerAuth;
 use yii\data\ActiveDataProvider;
@@ -15,15 +16,31 @@ class ApiController extends \yii\rest\ActiveController
     public $authenable = true;//en los controladores que no queramos el token se pone en false
     public $modelClass="d";
     public $frontendUrlBase = "localhost:4200";
-    public $ApiImagesUrl="http://localhost/connectingpeople/api/imagenes/";
+
+    public $ApiImagesUrl = "";
+    public $ApiUrl = "";
+    public $UrlBaseFrontend = "";
 
     public function beforeAction($a)
-    {
+    {   
+        $this->ApiImagesUrl = self::get_base_imagen_URL();
+        $this->ApiUrl = self::get_base_URL_api();
+        $this->UrlBaseFrontend = self::get_url_frontend();
         header('Access-Control-Allow-Origin: *');
         return parent::beforeAction($a);
     }
 
-
+    public static function get_base_imagen_URL(){
+        return $GLOBALS["base_imagenes"];
+     }
+     
+     public static function get_base_URL_api(){
+        return $GLOBALS["base_api"];
+     }
+  
+     public static function get_url_frontend(){
+        return $GLOBALS["base_frontend"];
+     }
     public function behaviors()
     {
         $behaviors = parent::behaviors();

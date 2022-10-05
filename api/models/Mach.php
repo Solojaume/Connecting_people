@@ -95,31 +95,31 @@ class Mach extends \yii\db\ActiveRecord
         }else {
             $lista_usuarios=Yii::$app->db->createCommand(
                 //Select a  la tabla usuario
-                "SELECT id,nombre,timestamp_nacimiento FROM usuario as u where
-                NOT EXISTS 
-                /*Esto saca a los usuarios los cuales les has dado like en primer lugar*/ 
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and m2.match_id_usu1=$usuario1 and u2.id=u.id)
-                AND NOT EXISTS
-                /*Esto saca a los usuarios los cuales les has dado like en segundo lugar*/
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu1 = u2.id WHERE m2.match_estado_u2=1 and m2.match_id_usu2=$usuario1 and m2.match_id_usu1=u.id and u.id!=$usuario1)                AND NOT EXISTS 
-                /*Esto saca a los usuarios los cuales les has dado dislike en primer lugar*/         
-                ( SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m3 on m3.match_id_usu2 = u2.id WHERe m3.match_estado_u1=2 AND m3.match_id_usu2=u.id and m3.match_id_usu1=$usuario1 )
-                 AND NOT EXISTS 
-                /*usuario a los cuales te han dado dislike en Segundo lugar */
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu1 = u2.id WHERe m4.match_estado_u2=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id)
-                AND NOT EXISTS
-                /*usuario a los cuales te han dado dislike en primer lugar */
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERe m4.match_estado_u1=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id) AND NOT EXISTS
-                /*OBTENEMOS EL USUARIO CON LOS QUE HEMOS HECHO MACTH*/
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERE match_id_usu1=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id OR  match_id_usu2=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id) AND EXISTS
-                /*La primera consulta es para que no aparezca mi propio usuario*/
-                (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m on m.match_id_usu1 = u2.id where u2.id!=$usuario1 and u2.id=u.id) Limit 50"
-                
+               "SELECT id,nombre,timestamp_nacimiento FROM usuario as u where
+               NOT EXISTS 
+               /*Esto saca a los usuarios los cuales les has dado like en primer lugar*/ 
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu2 = u2.id WHERe m2.match_estado_u1=1 and m2.match_id_usu1=$usuario1 and u2.id=u.id)
+               AND NOT EXISTS
+               /*Esto saca a los usuarios los cuales les has dado like en segundo lugar*/
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m2 on m2.match_id_usu1 = u2.id WHERE m2.match_estado_u2=1 and m2.match_id_usu2=$usuario1 and m2.match_id_usu1=u.id and u.id!=$usuario1)
+               AND NOT EXISTS 
+               /*Esto saca a los usuarios los cuales les has dado dislike en primer lugar*/         
+               ( SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m3 on m3.match_id_usu2 = u2.id WHERe m3.match_estado_u1=2 AND m3.match_id_usu2=u.id and m3.match_id_usu1=$usuario1)
+               AND NOT EXISTS 
+               /*usuario a los cuales te han dado dislike en Segundo lugar */
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu1 = u2.id WHERe m4.match_estado_u2=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id)
+               AND NOT EXISTS
+               /*usuario a los cuales te han dado dislike en primer lugar */
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERe m4.match_estado_u1=2 and m4.match_id_usu2=$usuario1 and u2.id=u.id) AND NOT EXISTS
+               /*OBTENEMOS EL USUARIO CON LOS QUE HEMOS HECHO MACTH*/
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m4 on m4.match_id_usu2 = u2.id WHERE match_id_usu1=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id OR  match_id_usu2=$usuario1 AND match_estado_u1=1 AND match_estado_u2=1 and u2.id=u.id) AND EXISTS
+               /*La primera consulta es para que no aparezca mi propio usuario*/
+               (SELECT id,nombre,timestamp_nacimiento FROM usuario as u2 LEFT JOIN mach as m on m.match_id_usu1 = u2.id where u2.id!=$usuario1 and u2.id=u.id) Limit 50"
             )->queryAll();
           
-
             $us=[];
-            $us[]=[
+            if(count($lista_usuarios)>=1){
+                $us[]=[
                     "id"=>$lista_usuarios[0]["id"],
                     "timestamp_nacimiento"=>
                     //La fecha de nacimiento se deve cacular en el registro
@@ -128,6 +128,8 @@ class Mach extends \yii\db\ActiveRecord
                     "imagenes"=>Imagen::getImagenUsuario($lista_usuarios[0]["id"]),
                     "reviews"=>[]
                 ];
+            }
+            
             //die();
     
             foreach ($lista_usuarios as $key ) {
@@ -156,11 +158,9 @@ class Mach extends \yii\db\ActiveRecord
             $lista_usuarios=$us;
         }
         
-        //die();
-        if(count($lista_usuarios)>1){
-            return $lista_usuarios;
-        }
-        return [];
+        
+        return $lista_usuarios;
+
     }
 
     /**
