@@ -43,8 +43,17 @@ export class MatchComponent implements OnInit {
         this.usuarios = u;
         console.log('Usuarios:', this.usuarios);
         this.contUser = 0;
-        this.imagen = this.usuarios[this.contUser].imagenes;
-        console.log('imagen:', this.imagen);
+        this.imagen = [
+          {
+            imagen_id: 0,
+            imagen_src: environment.imagenesBase + 'null.png',
+          },
+        ];
+        if (this.usuarios[this.contUser].hasOwnProperty('imagenes')&&this.usuarios[this.contUser].imagenes.length>0) {
+          this.imagen = this.usuarios[this.contUser].imagenes;
+          console.log('Imagen actualizada dentro del if');
+          console.log('imagen:', this.imagen);
+        }
         this.nombre = this.usuarios[this.contUser].nombre;
         console.log('NOMBRE WEY:', this.nombre);
         this.timestamp_nacimiento =
@@ -99,7 +108,7 @@ export class MatchComponent implements OnInit {
       this.imagen = [
         {
           imagen_id: 0,
-          imagen_src: '',
+          imagen_src: environment.imagenesBase + 'null.png',
         },
       ];
       if (this.usuarios[this.contUser].hasOwnProperty('imagenes')) {
