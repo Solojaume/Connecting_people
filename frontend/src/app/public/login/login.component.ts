@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit{
     
   }
   buttonLogueame={
-    nombre: "Loguearme",
+    nombre: "Inicia sesión",
     link: " ",
     classCSS:"btn-terciario",
     type: "submit"
