@@ -1,115 +1,174 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$frontend-primary: mat.define-palette(mat.$indigo-palette);
+$frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$frontend-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$frontend-theme: mat.define-light-theme((
+  color: (
+    primary: $frontend-primary,
+    accent: $frontend-accent,
+    warn: $frontend-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($frontend-theme);
+
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+
 //Colors
-$primary:#BD00F5;
-$secondary:#18F584;
-$terciario:#F5A000;
-$cuaternario:#FA0DA5;
-$q:#00A4AD;
-$white:#fff;
-$lightgray:#ccc;
-$gray:#999;
-$darkgrey:#333;
-$verydarkgrey:#222;
-$black:#000;
-$cuaternario-l:#FA0DA590;
-@mixin background($theme: #BD00F5) {
-    background: $theme !important;
+$primary: #bd00f5;
+$secondary: #18f584;
+$terciario: #f5a000;
+$cuaternario: #fa0da5;
+$q: #00a4ad;
+$white: #fff;
+$lightgray: #ccc;
+$gray: #999;
+$darkgrey: #333;
+$verydarkgrey: #222;
+$black: #000;
+$cuaternario-l: #fa0da590;
+@mixin background($theme: #bd00f5) {
+  background: $theme !important;
 }
-@mixin color($color:white){
-    color:$color !important;
+@mixin color($color: white) {
+  color: $color !important;
 }
-@mixin theme($background:#BD00F5, $color:white) {
-    color:$color;
-    background: $background;
+@mixin theme($background: #bd00f5, $color: white) {
+  color: $color;
+  background: $background;
 }
 
 //background
-.bg-primary{
-    @include background;
+.bg-primary {
+  @include background;
 }
-.bg-secondary{
-    @include background($theme:$secondary)
+.bg-secondary {
+  @include background($theme: $secondary);
 }
-.bg-terciario{
-    @include background($theme:$terciario)
+.bg-terciario {
+  @include background($theme: $terciario);
 }
-.bg-cuaternario{
-    @include background($theme:$cuaternario)
+.btn-outline-terciario {
+  --bs-btn-color: #f5a000;
+  --bs-btn-border-color: #f5a000;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #f5a000;
+  --bs-btn-hover-border-color: #f5a000;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #f5a000;
+  --bs-btn-active-border-color: #f5a000;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #f5a000;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #f5a000;
+  --bs-gradient: none;
 }
-.bg-quintal{
-    @include background($theme:$q)
+.bg-cuaternario {
+  @include background($theme: $cuaternario);
+}
+.bg-quintal {
+  @include background($theme: $q);
 }
 
-.a{
-    @include theme($background:$white ,$color:#333);
-    &:hover{
-        background: $gray;
-    }
+.a {
+  @include theme($background: $white, $color: #333);
+  &:hover {
+    background: $gray;
+  }
 }
 
 //Color stiles
-.color-white, .white-text .color-secondary-hover:hover{
-    @include color();
-    
+.color-white,
+.white-text .color-secondary-hover:hover {
+  @include color();
 }
-.color-primary{
-    @include color($color:$primary);
+.color-primary {
+  @include color($color: $primary);
 }
-.color-secondary{
-    @include color($color:$secondary);
+.color-secondary {
+  @include color($color: $secondary);
 }
-.color-quintal{
-    @include color($color:$q);
+.color-quintal {
+  @include color($color: $q);
 }
-.color-red{
-    @include color($color:#ff0000);
+.color-red {
+  @include color($color: #ff0000);
 }
-.margin-0{
-    margin: 0;
+.text-success{
+  color: $secondary !important;
 }
-.light-text-color{
-    @include color($color:$lightgray)
+
+.margin-0 {
+  margin: 0;
+}
+.light-text-color {
+  @include color($color: $lightgray);
 }
 //button
 
-@mixin btn($back,$c:#fff){
-    color: $c;
-    background-color: $back;
-    border-color: $back;
+@mixin btn($back, $c: #fff) {
+  color: $c;
+  background-color: $back;
+  border-color: $back;
+}
+@mixin btn-modular($bc: #fff, $back, $c: #fff) {
+  color: $c;
+  background-color: $back;
+  border-color: $bc;
+}
+
+.btn-primary,
+.btn-primary:hover {
+  @include btn($primary, $white);
+}
+
+.btn-terciario,
+.btn-terciario:hover {
+  @include btn($terciario, $lightgray);
+  &:hover {
+    @include btn($terciario, $white);
   }
-@mixin btn-modular($bc:#fff,$back,$c:#fff){
-    color: $c;
-    background-color: $back;
-    border-color: $bc;
-}
-  
-.btn-primary, .btn-primary:hover{
-    @include btn($primary,$white);
-}
-   
-.btn-terciario,.btn-terciario:hover{
-    @include btn($terciario,$lightgray);
-    &:hover{
-        @include btn($terciario,$white);
-    }
 }
 
-.btn-vacio-terciario{
-    @include btn-modular($bc:$terciario,$back:$primary,$c:$lightgray);
-    &:hover{
-        @include btn-modular($bc:$terciario,$back:$primary,$c:$white);
-    }
+.btn-vacio-terciario {
+  @include btn-modular($bc: $terciario, $back: $primary, $c: $lightgray);
+  &:hover {
+    @include btn-modular($bc: $terciario, $back: $primary, $c: $white);
+  }
 }
 
-.btn-vacio-primary{
-    @include btn($primary,$white);
-    &:hover{
-        @include btn-modular($bc:$secondary,$back:$primary,$c:$white);
-
-    }
+.btn-vacio-primary {
+  @include btn($primary, $white);
+  &:hover {
+    @include btn-modular($bc: $secondary, $back: $primary, $c: $white);
+  }
 }
 
-
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

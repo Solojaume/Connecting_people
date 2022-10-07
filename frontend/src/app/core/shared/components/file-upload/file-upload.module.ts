@@ -4,7 +4,6 @@ import { AngularFileUploaderModule } from 'angular-file-uploader';
 import { ServicesModule } from '../../services/services.module';
 import { ImagesComponent } from './images/images.component';
 import { NewImageUploaderComponent } from './new-image-uploader/new-image-uploader.component';
-import { ModalModule } from '../modals/modal.module';
 
 
 
@@ -16,7 +15,7 @@ import { ModalModule } from '../modals/modal.module';
   imports: [
     AngularFileUploaderModule,
     CommonModule,
-    ServicesModule,ModalModule
+    ServicesModule,
   ],
   exports:[
     AngularFileUploaderModule,

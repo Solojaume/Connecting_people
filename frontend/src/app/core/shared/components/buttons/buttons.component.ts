@@ -6,15 +6,11 @@ import { Router } from '@angular/router';
   templateUrl: './buttons.component.html',
   styleUrls: ['./buttons.component.scss']
 })
-export class ButtonsComponent implements OnInit {
+export class ButtonsComponent {
  @Input () button!:{nombre:string, link:string, classCSS:string, type:string};
-  constructor(private router:Router) { 
-    
-  }
+  constructor(private router:Router) {}
 
-  ngOnInit(): void {
-    
-  }
+  
   
   redirectTo(){
     if (this.button.link!==" ") {

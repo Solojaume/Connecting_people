@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './imput-text.component.html',
   styleUrls: ['./imput-text.component.scss']
 })
-export class ImputTextComponent implements OnInit {
+export class ImputTextComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
 
 }

@@ -146,9 +146,9 @@ class MachController extends ApiController
 
     public function actionGet_new_match_users_list(){
         
-        $m= new Mach();
-        $m= $m->getUsersNoMostrados();
-        $c=0;
+        $m = new Mach();
+        $m = $m->getUsersNoMostrados();
+        $c = 0;
   
         //return ["status"=>"error"];
         return $m;
@@ -174,9 +174,10 @@ class MachController extends ApiController
             $m->match_estado_u2=$estado;
             $m->match_fecha=$now;
         }
+       
         if($m==null){
             $m=new Mach();
-            $m->match_id=count(Mach::find()->asArray()->all());
+            //$m->match_id=count(Mach::find()->asArray()->all());
             $m->match_id_usu1=$u->id;
             $m->match_id_usu2=$u2->id;
             $m->match_estado_u1=$estado;

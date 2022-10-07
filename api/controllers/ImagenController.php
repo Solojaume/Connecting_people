@@ -111,7 +111,11 @@ class ImagenController extends ApiController
         $imagen = $imagen[0];
         
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$imagen->imagen_src;
-        unlink($dir_final);
+        if($imagen->imagen_localizacion_donde_subida==="Interno"){
+            
+            unlink($dir_final);
+        }
+            
         $img_ret = $imagen;
        // echo"imagen->delete()";
         //var_dump($imagen->delete());
@@ -155,7 +159,7 @@ class ImagenController extends ApiController
         }
         $cod = static::sha256(uniqid("",true).$archivo["name"].uniqid()).$extension;
         $dir_final = dirname(__FILE__)."\..\imagenes\\".$cod;
-        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,95,550,750);
+        $resultado = $this->compressImage($archivo["tmp_name"],$dir_final,85,750,950);
 
         //$resultado = move_uploaded_file($archivo["tmp_name"],$dir_final);
         
@@ -213,7 +217,7 @@ class ImagenController extends ApiController
     * Función personalizada para comprimir y 
     * subir una imagen mediante PHP
     */ 
-    function compressImage($source, $destination, $quality, $with=500 ,$heitgh=500) { 
+    function compressImage($source, $destination, $quality, $with=1080 ,$heitgh=1080) { 
         // Obtenemos la información de la imagen
         $imgInfo = getimagesize($source); 
         $mime = $imgInfo['mime']; 
@@ -229,6 +233,9 @@ class ImagenController extends ApiController
             case 'image/gif': 
                 $image = imagecreatefromgif($source); 
                 break; 
+            case 'image/webp': 
+                $image = imagecreatefromwebp($source); 
+                break;     
             default: 
                 $image = imagecreatefromjpeg($source); 
         } 

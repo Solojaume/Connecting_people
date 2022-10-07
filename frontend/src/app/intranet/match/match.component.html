@@ -1,34 +1,29 @@
 <script src="./asets/js/intranet.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <main class="content" id="body">
-    <div class="container p-0" *ngIf="error==''">
-		<div class="card" *ngIf="error==''">
-			<div class="row g-0" *ngIf="error==''">
+    <div class="container pt-5  " *ngIf="error===''">
+		<div class="card  " *ngIf="error===''">
+			<div class="row g-0" *ngIf="error===''">
 				
-				<div class="col-12 col-lg-7 col-xl-8" *ngIf="error==''">
-					<div class="py-2 px-4 border-bottom d-none d-lg-block" *ngIf="error==''">
-						<div class="d-flex" *ngIf="error==''">
-							<div class="align-items-center text-end"  *ngIf="error==''">
-								<div class="row align-items-center"  *ngIf="error==''"> 						
-									<div class="col-12" *ngIf="error==''">
-										<img [src]="imagen" class="img-fluid image" alt="" *ngIf="error==''">
+				<div class="col-12 col-lg-7 col-xl-8" *ngIf="error===''">
+					<div class="py-2 px-4 border-bottom d-none d-lg-block  d-md-block" *ngIf="error===''">
+						<div class="d-flex" *ngIf="error===''">
+							<div class="align-items-center text-end"  *ngIf="error===''">
+								<div class="row align-items-center"  *ngIf="error===''"> 						
+									<div class="col-12 align-items-end text-end slider  " *ngIf="error===''">
+										<app-slider [config]="configSlider" (like)="like()" (dislike)="dislike()"></app-slider>
 									</div>
-								
-									<div class="col-12 align-items-end text-end ms-1" *ngIf="con()==true">
-										<button (click)="dislike()" class="btn btn-danger col-2" *ngIf="con()==true">Dislike</button>
-										<strong class="col-2" id="Name" *ngIf="error==''">Nombre: {{nombre}}, </strong>
-										<strong class="col-1" id="Edad" *ngIf="error==''"> Edad: {{timestamp_nacimiento}} </strong>
-										<button (click)="like()" class="btn btn-success col-2" *ngIf="error==''">Like</button>
-									</div>
+									<p></p>
+									<p></p>
 								</div>
 							</div>		
 						</div>
 					</div>
 
 				</div>
-				<div class="col-12 col-lg-5 col-xl-4 border-letf" *ngIf="error==''">
+				<div class="col-12 col-lg-5 col-xl-4 border-letf" *ngIf="error===''">
 
-					<div class="px-4 d-none d-md-block" >
+					<div class="px-4 d-none d-md-block" *ngIf="usuarios[contUser].hasOwnProperty('reviews')&&usuarios[contUser].reviews.length!=0" >
 						<app-reviews [reviews]="usuarios[contUser].reviews"  ></app-reviews>
 					</div>
 
@@ -38,9 +33,10 @@
 		</div> 
 	</div>
 	<div class="row align-items-center">
-		<div class="col-12 text-center align-items-center"  *ngIf="error!=''">
+		<div class="col-12 text-center align-items-center"  *ngIf="error!==''">
 			
-			<p class="h1 col" *ngIf="error!=''">{{error}}</p>
+			<p class="h1 col" *ngIf="error!==''">{{error}}</p>
+			<button class="btn btn-terciario" (click)="subscriptionNewUsers()">Volver a cargar</button>
 		</div>
 	</div>
 </main>

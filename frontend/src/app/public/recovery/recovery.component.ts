@@ -6,11 +6,8 @@ import { FormControl, FormGroup } from '@angular/forms';
   templateUrl: './recovery.component.html',
   styleUrls: ['./recovery.component.scss']
 })
-export class RecoveryComponent implements OnInit {
+export class RecoveryComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
-  
+ 
 }

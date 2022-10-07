@@ -65,6 +65,6 @@ class Imagen extends \yii\db\ActiveRecord
      */
     public static function getImagenUsuario($u_id)
     {
-        return Yii::$app->db->createCommand("SELECT * FROM `imagen` WHERE `imagen_usuario_id`=$u_id")->queryAll();
+        return Yii::$app->db->createCommand("SELECT * FROM `imagen` WHERE `imagen_usuario_id` = $u_id")->queryAll();
     }
 }

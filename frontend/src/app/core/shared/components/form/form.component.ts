@@ -39,28 +39,30 @@ export class FormComponent implements OnInit {
   buttonGuardar={
     nombre: "Guardar cambios",
     link: " ",
-    classCSS:"btn-terciario",
+    classCSS:"btn btn-success mt-3 mb-2",
     type: "submit"
   };  
   buttonCambiarContrasenya={
     nombre: "Cambiar Contraseña",
     link: " ",
-    classCSS:"btn-primario mt-1",
+    classCSS:" btn  btn-outline-terciario mt-1",
     type: "button"
   };
   buttonCambiarEmail={
     nombre: "Cambiar Email",
     link: " ",
-    classCSS:"btn-primario mt-1",
+    classCSS:"btn  btn-outline-dark mt-2",
     type: "button"
   };
 
   cambiarContrasenya(){
     if(this.mostraCambiarContrasenya==true){
       this.buttonCambiarContrasenya.nombre="Cambiar Contraseña";
+      this.buttonCambiarContrasenya.classCSS="btn btn-outline-terciario mt-1";
       this.mostraCambiarContrasenya=false;
     }else{
       this.buttonCambiarContrasenya.nombre="No Cambiar Contraseña";
+      this.buttonCambiarContrasenya.classCSS="btn btn-danger";
       this.mostraCambiarContrasenya=true;
     }
     console.log("MostrarContraseña",this.mostraCambiarContrasenya);
@@ -68,9 +70,11 @@ export class FormComponent implements OnInit {
   cambiarEmail(){
     if(this.mostraCambiarEmail==true){
       this.buttonCambiarEmail.nombre="Cambiar Email";
+      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-2";
       this.mostraCambiarEmail=false;
     }else{
       this.buttonCambiarEmail.nombre="No Cambiar Email";
+      this.buttonCambiarEmail.classCSS="btn btn-danger";
 
       this.mostraCambiarEmail=true;
     }

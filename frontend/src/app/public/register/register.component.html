@@ -3,56 +3,56 @@
   <div class="form-floating">
     <input type="email" formControlName="email" class="form-control" id="floatingInput" placeholder="name@example.com">
     <label for="floatingInput">
-      <span class="color-red" *ngIf="errorType=='email' || email==''">*</span>
+      <span class="color-red" *ngIf="errorType==='email' || email===''">*</span>
       Correo electrónico 
-      <span class="color-red" *ngIf="email==''">(requerido)</span>
-      <span *ngIf="email!=''">(requerido)</span>
+      <span class="color-red" *ngIf="email===''">(requerido)</span>
+      <span *ngIf="email!==''">(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
     <input type="password" formControlName="pass1" class="form-control" id="floatingPassword" placeholder="Password">
     <label for="floatingPassword">
-      <span class="color-red" *ngIf="errorType=='password' || password==''">*</span>
+      <span class="color-red" *ngIf="errorType==='password' || password===''">*</span>
       Contraseña
-      <span *ngIf="passwordL!=true">(mínimo 6 caracteres)</span>
-      <span class="color-red" *ngIf="passwordL==true">(mínimo 6 caracteres)</span>
+      <span *ngIf="passwordL!==true">(mínimo 6 caracteres)</span>
+      <span class="color-red" *ngIf="passwordL===true">(mínimo 6 caracteres)</span>
 
-      <span *ngIf="password!=''">(requerido)</span>
-      <span class="color-red" *ngIf="password==''">(requerido)</span>
+      <span *ngIf="password!==''">(requerido)</span>
+      <span class="color-red" *ngIf="password===''">(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
     <input type="password" formControlName="pass2" class="form-control" id="floatingPassword2" placeholder="Password">
     <label for="floatingPassword2">
-      <span class="color-red" *ngIf="errorType=='password2' || pass2==''">*</span>
+      <span class="color-red" *ngIf="errorType==='password2' || pass2===''">*</span>
       Confirmar Contraseña
-      <span *ngIf="pass2!=''">(requerido)</span>
-      <span class="color-red" *ngIf="pass2==''">(requerido)</span>
+      <span *ngIf="pass2!==''">(requerido)</span>
+      <span class="color-red" *ngIf="pass2===''">(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
     <input type="text" formControlName="nombre" class="form-control" id="floatingName" placeholder="Password">
     <label for="floatingName">
-      <span class="color-red" *ngIf="errorType=='nombre' || nombre==''">*</span>
+      <span class="color-red" *ngIf="errorType==='nombre' || nombre===''">*</span>
       Nombre 
-      <span *ngIf="nombre!=''">(requerido)</span>
-      <span class="color-red" *ngIf="nombre==''">(requerido)</span>
+      <span *ngIf="nombre!==''">(requerido)</span>
+      <span class="color-red" *ngIf="nombre===''">(requerido)</span>
     </label>
   </div>
   <div class="form-floating">
     <input formControlName="fecha_na" class="form-control" id="floatingData" type="date" min="1900-01-01" [max]="today" 
     placeholder="date">
     <label for="floatingData">
-      <span class="color-red" *ngIf="errorType=='fecha' || fecha_na == '' ">*</span>
+      <span class="color-red" *ngIf="errorType==='fecha' || fecha_na === '' ">*</span>
       Fecha Nacimiento
-      <span *ngIf="fecha_na!=''">(requerido)</span>
-      <span class="color-red" *ngIf="fecha_na==''">(requerido)</span>
+      <span *ngIf="fecha_na!==''">(requerido)</span>
+      <span class="color-red" *ngIf="fecha_na===''">(requerido)</span>
     </label>
   </div>
 
   
   <div class="checkbox mb-3">
-    <span class="color-red" *ngIf="errorType=='aceptTerms'">* </span>
+    <span class="color-red" *ngIf="errorType==='aceptTerms'">* </span>
     <label class="color-white">
       <input class="form-check-input" type="checkbox" value="acepto" formControlName="aceptTerms"> He leído y acepto los <a class="color-white" routerLink="/politicas"> términos y condiciones</a>
     </label>
@@ -66,11 +66,11 @@
 
 
 <div class="color-white" *ngIf="error">
-  <span class="color-red" *ngIf="errorType==''">*</span>
+  <span class="color-red" *ngIf="errorType===''">*</span>
   {{error}}
 </div>  
 
-<div *ngIf="error==''">
+<div *ngIf="error===''">
   <div class="color-white row ml-3" *ngFor="let e of errors" >
    <!-- <span class="color-red" *ngIf="errorType==''">*</span> -->
     {{e}}

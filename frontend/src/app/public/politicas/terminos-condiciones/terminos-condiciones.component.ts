@@ -5,11 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './terminos-condiciones.component.html',
   styleUrls: ['./terminos-condiciones.component.scss']
 })
-export class TerminosCondicionesComponent implements OnInit {
-
+export class TerminosCondicionesComponent  {
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

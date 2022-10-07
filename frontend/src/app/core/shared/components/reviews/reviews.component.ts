@@ -6,10 +6,11 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./reviews.component.scss']
 })
 export class ReviewsComponent implements OnInit {
-  @Input() reviews:any;
+  @Input() reviews!:any;
   constructor() { }
 
   ngOnInit(): void {
+    console.log("Review",this.reviews);
   }
 
 }
