@@ -60,7 +60,7 @@ export class ImagenesComponent implements OnInit,OnChanges {
         return true;
       }
     } catch (error) {
-      console.log("errors",error);
+      //console.log("errors",error);
       return false;
     }
     return false;

@@ -21,10 +21,11 @@ import { CdkScrollable, CdkVirtualScrollViewport } from '@angular/cdk/scrolling'
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  @ViewChild(CdkVirtualScrollViewport) cdkScrollable!: CdkVirtualScrollViewport;
   formularioEnvio = new FormGroup({
     message: new FormControl(''),
   });
+  @ViewChild(CdkVirtualScrollViewport) cdkScrollable!: CdkVirtualScrollViewport;
+
 
   config: IImagenesComponentConfig = {
     type: 'rounded',
@@ -41,11 +42,12 @@ export class ChatComponent implements OnInit {
       match_id_usu2: this.token.getUser(),
       mensajes: [],
     };
-    this.cdkScrollable.scrollTo({ bottom: 100 });
+    
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
       this.setTyping('' + x.message);
     });
+    this.cdkScrollable.scrollTo({ bottom: 100 });
   }
 
   scrollEnd(){
