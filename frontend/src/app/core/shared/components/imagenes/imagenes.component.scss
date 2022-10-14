@@ -13,138 +13,112 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  left:0;
+  left: 0;
   padding-top: 1.25rem;
-  padding-bottom:0;
+  padding-bottom: 0;
   color: #fff;
   text-align: start;
   padding-left: 0;
-  p{
+  p {
     padding-left: 1.25rem;
     padding-bottom: 0.06rem;
   }
-  .row{
+  .row {
     padding-top: 1.2rem;
     padding-bottom: 1.2rem;
   }
 }
 
-
-
+.ml-1 {
+  margin-left: 0.8em;
+}
 
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) {
-  .image {
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 50%;
-  }
-   .container{
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 50%;
-  }
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
-  .image {
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 70%;
-  }
-  .container {
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 70%;
-  }
 }
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
-  .image {
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 70%;
-  }
-  .container {
-    max-width: 30%;
-    max-height: 50%;
-    min-width: 30%;
-    min-height: 70%;
-  }
 }
 
 // X-Large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
-  .image {
-    margin-left: 0px;
-    max-width: 350px;
-    max-height: 500px;
-    min-width: 350px;
-    min-height: 500px;
-  }
-  .container {
-    margin-left: 500px;
-    max-width: 350px;
-    max-height: 500px;
-    min-width: 350px;
-    min-height: 500px;
-  }
 }
 
 // XX-Large devices (larger desktops, 1400px and up)
 @media (min-width: 1400px) {
-  .image {
-    max-width: 350px;
-    max-height: 500px;
-    min-width: 350px;
-    min-height: 500px;
-  }
-  .container {
-    max-width: 350px;
-    max-height: 500px;
-    min-width: 350px;
-    min-height: 500px;
-  }
 }
 
-@mixin like_dislike($color) {
-  border-color:$color ;
-  color:$color;
-  font-size: 1.5em;
-  .bi{
-    font-size: 1.26em;
+@mixin like_dislike(
+  $color,
+  $font-size-bi: 1.26em,
+  $font-size-bi-hover: 2em,
+  $font-size: 1.5em
+) {
+  border-color: $color;
+  color: $color;
+  font-size: $font-size;
+  .bi {
+    font-size: $font-size-bi;
   }
-  &:hover{
-    .bi{
-      font-size: 2em;
+  &:hover {
+    .bi {
+      font-size: $font-size-bi-hover;
     }
   }
- 
+}
 
+@mixin circulo(
+  $width: 3em,
+  $height: 3em,
+  $background: transparent,
+  $border-radius: 50%
+) {
+  width: $width;
+  height: $height;
+  -moz-border-radius: $border-radius;
+  -webkit-border-radius: $border-radius;
+  border-radius: $border-radius;
+  background: $background;
+  border-color: $background;
+  &.dislike {
+    @include like_dislike($color: red);
+  }
+
+  &.like {
+    @include like_dislike($color: #5cb85c);
+  }
+
+  &.desplegar {
+    @include like_dislike(
+      $color: #fff,
+      $font-size-bi: 1em,
+      $font-size-bi-hover: 1.2em,
+      $font-size: 1.5em
+    );
+  }
+
+  &.replegar{
+    @include like_dislike(
+      $color: #fff,
+      $font-size-bi: 1em,
+      $font-size-bi-hover: 1.2em,
+      $font-size: 1.5em
+    );
+  }
 }
 .circulo {
-  width: 3em;
-  height: 3em;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  background: transparent;
-  &.dislike{
-    @include like_dislike($color:red);
- 
-  }
-  
-  &.like{
-    @include like_dislike($color:#5cb85c); 
-  }
-
- 
+  @include circulo();
 }
-
+.circulo-pequenyo {
+  @include circulo(
+    $width: 1.75em,
+    $height: 1.75em,
+    $background: #bd00f5,
+    $border-radius: 50%
+  );
+}

@@ -51,7 +51,7 @@ export class FormComponent implements OnInit {
   buttonCambiarEmail={
     nombre: "Cambiar Email",
     link: " ",
-    classCSS:"btn  btn-outline-dark mt-2",
+    classCSS:"btn  btn-outline-dark mt-2 mb-3",
     type: "button"
   };
 
@@ -70,7 +70,7 @@ export class FormComponent implements OnInit {
   cambiarEmail(){
     if(this.mostraCambiarEmail==true){
       this.buttonCambiarEmail.nombre="Cambiar Email";
-      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-2";
+      this.buttonCambiarEmail.classCSS="btn btn-outline-dark mt-2 mb-3";
       this.mostraCambiarEmail=false;
     }else{
       this.buttonCambiarEmail.nombre="No Cambiar Email";

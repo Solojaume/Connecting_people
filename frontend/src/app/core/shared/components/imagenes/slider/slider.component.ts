@@ -21,6 +21,7 @@ export class SliderComponent implements OnInit,OnChanges {
     actived: true,
   };
   imagenPosition = 0;
+  constructor(public sliderService: SliderService) {}
 
   likeDislikeM(l_d: string) {
     switch (l_d) {
@@ -36,7 +37,6 @@ export class SliderComponent implements OnInit,OnChanges {
     }
   }
 
-  constructor(public sliderService: SliderService) {}
   ngOnChanges(changes: SimpleChanges): void {
     console.log("LikeDislike hecho");
     console.log("slider imagenes:",this.config)

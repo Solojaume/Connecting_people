@@ -12,6 +12,7 @@ import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.
 import { Imagen } from 'src/app/core/models/imagen';
 import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
 import { environment } from 'src/environments/environment';
+import { SliderButtonService } from 'src/app/core/shared/services/slider-button/slider-button.service';
 
 @Component({
   selector: 'app-match',
@@ -27,7 +28,8 @@ export class MatchComponent implements OnInit {
     private cookieService: CookieService,
     private apiService: AuthService,
     private webSocketService: WebSocketService,
-    private imagenService: ImagenesService
+    private imagenService: ImagenesService,
+    private serviceButton: SliderButtonService
   ) {}
   subscribe!: Subscription;
   error: string = 'No hay más usuarios que mostrarte, vuelve más tarde';
@@ -49,7 +51,10 @@ export class MatchComponent implements OnInit {
             imagen_src: environment.imagenesBase + 'null.png',
           },
         ];
-        if (this.usuarios[this.contUser].hasOwnProperty('imagenes')&&this.usuarios[this.contUser].imagenes.length>0) {
+        if (
+          this.usuarios[this.contUser].hasOwnProperty('imagenes') &&
+          this.usuarios[this.contUser].imagenes.length > 0
+        ) {
           this.imagen = this.usuarios[this.contUser].imagenes;
           console.log('Imagen actualizada dentro del if');
           console.log('imagen:', this.imagen);
@@ -114,6 +119,11 @@ export class MatchComponent implements OnInit {
       if (this.usuarios[this.contUser].hasOwnProperty('imagenes')) {
         this.imagen = this.usuarios[this.contUser].imagenes;
         console.log('Imagen actualizada dentro del if');
+      }
+      if (this.usuarios[this.contUser].hasOwnProperty('reviews')) {
+        this.serviceButton.reviews_estan_cargadas = true;
+      } else {
+        this.serviceButton.reviews_estan_cargadas = false;
       }
 
       this.nombre = this.usuarios[this.contUser].nombre;

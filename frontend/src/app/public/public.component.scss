@@ -1,40 +1,111 @@
-//Color
-$primary:#BD00F5;
-$secondary:#18F584;
-$terciario:#F5A000;
-$cuaternario:#FA0DA5;
-$q:#00A4AD;
-$white:#fff;
-$lightgray:#ccc;
-$gray:#999;
-$darkgrey:#333;
-$verydarkgrey:#222;
-$black:#000;
-$cuaternario-l:#FA0DA590;
+/* Importing Bootstrap SCSS file. */
 
-app-login{
-    margin:0;
-    display: flex;
-    justify-content: center;
-    justify-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+//Color
+$primary: #bd00f5;
+$secondary: #18f584;
+$terciario: #f5a000;
+$cuaternario: #fa0da5;
+$q: #00a4ad;
+$white: #fff;
+$lightgray: #ccc;
+$gray: #999;
+$darkgrey: #333;
+$verydarkgrey: #222;
+$black: #000;
+$cuaternario-l: #fa0da590;
+
+app-login {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
-.form-signin {
- 
-    align-items: center;
-    width: 100%;
-    max-width: 430px;
-    padding: 15px;
-    margin: auto;
-    .checkbox {
-      font-weight: 400;
+
+@mixin form-singnin-model(
+  $max-width: calc(30%),
+  $checkbox_wight: calc(10%),
+  $width_heigth_icon: calc(11%),
+  $padding: 15px
+) {
+  
+  align-items: center;
+  width: 100%;
+  max-width: $max-width;
+  padding: $padding;
+  margin: auto;
+  .checkbox {
+    font-weight: $checkbox_wight;
+  }
+  .btn-transparent {
+    color: black;
+  }
+  .btn-transparent:hover {
+    color: black;
+    border-color: black;
+  }
+  .bi {
+    &.bi-people {
+      width: $width_heigth_icon;
+      height: $width_heigth_icon;
     }
-    .btn-transparent{
-        color:black;
-    }
-    .btn-transparent:hover{
-        color:black;
-        border-color:black;
-    }
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .form-signin {
+    @include form-singnin-model(
+      $max-width: calc(100%),
+      $checkbox_wight: calc(10%),
+      $width_heigth_icon: calc(8%),
+      $padding: 15px
+    );
+  }
+}
+@include media-breakpoint-up(md) {
+  .form-signin {
+    
+    @include form-singnin-model(
+      $max-width: calc(90%),
+      $checkbox_wight: calc(10%),
+      $width_heigth_icon: calc(16%),
+      $padding: calc(1%)
+    );
+    
+  }
+}
+@include media-breakpoint-up(lg) {
+  .form-signin {
+    @include form-singnin-model(
+      $max-width: calc(40%),
+      $checkbox_wight: calc(10%),
+      $width_heigth_icon: calc(11%),
+      $padding: 15px
+    );
+  }
+}
+@include media-breakpoint-up(xl) {
+  .form-signin {
+    @include form-singnin-model(
+      $max-width: calc(30%),
+      $checkbox_wight: calc(10%),
+      $width_heigth_icon: calc(11%),
+      $padding: 15px
+    );
+  }
+}
+@include media-breakpoint-up(xxl) {
+  .form-signin {
+    
+    @include form-singnin-model(
+      $max-width: calc(50%),
+      $checkbox_wight: calc(10%),
+      $width_heigth_icon: calc(11%),
+      $padding: 15px
+    );
+  }
 }

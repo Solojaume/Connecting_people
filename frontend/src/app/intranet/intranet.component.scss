@@ -1,84 +1,76 @@
-/*@import url('../../../node_modules/bootstrap/scss/mixins/_breakpoints.scss');
-@include media-breakpoint-down(sm){
-    div{
-        &#intranet{
-            min-height:500px;
-        }
-    }
-}
-@include media-breakpoint-down(md){
-    div{
-        &#intranet{
-            min-height:700px;
-        }
-    }
-}
-@include media-breakpoint-down(lg){
-    div{
-        &#intranet{
-            min-height:700px;
-        }
-    }
-}
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+/*
+@include media-breakpoint-up(sm) { ... }
+@include media-breakpoint-up(md) { ... }
+@include media-breakpoint-up(lg) { ... }
+@include media-breakpoint-up(xl) { ... }
+@include media-breakpoint-up(xxl) { ... }
 */
-
-@media (min-width: 576px) { 
-    div{
-        &#intranet{
-           min-height:350px;
-        }
+@mixin intranet(
+  $height,
+  $width,
+  $min-height: 30%,
+  $min-width: 30%,
+  $max-height: 100%,
+  $max-width: 100%
+) {
+  div {
+    &#intranet {
+      height: $height;
+      width: $width;
+      min-height: $min-height;
+      min-width: $min-width;
+      max-width: $max-width;
+      max-height: $max-height;
     }
- }
+  }
+}
+@include media-breakpoint-up(sm) {
+  @include intranet($height: 100%, $width: 100%);
+}
+@include media-breakpoint-up(md) {
+  @include intranet($height: 100%, $width: 100%);
+}
+@include media-breakpoint-up(lg) {
+  @include intranet($height: 50%, $width: 100%);
+}
+@include media-breakpoint-up(xl) {
+  @include intranet($height: 40%, $width: 100%);
+}
+@include media-breakpoint-up(xxl) {
+  @include intranet($height: 40%, $width: 100%);
+}
 
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) { 
-    div{
-        &#intranet{
-           min-height:450px;
-        }
-    }
+/*
+@media (min-width: 576px) {
+  @include intranet($height: 100%, $width: 100%);
+}
+
+@media (min-width: 700px) {
+  @include intranet($height: 100%, $width: 100%);
 }
 
 // Large devices (desktops, 992px and up)
-@media (min-width: 992px) { 
-    div{
-        &#intranet{
-           min-height:470px;
-           height: 80%;
-           max-height: 600px;
-        }
-    }
- }
+@media (min-width: 992px) {
+  @include intranet($height: 50%, $width: 100%);
+}
 
 // X-Large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) { 
-    div{
-        &#intranet{
-           min-height:550px;
-           height: 80%;
-           max-height: 700px;
-        }
-    }
- }
+@media (min-width: 1200px) {
+  @include intranet($height: 40%, $width: 100%);
+}
 
 // XX-Large devices (larger desktops, 1400px and up)
 @media (min-width: 1400px) {
-    .image{
-        max-width: 350px;
-        max-height: 500px;
-        min-width: 350px;
-        min-height: 500px;
-    } 
-    
-    div{
-        &#intranet{
-            min-height: 650px;
-            height: 80%;
-            max-height: 800px;
-        }
-    }
+  @include intranet($height: 40%, $width: 100%);
 }
-.active{
-    @extend .active;
-    color:#00A4AD !important;
+
+*/
+.active {
+  @extend .active;
+  color: #00a4ad !important;
 }

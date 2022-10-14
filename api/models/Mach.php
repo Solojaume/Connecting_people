@@ -146,7 +146,7 @@ class Mach extends \yii\db\ActiveRecord
                 }
                 if ($bol==true) {
                     $key["imagenes"]=Imagen::getImagenUsuario($key["id"]);
-                    $key["reviews"]= ReviewController::getReviewsByUserIdWithAuthToken();
+                    $key["reviews"]= ReviewController::getReviewsByUserId($key["id"]);
                     //La fecha de nacimiento se deve cacular en el registro
                     $key["timestamp_nacimiento"] = Helper::calcularEdad($key["timestamp_nacimiento"]);
                     $us[]=$key; 
