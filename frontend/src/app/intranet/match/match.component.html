@@ -1,18 +1,19 @@
-<script src="./asets/js/intranet.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <main class="content" id="body">
-    <div class="container pt-5  " *ngIf="error===''">
+    <div class="container pt-2 pb-2" *ngIf="error===''">
 		<div class="card  " *ngIf="error===''">
 			<div class="row g-0" *ngIf="error===''">
 				
-				<div class="col-12 col-lg-7 col-xl-8" *ngIf="error===''">
-					<div class="py-2 px-4 border-bottom d-none d-lg-block  d-md-block" *ngIf="error===''">
+				<div class="col-12 .col-sm-12 .col-md-12 col-lg-7 col-xl-8" *ngIf="error===''">
+					<div class="py-3  border-bottom d-none d-lg-block  d-md-block" *ngIf="error===''">
 						<div class="d-flex" *ngIf="error===''">
 							<div class="align-items-center text-end"  *ngIf="error===''">
 								<div class="row align-items-center"  *ngIf="error===''"> 						
 									<div class="col-12 align-items-end text-end slider  " *ngIf="error===''">
 										<app-slider [config]="configSlider" (like)="like()" (dislike)="dislike()"></app-slider>
 									</div>
+									<h1>GUARRADA</h1>
+
 									<p></p>
 									<p></p>
 								</div>
@@ -21,22 +22,22 @@
 					</div>
 
 				</div>
-				<div class="col-12 col-lg-5 col-xl-4 border-letf" *ngIf="error===''">
+				<div class="col-12 .col-sm-12 .col-md-12 col-lg-5 col-xl-4 border-letf" *ngIf="error===''">
 
-					<div class="px-4 d-none d-md-block" *ngIf="usuarios[contUser].hasOwnProperty('reviews')&&usuarios[contUser].reviews.length!=0" >
+					<div class="d-none d-md-block" *ngIf="usuarios[contUser].hasOwnProperty('reviews')&&usuarios[contUser].reviews.length!=0" >
 						<app-reviews [reviews]="usuarios[contUser].reviews"  ></app-reviews>
 					</div>
 
-					<hr class="d-block d-lg-none mt-1 mb-0" > 
 				</div>
 			</div>
 		</div> 
 	</div>
-	<div class="row align-items-center">
-		<div class="col-12 text-center align-items-center"  *ngIf="error!==''">
+	<div class="pantalla-error row align-items-start mt-1 mb-2" *ngIf="error!==''">
+		<div class="col-12 text-center align-items-center mb-2 "  *ngIf="error!==''">
 			
-			<p class="h1 col" *ngIf="error!==''">{{error}}</p>
-			<button class="btn btn-terciario" (click)="subscriptionNewUsers()">Volver a cargar</button>
+			<p class="h1 col mb-5" *ngIf="error!==''">{{error}}</p>
+			<div class="mb-5"></div>
+			<button class="btn btn-terciario mt-5 mb-5" (click)="subscriptionNewUsers()">Volver a cargar</button>
 		</div>
 	</div>
 </main>

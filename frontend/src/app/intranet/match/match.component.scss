@@ -1,47 +1,52 @@
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+@include media-breakpoint-up(sm) {
+  .slider {
+    margin-left: 0em !important;
+  }
+}
+@include media-breakpoint-up(md) {
+  .slider {
+    margin-left: 15em !important;
+  }
+}
+@include media-breakpoint-up(lg) {
+  .slider {
+    margin-left: 15em !important;
+  }
+}
+@include media-breakpoint-up(xl) {
+  .slider {
+    margin-left: 22em !important;
+  }
+}
+@include media-breakpoint-up(xxl) {
+  .slider {
+    margin-left: 25em !important;
+  }
+}
+
 #todas_punt,
 #menos {
   display: none;
 }
 
-.slider{
-  margin-left: 25em !important;
+.pantalla-error {
+  min-height: 45%;
+  height: 13.5em;
 }
-
 .buttons {
   margin-left: 2%;
 }
-.chat-online {
-  color: #34ce57;
-}
-
-.chat-offline {
-  color: #e4606d;
-}
-
-.chat-messages {
-  display: flex;
-  flex-direction: column;
-  max-height: 800px;
-  overflow-y: scroll;
-}
-
-.chat-message-left,
-.chat-message-right {
-  display: flex;
-  flex-shrink: 0;
-}
-
-.chat-message-left {
-  margin-right: auto;
-}
-
-.chat-message-right {
-  flex-direction: row-reverse;
-  margin-left: auto;
+.p-0 {
+  padding: 0;
 }
 .py-3 {
   padding-top: 1rem !important;
-  padding-bottom: 1rem !important;
+  padding-bottom: 0rem !important;
 }
 .px-4 {
   padding-right: 1.5rem !important;
