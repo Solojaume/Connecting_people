@@ -1,18 +1,25 @@
 
+@import "~bootstrap/scss/bootstrap";
 
-  .form-floating:focus-within {
-    z-index: 2;
-  }
+/* Importing Bootstrap SCSS file. */
 
-  input[type="email"] {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+.form-floating:focus-within {
+  z-index: 2;
+}
 
-  input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
+input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
 
+input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+//@include media-breakpoint-up(sm) { ... }
+
+//@include media-breakpoint-up(xl) { ... }
+//@include media-breakpoint-up(xxl) { ... }

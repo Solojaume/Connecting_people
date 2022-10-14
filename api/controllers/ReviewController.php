@@ -71,7 +71,7 @@ class ReviewController extends ApiController
      *  Reviews, que contiene:[PuntuacionesReview] y el campo extra llamado "puntuacion_media"
      * 
      */
-    public function actionGetReviewsByUserId()
+    public function actionGetReviewsByUserId($id)
     {
         if ($this->request->isPost) {
             $u=self::getUserWhithAuthToken();
@@ -95,6 +95,16 @@ class ReviewController extends ApiController
         return ["error"=>"UPPS, Algo ha salido mal"];
         
     }
+    public static function getReviewsByUserId($id){
+        $rev = new Review();
+        $rev = $rev->getReviewByUserID($id);
+        for ($i=0; $i < count($rev); $i++) { 
+            $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
+            $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
+        }
+        return $rev; 
+    }
+
     public static function getReviewsByUserIdWithAuthToken()
     {
        $u=self::getUserWhithAuthToken();
@@ -110,6 +120,7 @@ class ReviewController extends ApiController
                 $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
                 $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
             }
+           
             return $rev;    
         }else{
              return ["error"=>"No hay usuario en la peticion"];

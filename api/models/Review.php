@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "review".
@@ -74,7 +75,12 @@ class Review extends \yii\db\ActiveRecord
      */
     public function getReviewByUserID($usuario)
     {
-        return self::find("review_usuario_id=$usuario")->asArray()->all();
+        $query = new Query();
+        return $query->
+        from("review")->
+        where("review_usuario_id = :usuario",[':usuario'=>$usuario])-> 
+        all();
+        //return self::find("review_usuario_id=$usuario")->asArray()->all();
     }
     
     /**

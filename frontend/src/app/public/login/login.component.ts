@@ -116,21 +116,21 @@ export class LoginComponent implements OnInit{
   buttonLogueame={
     nombre: "Inicia sesión",
     link: " ",
-    classCSS:"btn-terciario",
+    classCSS:" btn btn-terciario font",
     type: "submit"
   };
   
   buttonRegistrame= {
     nombre: "Registrarme",
     link: "/register",
-    classCSS:"btn-vacio-terciario ",
+    classCSS:"btn  btn-xl btn-md btn-vacio-terciario font",
     type: "button"
   };
 
   buttoneRecuperar= {
     nombre: "Recuperar cuenta",
     link: "/recovery",
-    classCSS:"btn-vacio-primary color-secondary mt-2",
+    classCSS:"btn-vacio-primary color-secondary font mt-2",
     type: "button"
   };
 
