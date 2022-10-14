@@ -27,7 +27,7 @@ export class SliderButtonService {
   }
 
   set_reviews_visibles(bool: boolean) {
-    this.reviews_estan_cargadas = bool;
+    this.reviews_visibles = bool;
     this.event_reviews_visibles.emit(bool);
   }
   
