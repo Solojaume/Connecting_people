@@ -25,26 +25,14 @@
   min-width: $container-min-width;
   min-height: $container-min-height;
 }
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-  .image {
-    @include image-mixin(
-      $image-max-width: 20em,
-      $image-max-height: 30em,
-      $image-min-width: 18%,
-      $image-min-height: 30%,
-      $height:100%
-    );
-    padding-top: 1em;
-  }
-}
+
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
   .image {
     @include image-mixin(
-      $image-max-width: 20em,
-      $image-max-height: 30em,
+      $image-max-width: 25em,
+      $image-max-height: 29em,
       $image-min-width: 18%,
       $image-min-height: 30%,
       $height:100%

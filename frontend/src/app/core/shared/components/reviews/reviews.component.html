@@ -1,10 +1,21 @@
-<p class="h1">Reviews</p>
-<cdk-virtual-scroll-viewport  itemSize="100"   class="reviews">
-    <div class="d-flex align-items-center color-white row">
-        <div *ngFor="let review of reviews" class="flex-grow-1 rounded bg-primary bg-opacity-10  mt-1">
-            <app-review [datos]="review" class="col-12 "></app-review>        
-        </div>
-        
+<p
+  class="h1"
+  *ngIf="
+    sizeDisplay === 'web' || reviewsButtonsService.reviews_visibles === true
+  "
+>
+  Reviews
+</p>
+<cdk-virtual-scroll-viewport
+  itemSize="100"
+  class="reviews"
+  *ngIf="sizeDisplay === 'web' || reviewsButtonsService.reviews_visibles === true">
+  <div class="d-flex align-items-center color-white row">
+    <div
+      *ngFor="let review of reviews"
+      class="flex-grow-1 rounded bg-primary bg-opacity-10 mt-1"
+    >
+      <app-review [datos]="review" class="col-12"></app-review>
     </div>
+  </div>
 </cdk-virtual-scroll-viewport>
-

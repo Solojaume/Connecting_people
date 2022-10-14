@@ -2,10 +2,18 @@
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
-
+@media (min-width: 250px) {
+  .slider {
+    margin-left: 1em ;
+    margin-right: 1em;
+    max-width: 95%;
+  }
+}
 @include media-breakpoint-up(sm) {
   .slider {
-    margin-left: 0em !important;
+    margin-left: 1em ;
+    margin-right: 1em;
+    max-width: 95%;
   }
 }
 @include media-breakpoint-up(md) {
