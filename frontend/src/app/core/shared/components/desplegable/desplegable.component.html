@@ -1,15 +1,15 @@
-<div class="row text-center " id="no-hay-chat" *ngIf=' lista_objetos.length === 0' (click)="ocultar()">
+<div class="row tx-start m-auto text-lg-center " id="no-hay-chat" *ngIf=' lista_objetos.length === 0' (click)="ocultar()">
     <strong class="col-6">No hay {{tipo_objeto}}</strong>
 </div>
 
-<div class="row text-center " id="ocultar-chat" *ngIf='desplegado === true && lista_objetos.length !== 0' (click)="ocultar()">
+<div class="row tx-start m-auto text-lg-center " id="ocultar-chat" *ngIf='desplegado === true && lista_objetos.length !== 0' (click)="ocultar()">
     <strong class="col-6">Ocultar {{tipo_objeto}}</strong>
-    <i class="bi bi-caret-up-fill col-2"></i>	
+    <i class="bi bi-caret-up-fill text-end text-lg-center col-2"></i>	
 </div>
 
-<div class="row text-center" id="mostrar-chat" *ngIf="desplegado === false && lista_objetos.length !== 0" (click)="mostrar()">
+<div class="row text-start m-auto text-lg-center" id="mostrar-chat" *ngIf="desplegado === false && lista_objetos.length !== 0" (click)="mostrar()">
     <strong class="col-6">Mostrar {{tipo_objeto}}</strong>
-    <i class="bi bi-caret-down-fill col-2"></i>	
+    <i class="bi bi-caret-down-fill text-end text-lg-center col-2"></i>	
 </div>
 <div id="con" *ngIf='desplegado === true'>
     <div href="#" class="list-group-item list-group-item-action border-0 " *ngFor="let objeto of lista_objetos" (click)="cambiarChatOMatch(objeto)">
@@ -33,4 +33,4 @@
     
 </div>
 
-<hr class="d-block d-lg-none mt-1 mb-0">
+
