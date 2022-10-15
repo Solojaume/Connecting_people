@@ -77,7 +77,8 @@ export class ChatComponent implements OnInit {
       usu_2: match_id_usu2.id,
     });
     //Esto sirve para que si un usuario envia un mensage a un macth le aparezca como chat
-    this.socketService.modify_conection_status()
+    //this.socketService.modify_conection_status();
+
     this.formularioEnvio.value.message = '';
     this.formularioEnvio.reset();
     this.setTyping('');

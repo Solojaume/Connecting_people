@@ -1,30 +1,63 @@
+$primary: #bd00f5;
+$secondary: #18f584;
+$terciario: #f5a000;
+$cuaternario: #fa0da5;
+$q: #00a4ad;
+$white: #fff;
+$lightgray: #ccc;
+$gray: #999;
+$darkgrey: #333;
+$verydarkgrey: #222;
+$black: #000;
+$cuaternario-l: #fa0da590;
+$q-ligero: #00a4ad80;
 
-$primary:#BD00F5;
-$secondary:#18F584;
-$terciario:#F5A000;
-$cuaternario:#FA0DA5;
-$q:#00A4AD;
-$white:#fff;
-$lightgray:#ccc;
-$gray:#999;
-$darkgrey:#333;
-$verydarkgrey:#222;
-$black:#000;
-$cuaternario-l:#FA0DA590;
-$q-ligero:#00A4AD80;
-
-.chat-message-ritgh,.chat-message-left{
-    width: 80%;
-}
-.chat-message-ritgh{
-    margin-left: 10em;
-    div.flex-shrink-1{
-       background-color:#FA0DA590;
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+ 
+@mixin chat_clases($max_width:100%,$width:80%, $margin_message_left:16%){
+    .chat-message-ritgh,
+    .chat-message-left {
+      width: $width;
+      max-width: $max_width;
+    }
+    .chat-message-ritgh {
+      margin-left: $margin_message_left;
+      div.flex-shrink-1 {
+        background-color: $cuaternario-l;
+      }
+    }
+    .chat-message-left {
+      //margin-right: 30em;
+      div.flex-shrink-1 {
+        background-color: $q-ligero;
+      }
     }
 }
-.chat-message-left{
-    //margin-right: 30em;
-    div.flex-shrink-1{
-       background-color:$q-ligero;
-    }
+@include chat_clases();
+
+@media (min-width: 250px) {
+    @include chat_clases($max_width:25em);
+
+}
+@include media-breakpoint-up(sm) {
+  
+  @include chat_clases($max_width:30em);
+
+}
+@include media-breakpoint-up(md) {
+    @include chat_clases($max_width:40em);
+   
+}
+@include media-breakpoint-up(lg) {
+    @include chat_clases($max_width:30em);
+
+}
+@include media-breakpoint-up(xl) {
+    @include chat_clases($max_width:100%);
+
+}
+@include media-breakpoint-up(xxl) {
 }
