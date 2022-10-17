@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">Eliminar imagen</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close button"
+    aria-describedby="modal-title"
+    (click)="modal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <p>
+    <strong
+      >¿Estas seguro de que quieres elimar esta
+      <span class="text-primary">"imagen"</span>?</strong
+    >
+  </p>
+  <p>
+    Esta imagen dejara de estar visible a otros usuarios y sera eliminada permanentemente.
+    <span class="text-danger">Esta operación no puede deshacerse.
+    </span>
+  </p>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="modal.dismiss('cancel click')"
+  >
+    Cancel
+  </button>
+  <button
+    type="button"
+    ngbAutofocus
+    class="btn btn-danger"
+    (click)="modal.close('Ok click')"
+  >
+    Ok
+  </button>
+</div>
