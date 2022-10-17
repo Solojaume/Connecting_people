@@ -68,6 +68,7 @@ export class IntranetComponent implements OnInit {
   }
   
   logout(){
+    this.socketService.closeSubscription();
     this.socketService.close();
     this.cookieService.delete("usuario");
     this.token.signOut();

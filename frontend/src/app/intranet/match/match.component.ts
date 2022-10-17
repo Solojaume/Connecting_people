@@ -29,7 +29,8 @@ export class MatchComponent implements OnInit {
     private apiService: AuthService,
     private webSocketService: WebSocketService,
     private imagenService: ImagenesService,
-    private serviceButton: SliderButtonService
+    private serviceButton: SliderButtonService,
+    private socketService:WebSocketIOService
   ) {}
   subscribe!: Subscription;
   error: string = 'No hay más usuarios que mostrarte, vuelve más tarde';
@@ -168,6 +169,7 @@ export class MatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.socketService.getNewMatches();
     this.subscriptionNewUsers();
 
     this.imagenService.getImagenes();
