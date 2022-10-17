@@ -38,10 +38,10 @@ export class ChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.socketService.chatUsar = {
+    /*this.socketService.chatUsar = {
       match_id_usu2: this.token.getUser(),
       mensajes: [],
-    };
+    };*/
     
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
@@ -77,7 +77,7 @@ export class ChatComponent implements OnInit {
       usu_2: match_id_usu2.id,
     });
     //Esto sirve para que si un usuario envia un mensage a un macth le aparezca como chat
-    //this.socketService.modify_conection_status();
+    this.socketService.modify_conection_status();
 
     this.formularioEnvio.value.message = '';
     this.formularioEnvio.reset();
@@ -90,9 +90,11 @@ export class ChatComponent implements OnInit {
 
   cargarChat(chat: any) {
     console.log('Se ha cambiado el chat a:', chat);
-    this.socketService.chatUsar = chat;
-    this.socketService.matches[chat.match_position].match_count_no_leidos = 0;
-    console.log('Mensajes:', this.socketService.mensajes[chat.match_position]);
+    if(chat!="blanco"){
+      this.socketService.chatUsar = chat;
+      this.socketService.matches[chat.match_position].match_count_no_leidos = 0;
+      console.log('Mensajes:', this.socketService.mensajes[chat.match_position]);
+    }
   }
 
   setTyping(message: string) {

@@ -24,13 +24,25 @@ export class DesplegableComponent implements OnInit,OnChanges {
   //emited:boolean=false;
   ngOnChanges() {
     if (this.lista_objetos.length >= 1) {
-      this.cambiarChatOMatch(this.lista_objetos[0]);
+      if(this.socket.chatUsar=="blanco"){
+        this.cambiarChatOMatch(this.lista_objetos[0]);
+      }
+      this.cambiarChatOMatch(this.socket.chatUsar);
+     
+    }else{
+      this.cambiarChatOMatch("blanco");
     }
   }
 
   ngOnInit(): void {
     if (this.lista_objetos.length >= 1) {
-      this.cambiarChatOMatch(this.lista_objetos[0]);
+      if(this.socket.chatUsar=="blanco"){
+        this.cambiarChatOMatch(this.lista_objetos[0]);
+      }
+      this.cambiarChatOMatch(this.socket.chatUsar);
+      
+    } else{
+      this.cambiarChatOMatch("blanco");
     }
   }
 

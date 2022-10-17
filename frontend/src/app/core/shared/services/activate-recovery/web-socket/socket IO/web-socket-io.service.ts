@@ -46,7 +46,7 @@ export class WebSocketIOService extends Socket {
     public mensajes_count:number=0;
     public matches_public:Match[]=[];
     public chats:Match[]=[];
-    public chatUsar:any=0;
+    public chatUsar:any="blanco";
     /**
      * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
      */
