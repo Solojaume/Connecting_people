@@ -1,8 +1,7 @@
 import {
   Component,
-  EventEmitter,
   OnInit,
-  Output,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 
@@ -13,19 +12,23 @@ import { TokenStorageService } from 'src/app/core/shared/services/token-storage/
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
-import { CdkScrollable, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  CdkScrollable,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
+import { interval, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit  {
   formularioEnvio = new FormGroup({
     message: new FormControl(''),
   });
   @ViewChild(CdkVirtualScrollViewport) cdkScrollable!: CdkVirtualScrollViewport;
-
 
   config: IImagenesComponentConfig = {
     type: 'rounded',
@@ -36,13 +39,10 @@ export class ChatComponent implements OnInit {
     private cookies: CookieService,
     public socketService: WebSocketIOService
   ) {}
+ 
 
   ngOnInit(): void {
-    this.socketService.chatUsar = {
-      match_id_usu2: this.token.getUser(),
-      mensajes: [],
-    };
-    
+    this.socketService.setPage("chat");
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
       this.setTyping('' + x.message);
@@ -50,7 +50,8 @@ export class ChatComponent implements OnInit {
     this.cdkScrollable.scrollTo({ bottom: 100 });
   }
 
-  scrollEnd(){
+
+  scrollEnd() {
     this.cdkScrollable.scrollTo({
       bottom: 0,
     });
@@ -76,21 +77,27 @@ export class ChatComponent implements OnInit {
       mensage: chatMessageDto,
       usu_2: match_id_usu2.id,
     });
-    //this.webSocketService.sendMessage(comunicaciones);
+    //Esto sirve para que si un usuario envia un mensage a un macth le aparezca como chat
+    this.socketService.modify_conection_status();
+
     this.formularioEnvio.value.message = '';
     this.formularioEnvio.reset();
     this.setTyping('');
     this.cdkScrollable.scrollTo({
       bottom: 0,
     });
-  
   }
 
   cargarChat(chat: any) {
     console.log('Se ha cambiado el chat a:', chat);
-    this.socketService.chatUsar = chat;
-    this.socketService.matches[chat.match_position].match_count_no_leidos = 0;
-    console.log('Mensajes:', this.socketService.mensajes[chat.match_position]);
+    if (chat != 'blanco') {
+      this.socketService.chatUsar = chat;
+      this.socketService.matches[chat.match_position].match_count_no_leidos = 0;
+      console.log(
+        'Mensajes:',
+        this.socketService.mensajes[chat.match_position]
+      );
+    }
   }
 
   setTyping(message: string) {

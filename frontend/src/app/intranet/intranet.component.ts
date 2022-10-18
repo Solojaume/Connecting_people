@@ -35,7 +35,7 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
-    
+    this.socketService.getNewMatches();
     this.imagenService.getImagenesDelServer().subscribe(
       (img:Imagen[])=>{
         this.imagenService.imagenes=img;
@@ -68,6 +68,7 @@ export class IntranetComponent implements OnInit {
   }
   
   logout(){
+    this.socketService.closeSubscription();
     this.socketService.close();
     this.cookieService.delete("usuario");
     this.token.signOut();

@@ -1,10 +1,14 @@
-import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { pipe } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpEventType,
+  HttpResponse,
+} from '@angular/common/http';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
 import { Imagen } from 'src/app/core/models/imagen';
 import { ImagenClass } from 'src/app/core/models/imagenClass';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { ImagenesService } from 'src/app/core/shared/services/imagenes/imagenes.service';
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
 import { environment } from 'src/environments/environment';
@@ -12,16 +16,27 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-personal',
   templateUrl: './personal.component.html',
-  styleUrls: ['./personal.component.scss']
+  styleUrls: ['./personal.component.scss'],
 })
-export class PersonalComponent  {
+export class PersonalComponent implements OnInit, OnDestroy {
   progress = 0;
-  img:ImagenClass[]=[];
-  constructor(private token:TokenStorageService,public imgService:ImagenesService) { 
+  img: ImagenClass[] = [];
+  constructor(
+    private token: TokenStorageService,
+    public imgService: ImagenesService,
+    private socketService: WebSocketIOService
+  ) {
     this.img = imgService.imagenes;
-
   }
- 
+
+  ngOnInit(): void {
+    this.socketService.setPage('personal');
+  }
+
+  ngOnDestroy(): void {
+    
+    this.socketService.emitEvent('update lista match', this.token.getUser());  
+  }
   // @ts-nocheck
 
   /*
@@ -61,16 +76,13 @@ export class PersonalComponent  {
       sizeLimit: 'Size Limit'
     }
   };*/
- 
 
   afuConfig = {
-    uploadAPI:{
-      url:environment.apiBase+"imagen/subir-imagen"
-    }, 
+    uploadAPI: {
+      url: environment.apiBase + 'imagen/subir-imagen',
+    },
     autoUpload: true,
     hideResetBtn: true,
-    formatsAllowed: "images/*",
-  }
-  
- 
+    formatsAllowed: 'images/*',
+  };
 }

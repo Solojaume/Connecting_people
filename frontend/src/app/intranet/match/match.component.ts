@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
@@ -29,7 +29,8 @@ export class MatchComponent implements OnInit {
     private apiService: AuthService,
     private webSocketService: WebSocketService,
     private imagenService: ImagenesService,
-    private serviceButton: SliderButtonService
+    private serviceButton: SliderButtonService,
+    private socketService: WebSocketIOService
   ) {}
   subscribe!: Subscription;
   error: string = 'No hay más usuarios que mostrarte, vuelve más tarde';
@@ -38,7 +39,49 @@ export class MatchComponent implements OnInit {
   nombre!: any;
   timestamp_nacimiento!: any;
   bacio: any = false;
+ 
   configSlider: IImagenesComponentConfigAvanzada[] = [];
+  ngOnInit(): void {
+    this.socketService.setPage("match");
+    this.subscriptionNewUsers();
+
+    this.imagenService.getImagenes();
+    this.contUser = 0;
+
+    console.log(this.imagen);
+    let to = this.token.getToken();
+    let us = this.token.getUser();
+
+    let usuario = { token: '' };
+    try {
+      usuario = JSON.parse(this.cookieService.get('usuario')) ?? '';
+    } catch (error) {}
+    if (usuario.token != '' && this.token.getUser() && this.token.getToken()) {
+      this.subscribe = this.apiService
+        .autenticacion(usuario.token)
+        .subscribe((usu) => {
+          if (usu.error) {
+            this.token.signOut();
+            this.cookieService.delete('usuario');
+            this.token.signOut();
+            this.router.navigateByUrl('/');
+          }
+        });
+    } else if (
+      usuario.token == '' ||
+      (!this.token.getUser() && !this.token.getToken())
+    ) {
+      this.token.signOut();
+      this.router.navigateByUrl('/');
+    }
+    if (!this.token.getUser() && !this.token.getToken()) {
+      this.token.signOut();
+      this.router.navigateByUrl('/');
+    }
+  }
+
+
+  
   subscriptionNewUsers() {
     this.match.getNewMatchUsers().subscribe((u) => {
       if (u.length >= 1) {
@@ -167,44 +210,8 @@ export class MatchComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.subscriptionNewUsers();
-
-    this.imagenService.getImagenes();
-    this.contUser = 0;
-
-    console.log(this.imagen);
-    let to = this.token.getToken();
-    let us = this.token.getUser();
-
-    let usuario = { token: '' };
-    try {
-      usuario = JSON.parse(this.cookieService.get('usuario')) ?? '';
-    } catch (error) {}
-    if (usuario.token != '' && this.token.getUser() && this.token.getToken()) {
-      this.subscribe = this.apiService
-        .autenticacion(usuario.token)
-        .subscribe((usu) => {
-          if (usu.error) {
-            this.token.signOut();
-            this.cookieService.delete('usuario');
-            this.token.signOut();
-            this.router.navigateByUrl('/');
-          }
-        });
-    } else if (
-      usuario.token == '' ||
-      (!this.token.getUser() && !this.token.getToken())
-    ) {
-      this.token.signOut();
-      this.router.navigateByUrl('/');
-    }
-    if (!this.token.getUser() && !this.token.getToken()) {
-      this.token.signOut();
-      this.router.navigateByUrl('/');
-    }
-  }
-
+ 
+  
   //Recive por parametro si ha sido like o no
   //Si es like recive true si no false
   likeDislike(like: number) {
