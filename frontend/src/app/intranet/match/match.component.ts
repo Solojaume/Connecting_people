@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { Match } from 'src/app/core/models/match.model';
 import { AuthService } from 'src/app/core/shared/services/auth/auth.service';
 import { MatchService } from 'src/app/core/shared/services/match/match.service';
@@ -30,7 +30,7 @@ export class MatchComponent implements OnInit {
     private webSocketService: WebSocketService,
     private imagenService: ImagenesService,
     private serviceButton: SliderButtonService,
-    private socketService:WebSocketIOService
+    private socketService: WebSocketIOService
   ) {}
   subscribe!: Subscription;
   error: string = 'No hay más usuarios que mostrarte, vuelve más tarde';
@@ -39,6 +39,7 @@ export class MatchComponent implements OnInit {
   nombre!: any;
   timestamp_nacimiento!: any;
   bacio: any = false;
+ 
   configSlider: IImagenesComponentConfigAvanzada[] = [];
   subscriptionNewUsers() {
     this.match.getNewMatchUsers().subscribe((u) => {
@@ -168,8 +169,8 @@ export class MatchComponent implements OnInit {
     }
   }
 
+ 
   ngOnInit(): void {
-    this.socketService.getNewMatches();
     this.subscriptionNewUsers();
 
     this.imagenService.getImagenes();

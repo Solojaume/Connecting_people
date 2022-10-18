@@ -16,8 +16,6 @@ import { Observable } from 'rxjs';
 import { interval, take } from 'rxjs';
 import { Router } from '@angular/router';
 
-const intervalo = interval(environment.intervalo_tiempo_reescaneo_chat_match);
-
 const config: SocketIoConfig = {
   url: environment.serverSocket,
   options: {
@@ -237,13 +235,6 @@ export class WebSocketIOService extends Socket {
     this.emitEvent('disconnect-by-token', this.token.getToken());
   }
 
-  //SIrve para empezar a preguntarle al servidor si hay nuevos matches
-  public getNewMatches() {
-    this.subscription = intervalo.subscribe((x) => {
-      this.emitEvent('update lista match', this.token.getUser());
-    });
-  }
-
   /**
    * ---------------- Conectarse ------------------------
    * Dado que he configurado el socket para que no se conecte nada más se genere,
@@ -345,6 +336,15 @@ export class WebSocketIOService extends Socket {
     return false;
   }
 
+  obtenerNuevosMatch: Observable<any> = interval(
+    environment.intervalo_tiempo_reescaneo_chat_match
+  );
+  //SIrve para empezar a preguntarle al servidor si hay nuevos matches
+  getNewMatches() {
+    this.subscription = this.obtenerNuevosMatch.subscribe(() => {
+      this.emitEvent('update lista match', this.token.getUser());
+    });
+  }
   private setAutenticadoTrue() {
     window.sessionStorage.removeItem(AUTH_KEY);
     window.sessionStorage.setItem(AUTH_KEY, 'true');
