@@ -393,7 +393,7 @@ export class WebSocketIOService extends Socket {
     environment.intervalo_tiempo_reescaneo_chat_match
   );
 
-   public setPage(pagina_ActualParam: string = 'match') {
+  public setPage(pagina_ActualParam: string = 'match') {
     this.pagina_Actual = pagina_ActualParam;
     if (pagina_ActualParam == 'chat') {
       this.hay_cambios = false;
@@ -402,13 +402,12 @@ export class WebSocketIOService extends Socket {
 
   //SIrve para empezar a preguntarle al servidor si hay nuevos matches
   public getNewMatches() {
-    if (this.subscription===null) {
+    if (this.subscription === null) {
       this.subscription = this.obtenerNuevosMatch.subscribe(() => {
         this.emitEvent('update lista match', this.token.getUser());
       });
-    }else{
-      console.log("Ya existe suscripcion")
-
+    } else {
+      console.log('Ya existe suscripcion');
     }
   }
   private setAutenticadoTrue() {
@@ -424,8 +423,14 @@ export class WebSocketIOService extends Socket {
   public getAutenticado() {
     return window.sessionStorage.getItem(AUTH_KEY);
   }
+  marcadoParaCerrar = false;
   public closeSubscription() {
-    console.log('Subscription:', this.subscription);
-    this.subscription.unsubscribe();
+    if (this.marcadoParaCerrar === true) {
+      console.log('Subscription:', this.subscription);
+      this.subscription.unsubscribe();
+      this.marcadoParaCerrar = false;
+    } else {
+      this.marcadoParaCerrar = true;
+    }
   }
 }
