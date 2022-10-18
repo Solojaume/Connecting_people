@@ -24,7 +24,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit,OnDestroy  {
+export class ChatComponent implements OnInit  {
   formularioEnvio = new FormGroup({
     message: new FormControl(''),
   });
@@ -39,16 +39,10 @@ export class ChatComponent implements OnInit,OnDestroy  {
     private cookies: CookieService,
     public socketService: WebSocketIOService
   ) {}
-  ngOnDestroy(): void {
-    this.socketService.closeSubscription();
-  }
+ 
 
   ngOnInit(): void {
-    /*this.socketService.chatUsar = {
-      match_id_usu2: this.token.getUser(),
-      mensajes: [],
-    };*/
-    this.socketService.getNewMatches();
+    this.socketService.setPage("chat");
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
       this.setTyping('' + x.message);

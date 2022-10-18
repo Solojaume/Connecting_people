@@ -35,7 +35,7 @@ export class IntranetComponent implements OnInit {
   
   
   ngOnInit(): void {
-    
+    this.socketService.getNewMatches();
     this.imagenService.getImagenesDelServer().subscribe(
       (img:Imagen[])=>{
         this.imagenService.imagenes=img;

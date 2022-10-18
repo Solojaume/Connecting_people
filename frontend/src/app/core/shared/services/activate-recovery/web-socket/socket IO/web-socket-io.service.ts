@@ -50,10 +50,12 @@ export class WebSocketIOService extends Socket {
   public chats: Match[] = [];
   public chatUsar: any = 'blanco';
   public subscription!: any;
+  public pagina_Actual: string = 'match';
+  public hay_cambios: boolean = false;
   /**
    * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
    */
-  constructor(private token: TokenStorageService, private router: Router) {
+  constructor(private token: TokenStorageService) {
     /**
      *  En nuestro "super" declaramos la configuración inicial de conexión la cual hemos declarado en nuestro
      *  "environment.serverSocket",
@@ -155,6 +157,9 @@ export class WebSocketIOService extends Socket {
           this.matches[pos].match_count_no_leidos + 1;
       }
       this.mensajes[pos].push(mensaje);
+      if (this.pagina_Actual != 'chat') {
+        this.hay_cambios = true;
+      }
     });
 
     // Miembro abandonado en medio de la supervisión
@@ -172,10 +177,52 @@ export class WebSocketIOService extends Socket {
         mensajes: [MensajeModel[]];
         mensajes_count: number;
       }) => {
-        console.log('user:', user);
-        console.log('usuarios:', this.usuarios);
-        this.mensajes = user.mensajes;
+        let oldMatches: Match[] = this.matches;
         this.matches = user.matches;
+        this.mensajes = user.mensajes;
+        let primeroMatchIdAntiguo = oldMatches[0].match_id;
+        let primeroMatchIdNuevo = this.matches[0].match_id;
+
+        let ultimoMatchIdAntiguo = oldMatches[oldMatches.length - 1].match_id;
+        let ultimoMatchIdNuevo = this.matches[this.matches.length - 1].match_id;
+        if (oldMatches.length === this.matches.length) {
+          for (let index = 0; index < oldMatches.length; index++) {
+            const old = oldMatches[index];
+            const newM = this.matches[index];
+            //______________ Debug ________________________
+            /*
+            console.log("Old:",old);
+            console.log("NEW:",newM);
+            */
+            if (old.match_count_no_leidos > 0) {
+              newM.match_count_no_leidos = old.match_count_no_leidos;
+            }
+            this.matches[index] = newM;
+          }
+        } else if (
+          this.matches.length > oldMatches.length &&
+          ultimoMatchIdNuevo > ultimoMatchIdAntiguo
+        ) {
+          for (let index = 0; index < oldMatches.length; index++) {
+            const old = oldMatches[index];
+            const newM = this.matches[index];
+            //______________ Debug ________________________
+            /*
+            console.log("Old:",old);
+            console.log("NEW:",newM);
+            */
+            if (
+              old.match_id === newM.match_id &&
+              old.match_count_no_leidos > 0
+            ) {
+              console.log('NEW:', newM);
+
+              newM.match_count_no_leidos = old.match_count_no_leidos;
+              this.matches[index] = newM;
+            }
+          }
+        }
+
         this.mensajes_count = user.mensajes_count;
 
         this.modify_conection_status();
@@ -269,7 +316,13 @@ export class WebSocketIOService extends Socket {
       }
 
       this.matches[index].match_position = index;
-      this.matches[index].match_count_no_leidos = 0;
+      if (this.matches[index].match_count_no_leidos > 0) {
+        this.matches[index].match_count_no_leidos =
+          this.matches[index].match_count_no_leidos;
+      } else {
+        this.matches[index].match_count_no_leidos = 0;
+      }
+
       //Parte 4 - Pre for 2 y For2
 
       const lista_mensajes_por_match = this.mensajes[index];
@@ -339,11 +392,24 @@ export class WebSocketIOService extends Socket {
   obtenerNuevosMatch: Observable<any> = interval(
     environment.intervalo_tiempo_reescaneo_chat_match
   );
+
+   public setPage(pagina_ActualParam: string = 'match') {
+    this.pagina_Actual = pagina_ActualParam;
+    if (pagina_ActualParam == 'chat') {
+      this.hay_cambios = false;
+    }
+  }
+
   //SIrve para empezar a preguntarle al servidor si hay nuevos matches
-  getNewMatches() {
-    this.subscription = this.obtenerNuevosMatch.subscribe(() => {
-      this.emitEvent('update lista match', this.token.getUser());
-    });
+  public getNewMatches() {
+    if (this.subscription===null) {
+      this.subscription = this.obtenerNuevosMatch.subscribe(() => {
+        this.emitEvent('update lista match', this.token.getUser());
+      });
+    }else{
+      console.log("Ya existe suscripcion")
+
+    }
   }
   private setAutenticadoTrue() {
     window.sessionStorage.removeItem(AUTH_KEY);
@@ -359,6 +425,7 @@ export class WebSocketIOService extends Socket {
     return window.sessionStorage.getItem(AUTH_KEY);
   }
   public closeSubscription() {
+    console.log('Subscription:', this.subscription);
     this.subscription.unsubscribe();
   }
 }

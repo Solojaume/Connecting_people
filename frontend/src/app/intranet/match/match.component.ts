@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { interval, Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Match } from 'src/app/core/models/match.model';
 import { AuthService } from 'src/app/core/shared/services/auth/auth.service';
 import { MatchService } from 'src/app/core/shared/services/match/match.service';
@@ -41,6 +41,47 @@ export class MatchComponent implements OnInit {
   bacio: any = false;
  
   configSlider: IImagenesComponentConfigAvanzada[] = [];
+  ngOnInit(): void {
+    this.socketService.setPage("match");
+    this.subscriptionNewUsers();
+
+    this.imagenService.getImagenes();
+    this.contUser = 0;
+
+    console.log(this.imagen);
+    let to = this.token.getToken();
+    let us = this.token.getUser();
+
+    let usuario = { token: '' };
+    try {
+      usuario = JSON.parse(this.cookieService.get('usuario')) ?? '';
+    } catch (error) {}
+    if (usuario.token != '' && this.token.getUser() && this.token.getToken()) {
+      this.subscribe = this.apiService
+        .autenticacion(usuario.token)
+        .subscribe((usu) => {
+          if (usu.error) {
+            this.token.signOut();
+            this.cookieService.delete('usuario');
+            this.token.signOut();
+            this.router.navigateByUrl('/');
+          }
+        });
+    } else if (
+      usuario.token == '' ||
+      (!this.token.getUser() && !this.token.getToken())
+    ) {
+      this.token.signOut();
+      this.router.navigateByUrl('/');
+    }
+    if (!this.token.getUser() && !this.token.getToken()) {
+      this.token.signOut();
+      this.router.navigateByUrl('/');
+    }
+  }
+
+
+  
   subscriptionNewUsers() {
     this.match.getNewMatchUsers().subscribe((u) => {
       if (u.length >= 1) {
@@ -170,44 +211,7 @@ export class MatchComponent implements OnInit {
   }
 
  
-  ngOnInit(): void {
-    this.subscriptionNewUsers();
-
-    this.imagenService.getImagenes();
-    this.contUser = 0;
-
-    console.log(this.imagen);
-    let to = this.token.getToken();
-    let us = this.token.getUser();
-
-    let usuario = { token: '' };
-    try {
-      usuario = JSON.parse(this.cookieService.get('usuario')) ?? '';
-    } catch (error) {}
-    if (usuario.token != '' && this.token.getUser() && this.token.getToken()) {
-      this.subscribe = this.apiService
-        .autenticacion(usuario.token)
-        .subscribe((usu) => {
-          if (usu.error) {
-            this.token.signOut();
-            this.cookieService.delete('usuario');
-            this.token.signOut();
-            this.router.navigateByUrl('/');
-          }
-        });
-    } else if (
-      usuario.token == '' ||
-      (!this.token.getUser() && !this.token.getToken())
-    ) {
-      this.token.signOut();
-      this.router.navigateByUrl('/');
-    }
-    if (!this.token.getUser() && !this.token.getToken()) {
-      this.token.signOut();
-      this.router.navigateByUrl('/');
-    }
-  }
-
+  
   //Recive por parametro si ha sido like o no
   //Si es like recive true si no false
   likeDislike(like: number) {

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { IMatchModel } from 'src/app/core/models/chat/Interfaces/IMatchModel';
 import { Match } from 'src/app/core/models/chat/Match';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
@@ -9,7 +16,7 @@ import { WebSocketIOService } from '../../services/activate-recovery/web-socket/
   templateUrl: './desplegable.component.html',
   styleUrls: ['./desplegable.component.scss'],
 })
-export class DesplegableComponent implements OnInit,OnChanges {
+export class DesplegableComponent implements OnInit, OnChanges {
   desplegado: boolean = true;
 
   @Input() tipo_objeto!: string;
@@ -24,25 +31,23 @@ export class DesplegableComponent implements OnInit,OnChanges {
   //emited:boolean=false;
   ngOnChanges() {
     if (this.lista_objetos.length >= 1) {
-      if(this.socket.chatUsar=="blanco"){
+      if (this.socket.chatUsar == 'blanco') {
         this.cambiarChatOMatch(this.lista_objetos[0]);
       }
       this.cambiarChatOMatch(this.socket.chatUsar);
-     
-    }else{
-      this.cambiarChatOMatch("blanco");
+    } else {
+      this.cambiarChatOMatch('blanco');
     }
   }
 
   ngOnInit(): void {
     if (this.lista_objetos.length >= 1) {
-      if(this.socket.chatUsar=="blanco"){
+      if (this.socket.chatUsar == 'blanco') {
         this.cambiarChatOMatch(this.lista_objetos[0]);
       }
       this.cambiarChatOMatch(this.socket.chatUsar);
-      
-    } else{
-      this.cambiarChatOMatch("blanco");
+    } else {
+      this.cambiarChatOMatch('blanco');
     }
   }
 
@@ -74,8 +79,8 @@ export class DesplegableComponent implements OnInit,OnChanges {
     return false;
   }
 
-  existFotosEnObjeto(objeto:any){
-    if(objeto[0]){
+  existFotosEnObjeto(objeto: any) {
+    if (objeto[0]) {
       return true;
     }
     return false;
