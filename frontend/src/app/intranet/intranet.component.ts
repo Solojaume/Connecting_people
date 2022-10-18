@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './intranet.component.html',
   styleUrls: ['./intranet.component.scss']
 })
-export class IntranetComponent implements OnInit {
+export class IntranetComponent implements OnInit,OnDestroy {
 
   constructor( 
     private token:TokenStorageService, 
@@ -29,6 +29,10 @@ export class IntranetComponent implements OnInit {
   ) {
 
    }
+  ngOnDestroy(): void {
+    //this.socketService.closeSubscription();
+    //this.router.navigateByUrl("/");
+  }
   subscribe!:Subscription ;
   error:string="";
 
@@ -68,12 +72,13 @@ export class IntranetComponent implements OnInit {
   }
   
   logout(){
-    this.socketService.closeSubscription();
     this.socketService.close();
     this.cookieService.delete("usuario");
     this.token.signOut();
     this.token.setReloadFalse();
     this.router.navigateByUrl("/");
+    console.log(this.socketService.subscription);
+    this.socketService.subscription.unsubscribe();
 
   }
   
