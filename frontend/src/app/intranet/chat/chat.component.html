@@ -35,8 +35,9 @@
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
                 <app-imagenes
+                *ngIf="socketService.chatUsar.match_id_usu2.fotos!=null"
                   [config]="config"
-                  [imagenes]="socketService.chatUsar.match_id_usu2.fotos"
+                  [imagenes]="socketService.chatUsar.match_id_usu2.fotos" 
                 ></app-imagenes>
               </div>
               <div class="flex-grow-1 pl-3 m-2">
