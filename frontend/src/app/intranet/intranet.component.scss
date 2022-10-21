@@ -28,6 +28,10 @@
       max-height: $max-height;
     }
   }
+ 
+}
+.notificacion {
+  color: #f5a000;
 }
 @include media-breakpoint-up(sm) {
   @include intranet($height: 100%, $width: 100%);
