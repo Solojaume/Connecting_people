@@ -31,11 +31,11 @@
 		  <hr class="d-block d-lg-none mt-1 mb-0">
         </div>
         <div class="col-12 col-lg-9 col-xl-9">
-          <div class="py-2 px-4 border-bottom d-none d-lg-block">
+          <div class="py-2 px-4 border-bottom d-none d-lg-block" *ngIf="typeofUsuario2">
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
                 <app-imagenes
-                *ngIf="socketService.chatUsar.match_id_usu2.fotos!=null"
+               
                   [config]="config"
                   [imagenes]="socketService.chatUsar.match_id_usu2.fotos" 
                 ></app-imagenes>
@@ -76,7 +76,7 @@
               </div>
             </div>
           </div>
-          <div class="py-2 px-4 border-bottom d-lg-none">
+          <div class="py-2 px-4 border-bottom d-lg-none" *ngIf="typeofUsuario2">
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
                 <app-imagenes

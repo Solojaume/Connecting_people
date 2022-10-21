@@ -39,10 +39,11 @@ export class ChatComponent implements OnInit  {
     private cookies: CookieService,
     public socketService: WebSocketIOService
   ) {}
- 
+  public typeofUsuario2!:boolean;
 
   ngOnInit(): void {
     this.socketService.setPage("chat");
+    this.typeofUsuario2=typeof this.socketService.chatUsar.match_id_usu2!=='undefined';
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
       this.setTyping('' + x.message);
