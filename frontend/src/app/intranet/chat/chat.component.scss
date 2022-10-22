@@ -1,10 +1,23 @@
 
+
 .chat-messages2{
-    height: 30em;
+    height: calc(20*1.18em);
+   
     margin-left: 1.5em;
     margin-top: 6px;
 }
+@media (max-height:500px){
+  .chat-messages2{
+    height: 15.35em;
 
+  }
+}
+@media (min-height:1000px){
+  .chat-messages2{
+    height:  calc(25*1.45em);
+     font-size: 1.65em;
+  }
+}
 .chat-online {
     color: #34ce57;
   }

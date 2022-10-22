@@ -24,7 +24,7 @@ export class IntranetComponent implements OnInit,OnDestroy {
     private cookieService:CookieService, 
     private apiService:AuthService,
     public webSocketService:WebSocketService,
-    private socketService:WebSocketIOService,
+    public socketService:WebSocketIOService,
     private imagenService:ImagenesService
   ) {
 
@@ -46,7 +46,6 @@ export class IntranetComponent implements OnInit,OnDestroy {
         this.imagenService.imagenes.forEach((o:Imagen)=>{
           if(o.imagen_localizacion_donde_subida=="Interno"){
             o.imagen_src = environment.imagenesBase + o.imagen_src;
-
           }
         });
         this.imagenService.imgSRC=img[0];

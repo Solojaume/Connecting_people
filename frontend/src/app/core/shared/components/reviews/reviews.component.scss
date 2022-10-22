@@ -13,41 +13,56 @@ app-review {
   .reviews {
     height: 30em;
     $min-height: 30%;
-    
+
     $max-height: 100%;
-    
+
     margin-left: 1.5em;
     margin-top: 6px;
   }
 }
 
-@media (min-width: 576px) {
-    .reviews {
-        height: 16em;
-        $min-height: 30%;
-        $max-height: 100%;
-        margin-top: 6px;
+@media (min-width: 0px) {
+  .reviews {
+    height: 16em;
+    $min-height: 30%;
+    $max-height: 100%;
+    margin-top: 6px;
+  }
+
+  cdk-virtual-scroll-viewport {
+    -webkit-overflow-scrolling: touch;
+    .cdk-virtual-scroll-content-wrapper {
+      contain: content;
     }
+  }
+}
+@media (min-width: 576px) {
+  .reviews {
+    height: 16em;
+    $min-height: 30%;
+    $max-height: 100%;
+    margin-top: 6px;
+  }
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
-    .reviews {
-        height: 15em;
-        $min-height: 30%;
-        $max-height: 100%;
-        margin-top: 6px;
-    }
+  .reviews {
+    height: 15em;
+    $min-height: 30%;
+    $max-height: 100%;
+    margin-top: 6px;
+  }
 }
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
-    .reviews {
-        height: 13em;
-        $min-height: 30%;
-        $max-height: 100%;
-        margin-top: 6px;
-      }
+  .reviews {
+    height: 13em;
+    $min-height: 30%;
+    $max-height: 100%;
+    margin-top: 6px;
+  }
 }
 
 // X-Large devices (large desktops, 1200px and up)
@@ -62,10 +77,10 @@ app-review {
 
 // XX-Large devices (larger desktops, 1400px and up)
 @media (min-width: 1400px) {
-    .reviews {
-        height: 20em;
-        $min-height: 30%;
-        $max-height: 100%;
-        margin-top: 6px;
-    }
+  .reviews {
+    height: 20em;
+    $min-height: 30%;
+    $max-height: 100%;
+    margin-top: 6px;
+  }
 }
