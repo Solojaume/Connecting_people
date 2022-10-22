@@ -10,14 +10,16 @@
        <app-imagenes [configAvanzada]="config[imagenPosition]" (likeDislike)="likeDislikeM($event)" ></app-imagenes>
         
     </div>
-    <!--___________________________________ Botones ocultos por que no funcionan____________________________
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev"
+    (click)="cambiarImagenAtras()" [ngClass]="classButtonAtras">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" (click)="cambiarImagen()">
+    <button class="carousel-control-next " type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" 
+    (click)="cambiarImagenAdelante()" [ngClass]="classButtonAdelantar">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
-  -->
+  
   </div>
