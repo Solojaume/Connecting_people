@@ -34,10 +34,9 @@ export class DesplegableComponent implements OnInit, OnChanges {
       if (this.socket.chatUsar == 'blanco') {
         this.cambiarChatOMatch(this.lista_objetos[0]);
       }
-      this.cambiarChatOMatch(this.socket.chatUsar);
-    } else {
-      this.cambiarChatOMatch('blanco');
-    }
+     
+    } 
+    this.cambiarChatOMatch(this.socket.chatUsar);
   }
 
   ngOnInit(): void {
@@ -45,10 +44,8 @@ export class DesplegableComponent implements OnInit, OnChanges {
       if (this.socket.chatUsar == 'blanco') {
         this.cambiarChatOMatch(this.lista_objetos[0]);
       }
-      this.cambiarChatOMatch(this.socket.chatUsar);
-    } else {
-      this.cambiarChatOMatch('blanco');
-    }
+    } 
+    this.cambiarChatOMatch(this.socket.chatUsar);
   }
 
   con(objeto: any) {

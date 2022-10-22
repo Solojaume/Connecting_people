@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { IImagenesComponentConfig } from 'src/app/core/models/Interfaces/IImagenesComponentConfig';
 import { IImagenesComponentConfigAvanzada } from 'src/app/core/models/Interfaces/IImagenesComponentConfigAvanzada';
 import { SliderService } from './slider.service';
@@ -8,7 +16,7 @@ import { SliderService } from './slider.service';
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
 })
-export class SliderComponent implements OnInit,OnChanges {
+export class SliderComponent implements OnInit {
   @Input() config: IImagenesComponentConfigAvanzada[] = [];
   configImagen!: IImagenesComponentConfigAvanzada;
   @Output() like = new EventEmitter<string>();
@@ -26,7 +34,6 @@ export class SliderComponent implements OnInit,OnChanges {
   likeDislikeM(l_d: string) {
     switch (l_d) {
       case 'dislike':
-
         this.dislike.emit();
         break;
       case 'like':
@@ -38,20 +45,62 @@ export class SliderComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("LikeDislike hecho");
-    console.log("slider imagenes:",this.config)
+    console.log('LikeDislike hecho');
+    console.log('slider imagenes:', this.config);
   }
 
   ngOnInit(): void {
-    console.log("Slider Cargado");
+    console.log('Slider Cargado');
+    try {
+      if (this.config[this.imagenPosition - 1] == null) {
+        this.classButtonAtras = 'd-none';
+      }
+    } catch (error) {
+      this.classButtonAtras = 'd-none';
+    }
+    try {
+      if (this.config[this.imagenPosition + 1].img.imagen_src == '') {
+        this.classButtonAdelantar = 'd-none';
+      }
+    } catch (error) {
+      this.classButtonAdelantar = 'd-none';
+    }
   }
-
-  cambiarImagen() {
-    this.config[this.imagenPosition].config.actived = false;
-    this.configImagen = this.config[this.imagenPosition];
+  public classButtonAdelantar!: string;
+  cambiarImagenAdelante() {
+    //Se esconde la imagen actual
+    //this.config[this.imagenPosition].config.actived = false;
+    //Se Cambia la posición de la imagen
     this.imagenPosition = this.imagenPosition + 1;
-    this.sliderService.setSliderImagen(this.config[this.imagenPosition]);
+    //Se resetea la clase para que este oculto el boton atras
+    this.classButtonAtras = '';
+    //Se resetea la clase para que este oculto el boton adelante
+    this.classButtonAdelantar = '';
+   
+    try {
+      if (this.config[this.imagenPosition + 1].img.imagen_src == '') {
+        this.classButtonAdelantar = 'd-none';
+      }
+    } catch (error) {
+      this.classButtonAdelantar = 'd-none';
+    }
   }
 
-  ngOnChange(): void {}
+  public classButtonAtras = '';
+  cambiarImagenAtras() {
+    //this.config[this.imagenPosition].config.actived = false;
+    this.imagenPosition = this.imagenPosition - 1;
+   
+    this.classButtonAdelantar = '';
+    this.classButtonAtras = '';
+    //this.config[this.imagenPosition].config.actived = true;
+    this.configImagen = this.config[this.imagenPosition];
+    try {
+      if (this.config[this.imagenPosition - 1] == null) {
+        this.classButtonAtras = 'd-none';
+      }
+    } catch (error) {
+      this.classButtonAtras = 'd-none';
+    }
+  }
 }

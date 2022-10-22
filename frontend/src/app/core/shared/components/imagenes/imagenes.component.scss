@@ -90,7 +90,7 @@
   }
 
   &.like {
-    @include like_dislike($color: #5cb85c);
+    @include like_dislike($color: #18f584 );//#5cb85c);
   }
 
   &.desplegar {
