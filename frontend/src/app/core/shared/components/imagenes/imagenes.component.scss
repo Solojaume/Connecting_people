@@ -1,5 +1,10 @@
 .margin {
-  margin-left: 1em;
+  margin-left: 1.02em;
+  margin-right: 1em;
+  margin-bottom: 2px;
+}
+.margin2 {
+  margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 2px;
 }
@@ -59,7 +64,6 @@
 @mixin circulo(
   $width: 3em,
   $height: 2.5em,
-
   $background: transparent,
   $color: #fff,
   $font-size-bi: 1em,

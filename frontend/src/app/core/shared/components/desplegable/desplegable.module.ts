@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DesplegableComponent } from './desplegable.component';
 import { ServicesModule } from '../../services/services.module';
-import { ImagenesComponent } from '../imagenes/imagenes.component';
 import { ImagenesModule } from '../imagenes/imagenes.module';
 
 

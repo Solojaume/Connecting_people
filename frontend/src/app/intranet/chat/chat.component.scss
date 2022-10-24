@@ -1,49 +1,46 @@
+.chat-messages2 {
+  height: calc(20 * 1.18em);
 
-
-.chat-messages2{
-    height: calc(20*1.18em);
-   
-    margin-left: 1.5em;
-    margin-top: 6px;
+  margin-left: 1.5em;
+  margin-top: 6px;
 }
-@media (max-height:500px){
-  .chat-messages2{
+@media (max-height: 500px) {
+  .chat-messages2 {
     height: 15.35em;
-
   }
 }
-@media (min-height:1000px){
-  .chat-messages2{
-    height:  calc(25*1.45em);
-     font-size: 1.65em;
+@media (min-height: 1000px) {
+  .chat-messages2 {
+    height: calc(25 * 1.45em);
+    font-size: 1.65em;
   }
 }
 .chat-online {
-    color: #34ce57;
-  }
-  
-  .chat-offline {
-    color: #e4606d;
-  }
-  
-  .chat-messages {
-    display: flex;
-    flex-direction: column;
-    max-height: 800px;
-    overflow-y: scroll;
-  }
-  
-  .chat-message-left,
-  .chat-message-right {
-    display: flex;
-    flex-shrink: 0;
-  }
-  
-  .chat-message-left {
-    margin-right: auto;
-  }
-  
-  .chat-message-right {
-    flex-direction: row-reverse;
-    margin-left: auto;
-  }
+  color: #34ce57;
+}
+
+.chat-offline {
+  color: #e4606d;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+  overflow-y: scroll;
+}
+
+.chat-message-left,
+.chat-message-right {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.chat-message-left {
+  margin-right: auto;
+}
+
+.chat-message-right {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
