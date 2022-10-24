@@ -30,19 +30,16 @@
                 && reviewsButtonsService.reviews_estan_cargadas===true" >
                     <i class="bi bi-arrow-up-short"></i>
                 </button>
+                
             </div>
         </div>
         <p></p>
         
         <div class="row bg-dark" *ngIf="configAvanzada.config.like_dislike_button===true">
             <div class="col"></div>
-            <button class="circulo dislike col" (click)="dislikeM()">
-                <i class="bi bi-x "></i>
-            </button>
+            <app-button-circular [type]="dislike" class="col " (click)="dislikeM()"></app-button-circular>
             <div class="col"></div>
-            <button class="circulo like col" (click)="likeM()">
-                <i class="bi bi-suit-heart-fill"></i>
-            </button>
+            <app-button-circular [type]="like" class="col " (click)="dislikeM()"></app-button-circular>
             <div class="col"></div>
         </div>
     </div> 

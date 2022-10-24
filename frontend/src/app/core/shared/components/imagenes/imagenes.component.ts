@@ -30,7 +30,8 @@ export class ImagenesComponent implements OnInit, OnChanges {
   actived = 'active';
   avanzadaNull: boolean = false;
   constructor(public reviewsButtonsService: SliderButtonService) {}
-
+  like="like";
+  dislike="dislike";
   ngOnChanges(): void {
     console.log('Algo cambio aquí tienes las imagenes', this.imagenes);
     console.log('CONFIG AVANZADA en imagen component:', this.configAvanzada);

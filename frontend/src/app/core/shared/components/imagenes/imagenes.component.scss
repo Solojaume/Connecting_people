@@ -74,13 +74,6 @@
   border-radius: $border-radius;
   background: $background;
   border-color: $background;
-  &.dislike {
-    @include like_dislike($color: #f50045);
-  }
-
-  &.like {
-    @include like_dislike($color: #18f584); //#5cb85c);
-  }
 
   &.desplegar {
     @include like_dislike(
@@ -117,9 +110,7 @@
 }
 // Small devices (landscape phones, 576px and up)
 @include media-breakpoint-up(sm) {
-  .circulo {
-    @include circulo();
-  }
+  
   .circulo-pequenyo {
     @include circulo(
       $width: 1.75em,
@@ -132,9 +123,7 @@
 
 // Medium devices (tablets, 768px and up)
 @include media-breakpoint-up(md) {
-  .circulo {
-    @include circulo();
-  }
+  
   .circulo-pequenyo {
     @include circulo(
       $width: 1.75em,
