@@ -3,11 +3,12 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
+  LOCALE_ID,
+  Inject,
 } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-
 import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
@@ -16,15 +17,14 @@ import {
   CdkScrollable,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
-import { interval, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit  {
+export class ChatComponent implements OnInit {
   formularioEnvio = new FormGroup({
     message: new FormControl(''),
   });
@@ -37,20 +37,21 @@ export class ChatComponent implements OnInit  {
   constructor(
     private token: TokenStorageService,
     private cookies: CookieService,
-    public socketService: WebSocketIOService
+    public socketService: WebSocketIOService,
+    @Inject(LOCALE_ID) public locale: string
   ) {}
-  public typeofUsuario2!:boolean;
+  public typeofUsuario2!: boolean;
 
   ngOnInit(): void {
-    this.socketService.setPage("chat");
-    this.typeofUsuario2=typeof this.socketService.chatUsar.match_id_usu2!=='undefined';
+    this.socketService.setPage('chat');
+    this.typeofUsuario2 =
+      typeof this.socketService.chatUsar.match_id_usu2 !== 'undefined';
     this.formularioEnvio.valueChanges.subscribe((x) => {
       console.log('x:', x.message);
       this.setTyping('' + x.message);
     });
     this.cdkScrollable.scrollTo({ bottom: 100 });
   }
-
 
   scrollEnd() {
     this.cdkScrollable.scrollTo({
@@ -60,14 +61,17 @@ export class ChatComponent implements OnInit  {
 
   sendMessage() {
     //console.log("Chat Usar:",this.chatUsar)
-    const chatMessageDto = new MensajeModel(
+    //const date = new Date();
+    //Sirve para obtener la fecha  en un formato concreto
+    //alert(formatDate(date,"hh:mm",this.locale));
+    let chatMessageDto = new MensajeModel(
       this.token.getUser().id,
       this.formularioEnvio.value.message,
       -1,
       this.socketService.mensajes_count,
       this.socketService.chatUsar.match_id,
       'mensaje',
-      new Date().toDateString()
+      formatDate(new Date(),"yyyy-mm-dd hh:mm:ss",this.locale)
     );
     let chatUsar = this.socketService.chatUsar;
     this.socketService.mensajes[chatUsar.match_position].push(chatMessageDto);
@@ -91,7 +95,8 @@ export class ChatComponent implements OnInit  {
 
   cargarChat(chat: any) {
     console.log('Se ha cambiado el chat a:', chat);
-    this.typeofUsuario2=typeof this.socketService.chatUsar.match_id_usu2!=='undefined';
+    this.typeofUsuario2 =
+      typeof this.socketService.chatUsar.match_id_usu2 !== 'undefined';
 
     if (chat != 'blanco') {
       this.socketService.chatUsar = chat;
