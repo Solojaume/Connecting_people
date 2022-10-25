@@ -11,6 +11,7 @@ $verydarkgrey: #222;
 $black: #000;
 $cuaternario-l: #fa0da590;
 $q-ligero: #00a4ad80;
+$terciario-ligero:#f59f00a3;
 
 @import "~bootstrap/scss/functions";
 // 3. Include remainder of required Bootstrap stylesheets
@@ -26,13 +27,14 @@ $q-ligero: #00a4ad80;
     .chat-message-ritgh {
       margin-left: $margin_message_left;
       div.flex-shrink-1 {
-        background-color: $cuaternario-l;
+       
+        background-color: $lightgray;
       }
     }
     .chat-message-left {
       //margin-right: 30em;
       div.flex-shrink-1 {
-        background-color: $q-ligero;
+        background-color: $terciario-ligero;
       }
     }
 }
