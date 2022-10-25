@@ -13,16 +13,26 @@
   <router-outlet></router-outlet>
 </div>
 <div class="navbar navbar-litgh nav justify-content-center">
-  <a class="nav-link color-white" aria-current="page" routerLink="/home" routerLinkActive="active">
+  <a class="nav-link color-white" aria-current="page" routerLink="/home" *ngIf="router.url !=='/home'">
     <i class="bi bi-house "></i>
   </a>
-  <a class="nav-link color-white" aria-current="page" routerLink="/intranet/chat" routerLinkActive="active">
+  <a class="nav-link color-white border" aria-current="page" routerLink="/home" *ngIf="router.url ==='/home'">
+    <i class="bi bi-house-fill"></i>
+  </a>
+  <a class="nav-link color-white" aria-current="page" routerLink="/intranet/chat" *ngIf="router.url !=='/intranet/chat'">
     <i class="bi bi-chat"></i> 
     <i class="fa fa-circle notificacion"*ngIf="socketService.hay_cambios" ></i>
   </a>
+  <a class="nav-link color-white border" aria-current="page" routerLink="/intranet/chat" *ngIf="router.url ==='/intranet/chat'">
+    <i class="bi bi-chat-fill "></i> 
+    <i class="fa fa-circle notificacion"*ngIf="socketService.hay_cambios" ></i>
+  </a>
  
-  <a class="nav-link color-white" aria-current="page" routerLink="/intranet/personal" routerLinkActive="active">
+  <a class="nav-link color-white" aria-current="page" routerLink="/intranet/personal" *ngIf="router.url !=='/intranet/personal'">
     <i class="bi bi-person "></i>
+  </a>
+  <a class="nav-link color-white border" aria-current="page" routerLink="/intranet/personal" *ngIf="router.url ==='/intranet/personal'">
+    <i class="bi bi-person-fill"></i>
   </a>
 </div>
 
