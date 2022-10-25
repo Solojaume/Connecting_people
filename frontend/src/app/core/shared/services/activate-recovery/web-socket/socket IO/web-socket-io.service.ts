@@ -405,13 +405,18 @@ export class WebSocketIOService extends Socket {
     }
   }
 
+  public escriviendo:boolean = false;
   //SIrve para empezar a preguntarle al servidor si hay nuevos matches
   public getNewMatches() {
     if (this.subscription == null) {
       //alert("ENTROOOO, LA PUSEEEEE, la metii yuju");
       this.subscription = this.obtenerNuevosMatch.subscribe(() => {
-        this.emitEvent('update lista match', this.token.getUser());
-        console.log('Ha sido hemitido evento para actualizar lista de match');
+        if(this.escriviendo === false){
+          this.emitEvent('update lista match', this.token.getUser());
+          console.log('Ha sido hemitido evento para actualizar lista de match');
+        }
+        
+        
       });
     } else {
       console.log('Ya existe suscripcion');

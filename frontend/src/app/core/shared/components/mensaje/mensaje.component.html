@@ -3,13 +3,22 @@
   class="chat-message-left pb-4 mr-3 start-0"
   *ngIf="usuario.id !== mensaje.chat_user"
 >
-  <div>
-    <app-imagenes [config]="config" [imagenes]="u2.fotos"></app-imagenes>
-    <div class="text-muted small text-nowrap mt-2">{{ mensaje.timestamp }}</div>
+
+  <div class="row text-start">
+    <app-imagenes
+      class="col-2"
+      [config]="config"
+      [imagenes]="imagenService.imagenes"
+    ></app-imagenes>
+    <div class="font-weight-bold h5 margin-negativo col-10">
+      {{ usuario.nombre }}
+    </div>
   </div>
   <div class="flex-shrink-1 bg-cuaternario-ligero rounded py-2 px-3 ml-3">
-    <div class="font-weight-bold h6 mb-1">{{ u2.nombre }}</div>
-    {{ mensaje.chat_message }}
+    <div>
+      {{ mensaje.chat_message }}
+    </div>
+    <div class="text-muted small text-end">{{ mensaje.timestamp }}</div>
   </div>
 </div>
 
@@ -18,16 +27,21 @@
   class="chat-message-ritgh pb-4 ml-3 end-0"
   *ngIf="usuario.id === mensaje.chat_user"
 >
-  <div>
+  <div class="row text-start">
     <app-imagenes
+      class="col-2"
       [config]="config"
       [imagenes]="imagenService.imagenes"
     ></app-imagenes>
-    <div class="text-muted small text-nowrap mt-2">{{ mensaje.timestamp }}</div>
+    <div class="font-weight-bold h5 margin-negativo col-10">
+      {{ usuario.nombre }}
+    </div>
   </div>
   <div class="flex-shrink-1 bg-cuaternario-ligero rounded py-2 px-3 ml-3">
-    <div class="font-weight-bold h6 mb-1">{{ usuario.nombre }}</div>
-    {{ mensaje.chat_message }}
+    <div>
+      {{ mensaje.chat_message }}
+    </div>
+    <div class="text-muted small text-end">{{ mensaje.timestamp }}</div>
   </div>
 </div>
 

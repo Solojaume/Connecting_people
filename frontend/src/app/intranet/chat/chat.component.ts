@@ -71,7 +71,7 @@ export class ChatComponent implements OnInit {
       this.socketService.mensajes_count,
       this.socketService.chatUsar.match_id,
       'mensaje',
-      formatDate(new Date(),"yyyy-mm-dd hh:mm:ss",this.locale)
+      formatDate(new Date(),"yyyy-mm-dd HH:mm:ss",this.locale)
     );
     let chatUsar = this.socketService.chatUsar;
     this.socketService.mensajes[chatUsar.match_position].push(chatMessageDto);
