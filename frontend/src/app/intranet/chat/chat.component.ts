@@ -41,14 +41,21 @@ export class ChatComponent implements OnInit {
     @Inject(LOCALE_ID) public locale: string
   ) {}
   public typeofUsuario2!: boolean;
-
+ public claseQueUsaImput: string = "form-control";
   ngOnInit(): void {
     this.socketService.setPage('chat');
     this.typeofUsuario2 =
       typeof this.socketService.chatUsar.match_id_usu2 !== 'undefined';
     this.formularioEnvio.valueChanges.subscribe((x) => {
-      console.log('x:', x.message);
-      this.setTyping('' + x.message);
+      // console.log('x:', x.message);
+      let y=""+x.message;
+      
+      if (y.length <= 1000) {
+        this.claseQueUsaImput = "form-control";
+        this.setTyping('' + x.message);
+      }else{
+        this.claseQueUsaImput = 'form-control form-control-error';
+      } 
     });
     this.cdkScrollable.scrollTo({ bottom: 100 });
   }
@@ -71,7 +78,7 @@ export class ChatComponent implements OnInit {
       this.socketService.mensajes_count,
       this.socketService.chatUsar.match_id,
       'mensaje',
-      formatDate(new Date(),"yyyy-mm-dd HH:mm:ss",this.locale)
+      formatDate(new Date(), 'yyyy-mm-dd HH:mm:ss', this.locale)
     );
     let chatUsar = this.socketService.chatUsar;
     this.socketService.mensajes[chatUsar.match_position].push(chatMessageDto);

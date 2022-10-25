@@ -1,3 +1,8 @@
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/forms";
 .chat-messages2 {
   height: calc(20 * 1.18em);
 
@@ -6,7 +11,7 @@
 }
 @media (max-height: 500px) {
   .chat-messages2 {
-    height: 13.80em;
+    height: 13.8em;
     max-height: 15.35em;
   }
 }
@@ -44,4 +49,32 @@
 .chat-message-right {
   flex-direction: row-reverse;
   margin-left: auto;
+}
+.input-group > .form-control-error, .input-group > .form-select, .input-group > .form-floating {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+}
+.form-control-error {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border: 5px solid red;
+    box-shadow: 5px rgba(255, 0, 0, 0.663);
+    transition: border-color 0s ease-in-out, box-shadow 0s ease-in-out;
+  }
 }

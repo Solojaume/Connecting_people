@@ -156,12 +156,14 @@
               <div class="input-group">
                 <input
                   type="text"
-                  class="form-control"
+                  [ngClass]="claseQueUsaImput"
                   formControlName="message"
-                  placeholder="Type your message"
+                  placeholder="Escribe tu mensaje"
                 />
                 <button type="submit" class="btn btn-primary">Send</button>
+                
               </div>
+              <p class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir más de 1000 caracteres</p>
             </div>
           </form>
         </div>

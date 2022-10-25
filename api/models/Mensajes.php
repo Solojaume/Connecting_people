@@ -37,7 +37,7 @@ class Mensajes extends \yii\db\ActiveRecord
             [['mensajes_match_id', 'mensaje_contenido'], 'required'],
             [['mensajes_id', 'mensajes_match_id', 'entregado', 'mensajes_usuario_id'], 'integer'],
             [['timestamp'], 'safe'],
-            [['mensaje_contenido'], 'string', 'max' => 256],
+            [['mensaje_contenido'], 'string', 'max' => 1000],
             //[['mensajes_id'], 'unique'],
             [['mensajes_match_id'], 'exist', 'skipOnError' => true, 'targetClass' => Mach::className(), 'targetAttribute' => ['mensajes_match_id' => 'match_id']],
         ];
