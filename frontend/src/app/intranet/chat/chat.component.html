@@ -163,7 +163,9 @@
                 <button type="submit" class="btn btn-primary">Send</button>
                 
               </div>
-              <p class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir más de 1000 caracteres</p>
+              <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir más de 1000 caracteres</div>
+              <div class="text-danger" *ngIf="mensajeVacio===true">No se puede enviar un mensaje vacio</div>
+
             </div>
           </form>
         </div>
