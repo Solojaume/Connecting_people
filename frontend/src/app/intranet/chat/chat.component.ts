@@ -18,6 +18,8 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { formatDate } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalAutofocusComponent } from 'src/app/core/shared/components/modals/modal-autofocus/modal-autofocus.component';
 
 @Component({
   selector: 'app-chat',
@@ -38,11 +40,13 @@ export class ChatComponent implements OnInit {
     private token: TokenStorageService,
     private cookies: CookieService,
     public socketService: WebSocketIOService,
-    @Inject(LOCALE_ID) public locale: string
+    @Inject(LOCALE_ID) public locale: string,
+    private _modalService: NgbModal
   ) {}
   public typeofUsuario2!: boolean;
   public claseQueUsaImput: string = 'form-control';
   public mensajeVacio: boolean = false;
+
   ngOnInit(): void {
     this.socketService.setPage('chat');
     this.typeofUsuario2 =
@@ -142,5 +146,22 @@ export class ChatComponent implements OnInit {
       });
       this.typingSended = false;
     }
+  }
+
+  open(nombre:string="una putita") {
+    let modal = this._modalService.open(ModalAutofocusComponent);
+    modal.componentInstance.tittle = 'Deshacer match';
+    modal.componentInstance.strong1 = "¿Estas seguro de que quieres deshacer tu match con";
+    modal.componentInstance.spanStrong = '"'+nombre+'"';
+    modal.componentInstance.textoNormal = "Al deshacer el match te desaparecera la combersación. \n";
+    modal.componentInstance.strong2 = "?";
+    console.log('let Modal', modal);
+    modal.closed.subscribe((closed)=>{
+      console.log('CLOSED modal:', closed);
+    });
+    modal.dismissed.subscribe((dismis)=>{
+      console.log('Dismis modal:', dismis);
+    });
+
   }
 }

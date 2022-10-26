@@ -72,6 +72,9 @@
                 <button class="btn btn-light border btn-lg px-3 d-none ">
                   Review
                 </button>
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3   d-block">
+                  Deshacer Match
+                </button>
               </div>
             </div>
           </div>
@@ -115,6 +118,9 @@
               <div>
                 <button class="btn btn-light border btn-lg px-3 d-none">
                   Review
+                </button>
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                  Deshacer Match
                 </button>
               </div>
             </div>
