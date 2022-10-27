@@ -48,7 +48,7 @@ class ApiController extends \yii\rest\ActiveController
         $behaviors['corsFilter'] = [
             'class' => Cors::className(),
             'cors' => [
-                'Origin' => ['localhost:*/*'],
+                'Origin' => ['localhost:*/*','https://localhost/*'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS', 'DELETE'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => $this->authenable,
