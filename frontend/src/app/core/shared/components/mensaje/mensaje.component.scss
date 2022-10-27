@@ -11,6 +11,7 @@ $verydarkgrey: #222;
 $black: #000;
 $cuaternario-l: #fa0da590;
 $q-ligero: #00a4ad80;
+$terciario-ligero:#f59f00a3;
 
 @import "~bootstrap/scss/functions";
 // 3. Include remainder of required Bootstrap stylesheets
@@ -26,20 +27,29 @@ $q-ligero: #00a4ad80;
     .chat-message-ritgh {
       margin-left: $margin_message_left;
       div.flex-shrink-1 {
-        background-color: $cuaternario-l;
+       
+        background-color: $lightgray;
       }
     }
     .chat-message-left {
       //margin-right: 30em;
       div.flex-shrink-1 {
-        background-color: $q-ligero;
+        background-color: $terciario-ligero;
       }
     }
+}
+.margin-negativo{
+  margin: auto;
+  margin-left: -1.8em;
 }
 @include chat_clases();
 
 @media (min-width: 250px) {
     @include chat_clases($max_width:25em);
+    .margin-negativo{
+      margin: auto;
+      margin-left: -0.8em;
+    }
 
 }
 @include media-breakpoint-up(sm) {
@@ -48,16 +58,36 @@ $q-ligero: #00a4ad80;
 
 }
 @include media-breakpoint-up(md) {
+  .margin-negativo{
+    margin: auto;
+    margin-left: -2.2em;
+  }
     @include chat_clases($max_width:40em);
    
 }
 @include media-breakpoint-up(lg) {
+  .margin-negativo{
+    margin: auto;
+    margin-left: -1.6em;
+  }
     @include chat_clases($max_width:30em);
 
 }
 @include media-breakpoint-up(xl) {
-    @include chat_clases($max_width:100%);
+  .margin-negativo{
+    margin: auto;
+    margin-left: -2.75em;
+  }
+    @include chat_clases($max_width:45em);
 
 }
 @include media-breakpoint-up(xxl) {
+  .margin-negativo{
+    margin: auto;
+    margin-left: -3.8em;
+  }
+  @include chat_clases($max_width:50em);
+}
+@media (min-width:2500px){
+  @include chat_clases($max_width:50em);
 }

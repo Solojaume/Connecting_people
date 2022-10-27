@@ -13,21 +13,19 @@ app-review {
   .reviews {
     height: 30em;
     $min-height: 30%;
-
     $max-height: 100%;
-
     margin-left: 1.5em;
     margin-top: 6px;
   }
 }
 
-@media (min-width: 0px) {
-  .reviews {
-    height: 16em;
-    $min-height: 30%;
-    $max-height: 100%;
-    margin-top: 6px;
-  }
+.reviews {
+  height: 16em;
+  $min-height: 30%;
+  $max-height: 100%;
+  margin-top: 6px;
+}
+@media (min-width: 2px) {
 
   cdk-virtual-scroll-viewport {
     -webkit-overflow-scrolling: touch;
@@ -37,11 +35,21 @@ app-review {
   }
 }
 @media (min-width: 576px) {
-  .reviews {
-    height: 16em;
-    $min-height: 30%;
-    $max-height: 100%;
-    margin-top: 6px;
+  
+  cdk-virtual-scroll-viewport {
+    display: block;
+    position: relative;
+    overflow: auto;
+    contain: strict;
+    transform: translateZ(0);
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+    .cdk-virtual-scroll-content-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      contain: content;
+    }
   }
 }
 
@@ -49,9 +57,7 @@ app-review {
 @media (min-width: 768px) {
   .reviews {
     height: 15em;
-    $min-height: 30%;
-    $max-height: 100%;
-    margin-top: 6px;
+ 
   }
 }
 
@@ -67,12 +73,7 @@ app-review {
 
 // X-Large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
-  .reviews {
-    height: 16em;
-    $min-height: 30%;
-    $max-height: 100%;
-    margin-top: 6px;
-  }
+  
 }
 
 // XX-Large devices (larger desktops, 1400px and up)

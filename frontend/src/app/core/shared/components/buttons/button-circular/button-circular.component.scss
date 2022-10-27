@@ -1,0 +1,84 @@
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.circulo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  padding: auto;
+  p {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  &:hover {
+    p {
+      font-size: 1.8rem;
+      margin-top: 0.1rem;
+      font-weight: bold;
+    }
+  }
+}
+.like {
+  @extend .circulo;
+  border-color: #18f584;
+  color: #18f584;
+}
+.dislike {
+  @extend .circulo;
+  border-color: #f50045;
+  color: #f50045;
+
+  p {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  &:hover {
+    p {
+      font-size: 2.8rem;
+      font-weight: bold;
+    }
+  }
+}
+.circulo_pequeño{
+    @extend .circulo;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+@media (min-width: 2px) {
+  figure.circulo {
+    transform: scale(1.1, 1.1);
+  }
+}
+@media (min-width: 750px) {
+  figure.circulo {
+    border-width: 2px;
+
+    transform: scale(1.15, 1.15);
+  }
+}
+
+@media (min-width: 991px) {
+  figure.circulo {
+    border-width: 2px;
+
+    transform: scale(1, 1);
+  }
+}
+@media (min-width: 1200px) {
+  figure.circulo {
+    border-width: 2px;
+    transform: scale(1.05, 1.05);
+  }
+}

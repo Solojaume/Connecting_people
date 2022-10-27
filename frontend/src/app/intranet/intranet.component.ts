@@ -20,12 +20,13 @@ export class IntranetComponent implements OnInit,OnDestroy {
 
   constructor( 
     private token:TokenStorageService, 
-    private router:Router,
+    public router:Router,
     private cookieService:CookieService, 
     private apiService:AuthService,
     public webSocketService:WebSocketService,
     public socketService:WebSocketIOService,
-    private imagenService:ImagenesService
+    private imagenService:ImagenesService, 
+    
   ) {
 
    }
@@ -39,6 +40,7 @@ export class IntranetComponent implements OnInit,OnDestroy {
   
   
   ngOnInit(): void {
+    //alert(this.router.url);
     this.socketService.getNewMatches();
     this.imagenService.getImagenesDelServer().subscribe(
       (img:Imagen[])=>{

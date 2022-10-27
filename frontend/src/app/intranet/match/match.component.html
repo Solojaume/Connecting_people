@@ -1,20 +1,19 @@
 
 <main class="content" id="body">
-    <div class="container pt-2 pb-2" *ngIf="error===''">
+    <div class="container " *ngIf="error===''">
 		<div class="card  " *ngIf="error===''">
 			<div class="row g-0" *ngIf="error===''">
 				
 				<div class="col-12 .col-sm-12 .col-md-12 col-lg-7 col-xl-8" *ngIf="error===''">
 
-					<div class="  border-bottom   d-block" *ngIf="error===''">
+					<div class="border-bottom d-block" *ngIf="error===''">
 						<div class="d-flex" *ngIf="error===''">
 							<div class="align-items-center text-end"  *ngIf="error===''">
 								<div class="row align-items-center"  *ngIf="error===''"> 						
 									<div class="col-12 align-items-end text-lg-end slider  " *ngIf="error===''">
 										<app-slider [config]="configSlider" (like)="like()" (dislike)="dislike()"></app-slider>
 									</div>
-									<p></p>
-									<p></p>
+									
 								</div>
 							</div>		
 						</div>
@@ -24,7 +23,7 @@
 				<div class="col-12 .col-sm-12 .col-md-12 col-lg-5 col-xl-4 border-letf" *ngIf="error===''">
 
 					<div class="d-block" *ngIf="usuarios[contUser].hasOwnProperty('reviews')&&usuarios[contUser].reviews.length!=0" >
-						<app-reviews [reviews]="usuarios[contUser].reviews"  ></app-reviews>
+						<app-reviews [reviews]="usuarios[contUser].reviews"></app-reviews>
 					</div>
 
 				</div>

@@ -2,7 +2,14 @@
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
-@media (min-width: 250px) {
+@media (min-width: 200px) {
+  .slider {
+    margin-left: 1em ;
+    margin-right: 1em;
+    max-width: 100%;
+  }
+}
+@media (min-width: 400px) {
   .slider {
     margin-left: 1em ;
     margin-right: 1em;

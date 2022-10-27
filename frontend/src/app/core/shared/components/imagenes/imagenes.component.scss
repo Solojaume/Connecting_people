@@ -1,5 +1,10 @@
 .margin {
-  margin-left: 1em;
+  margin-left: 1.02em;
+  margin-right: 1em;
+  margin-bottom: 2px;
+}
+.margin2 {
+  margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 2px;
 }
@@ -32,26 +37,10 @@
 .ml-1 {
   margin-left: 0.8em;
 }
-
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-}
-
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {
-}
-
-// Large devices (desktops, 992px and up)
-@media (min-width: 992px) {
-}
-
-// X-Large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {
-}
-
-// XX-Large devices (larger desktops, 1400px and up)
-@media (min-width: 1400px) {
-}
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 @mixin like_dislike(
   $color,
@@ -74,8 +63,12 @@
 
 @mixin circulo(
   $width: 3em,
-  $height: 3em,
+  $height: 2.5em,
   $background: transparent,
+  $color: #fff,
+  $font-size-bi: 1em,
+  $font-size-bi-hover: 1.2em,
+  $font-size: 1.5em,
   $border-radius: 50%
 ) {
   width: $width;
@@ -85,24 +78,17 @@
   border-radius: $border-radius;
   background: $background;
   border-color: $background;
-  &.dislike {
-    @include like_dislike($color: red);
-  }
-
-  &.like {
-    @include like_dislike($color: #18f584 );//#5cb85c);
-  }
 
   &.desplegar {
     @include like_dislike(
-      $color: #fff,
+      $color: $color,
       $font-size-bi: 1em,
-      $font-size-bi-hover: 1.2em,
-      $font-size: 1.5em
+      $font-size-bi-hover: $font-size-bi-hover,
+      $font-size: $font-size
     );
   }
 
-  &.replegar{
+  &.replegar {
     @include like_dislike(
       $color: #fff,
       $font-size-bi: 1em,
@@ -111,14 +97,73 @@
     );
   }
 }
-.circulo {
-  @include circulo();
+
+//xtra small
+@include media-breakpoint-up(xs) {
+  .circulo {
+    @include circulo();
+  }
+  .circulo-pequenyo {
+    @include circulo(
+      $width: 1.75em,
+      $height: 1.75em,
+      $background: #bd00f5,
+      $border-radius: 50%
+    );
+  }
 }
-.circulo-pequenyo {
-  @include circulo(
-    $width: 1.75em,
-    $height: 1.75em,
-    $background: #bd00f5,
-    $border-radius: 50%
-  );
+// Small devices (landscape phones, 576px and up)
+@include media-breakpoint-up(sm) {
+  
+  .circulo-pequenyo {
+    @include circulo(
+      $width: 1.75em,
+      $height: 1.75em,
+      $background: #bd00f5,
+      $border-radius: 50%
+    );
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@include media-breakpoint-up(md) {
+  
+  .circulo-pequenyo {
+    @include circulo(
+      $width: 1.75em,
+      $height: 1.75em,
+      $background: #bd00f5,
+      $border-radius: 50%
+    );
+  }
+}
+
+//Large devices
+@include media-breakpoint-up(lg) {
+  .circulo {
+    @include circulo();
+  }
+  
+}
+
+// X-Large devices (large desktops, 1200px and up)
+@include media-breakpoint-up(xl) {
+  .circulo {
+    @include circulo();
+  }
+}
+
+// XX-Large devices (larger desktops, 1400px and up)
+@include media-breakpoint-up(xxl) {
+  .circulo {
+    @include circulo();
+  }
+  .circulo-pequenyo {
+    @include circulo(
+      $width: 1.75em,
+      $height: 1.75em,
+      $background: #bd00f5,
+      $border-radius: 50%
+    );
+  }
 }

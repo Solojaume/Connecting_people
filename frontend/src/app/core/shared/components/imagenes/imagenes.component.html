@@ -1,10 +1,10 @@
 
 <!-- _____________________________________ Rounded ________________________________ -->
-<img class=" rounded-circle mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type==='rounded' && existFotosEnArray()" />
-<img class=" rounded-circle mr-1" [src]="imagen_src" *ngIf="config.type==='rounded' && !existFotosEnArray()" />
-<img class="rounded-circle margin  mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type==='rounded-with-margin' && existFotosEnArray()" />
-<img class="rounded-circle margin  mr-1" [src]="imagen_src" *ngIf="config.type==='rounded-with-margin' && !existFotosEnArray()" />
-
+<img class="rounded-circle margin2 ratio ratio-1x1 mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type === 'rounded' && existFotosEnArray()" />
+<img class="rounded-circle ratio ratio-1x1 mr-1" [src]="imagen_src" *ngIf="config.type === 'rounded' && !existFotosEnArray()" />
+<img class="rounded-circle margin ratio ratio-1x1 mr-1" [src]="imagenes[0].imagen_src" *ngIf="config.type === 'rounded-with-margin' && existFotosEnArray()" />
+<img class="rounded-circle margin ratio ratio-1x1 mr-1" [src]="imagen_src" *ngIf="config.type === 'rounded-with-margin' && !existFotosEnArray()" />
+ 
 <!--__________________________ Imagen en carrusel config avanzada ____________________________-->
 <div class="carousel-item" *ngIf="avanzadaNull === false && configAvanzada.config.type === 'slider-imagen'" [class]="actived">
     <img class="d-block w-100" [src]="configAvanzada.img.imagen_src" alt="First slide"/>
@@ -30,19 +30,16 @@
                 && reviewsButtonsService.reviews_estan_cargadas===true" >
                     <i class="bi bi-arrow-up-short"></i>
                 </button>
+                
             </div>
         </div>
         <p></p>
         
         <div class="row bg-dark" *ngIf="configAvanzada.config.like_dislike_button===true">
             <div class="col"></div>
-            <button class="circulo dislike col" (click)="dislikeM()">
-                <i class="bi bi-x "></i>
-            </button>
+            <app-button-circular [type]="dislike" class="col " (click)="dislikeM()"></app-button-circular>
             <div class="col"></div>
-            <button class="circulo like col" (click)="likeM()">
-                <i class="bi bi-suit-heart-fill"></i>
-            </button>
+            <app-button-circular [type]="like" class="col " (click)="likeM()"></app-button-circular>
             <div class="col"></div>
         </div>
     </div> 

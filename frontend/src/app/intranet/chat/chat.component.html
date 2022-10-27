@@ -35,7 +35,6 @@
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
                 <app-imagenes
-               
                   [config]="config"
                   [imagenes]="socketService.chatUsar.match_id_usu2.fotos" 
                 ></app-imagenes>
@@ -72,6 +71,9 @@
               <div>
                 <button class="btn btn-light border btn-lg px-3 d-none ">
                   Review
+                </button>
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                  Deshacer Match
                 </button>
               </div>
             </div>
@@ -117,6 +119,10 @@
                 <button class="btn btn-light border btn-lg px-3 d-none">
                   Review
                 </button>
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" 
+                (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                  Deshacer Match
+                </button>
               </div>
             </div>
           </div>
@@ -132,10 +138,14 @@
 						</div>	
 						-->
 
+            <div class="chat-messages2" *ngIf="!typeofUsuario2">
+
+            </div>
             <cdk-virtual-scroll-viewport
               itemSize="100"
               cdkScrollable
               class="chat-messages2 p-4"
+              *ngIf="typeofUsuario2"
             >
               <app-mensaje
                 *ngFor="
@@ -152,17 +162,21 @@
             </cdk-virtual-scroll-viewport>
           </div>
 
-          <form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio">
+          <form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio" *ngIf="typeofUsuario2">
             <div class="flex-grow-0 py-3 px-4 border-top">
               <div class="input-group">
                 <input
                   type="text"
-                  class="form-control"
+                  [ngClass]="claseQueUsaImput"
                   formControlName="message"
-                  placeholder="Type your message"
+                  placeholder="Escribe tu mensaje"
                 />
                 <button type="submit" class="btn btn-primary">Send</button>
+                
               </div>
+              <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir más de 1000 caracteres</div>
+              <div class="text-danger" *ngIf="mensajeVacio===true">No se puede enviar un mensaje vacio</div>
+
             </div>
           </form>
         </div>

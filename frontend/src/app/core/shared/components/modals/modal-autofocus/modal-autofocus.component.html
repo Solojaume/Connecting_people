@@ -1,5 +1,7 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-title">Eliminar imagen</h4>
+  <h4 class="modal-title" id="modal-title">
+    {{ tittle }}
+  </h4>
   <button
     type="button"
     class="btn-close"
@@ -10,15 +12,17 @@
 </div>
 <div class="modal-body">
   <p>
-    <strong
-      >¿Estas seguro de que quieres elimar esta
-      <span class="text-primary">"imagen"</span>?</strong
-    >
+    <strong>
+      {{ strong1 }}
+      <span class="text-primary">
+        {{spanStrong}}
+      </span>
+      {{ strong2 }}
+    </strong>
   </p>
   <p>
-    Esta imagen dejara de estar visible a otros usuarios y sera eliminada permanentemente.
-    <span class="text-danger">Esta operación no puede deshacerse.
-    </span>
+    {{textoNormal}}
+    <span class="text-danger">{{textDanger}} </span>
   </p>
 </div>
 <div class="modal-footer">
