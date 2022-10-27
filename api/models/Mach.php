@@ -37,7 +37,7 @@ class Mach extends \yii\db\ActiveRecord
     {
         return [
             [[ 'match_id_usu1', 'match_id_usu2', 'match_estado_u1'], 'required'],
-            [['match_id', 'match_id_usu1', 'match_id_usu2', 'match_estado_u1', 'match_estado_u2'], 'integer'],
+            [['match_id', 'match_id_usu1', 'match_id_usu2', 'match_estado_u1', 'match_estado_u2',"match_deshecho"], 'integer'],
             [['match_fecha'], 'safe'],
             [['match_id'], 'unique'],
             [['match_id_usu1'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['match_id_usu1' => 'id']],
@@ -59,7 +59,8 @@ class Mach extends \yii\db\ActiveRecord
             'match_estado_u2' => 'Match Estado U2',
             'match_fecha' => 'Match Fecha',
             'estado_conexion_u1'=>'Estado Conexion U1',
-            'estado_conexion_u2'=>'Estado Conexion U2'
+            'estado_conexion_u2'=>'Estado Conexion U2',
+            "match_deshecho" => "Match Deshecho"
         ];
     }
     /*

@@ -72,7 +72,7 @@
                 <button class="btn btn-light border btn-lg px-3 d-none ">
                   Review
                 </button>
-                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3   d-block">
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
                   Deshacer Match
                 </button>
               </div>
@@ -119,7 +119,8 @@
                 <button class="btn btn-light border btn-lg px-3 d-none">
                   Review
                 </button>
-                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" 
+                (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
                   Deshacer Match
                 </button>
               </div>
@@ -137,10 +138,14 @@
 						</div>	
 						-->
 
+            <div class="chat-messages2" *ngIf="!typeofUsuario2">
+
+            </div>
             <cdk-virtual-scroll-viewport
               itemSize="100"
               cdkScrollable
               class="chat-messages2 p-4"
+              *ngIf="typeofUsuario2"
             >
               <app-mensaje
                 *ngFor="
@@ -157,7 +162,7 @@
             </cdk-virtual-scroll-viewport>
           </div>
 
-          <form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio">
+          <form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio" *ngIf="typeofUsuario2">
             <div class="flex-grow-0 py-3 px-4 border-top">
               <div class="input-group">
                 <input

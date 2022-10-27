@@ -180,10 +180,13 @@ export class WebSocketIOService extends Socket {
         let oldMatches: Match[] = this.matches;
         this.matches = user.matches;
         this.mensajes = user.mensajes;
+        let ultimoMatchIdAntiguo = 0;
+        let ultimoMatchIdNuevo = 0;
+        try {
+          ultimoMatchIdAntiguo = oldMatches[oldMatches.length - 1].match_id;
+          ultimoMatchIdNuevo = this.matches[this.matches.length - 1].match_id;
+        } catch (error) {}
 
-    
-        let ultimoMatchIdAntiguo = oldMatches[oldMatches.length - 1].match_id;
-        let ultimoMatchIdNuevo = this.matches[this.matches.length - 1].match_id;
         if (oldMatches.length === this.matches.length) {
           for (let index = 0; index < oldMatches.length; index++) {
             const old = oldMatches[index];
@@ -226,7 +229,7 @@ export class WebSocketIOService extends Socket {
         } else {
           this.matches = user.matches;
           this.mensajes = user.mensajes;
-          this.chatUsar= this.matches[0];
+          this.chatUsar = this.matches[0];
           this.chatUsar.match_position = 0;
         }
 
@@ -407,18 +410,16 @@ export class WebSocketIOService extends Socket {
     }
   }
 
-  public escriviendo:boolean = false;
+  public escriviendo: boolean = false;
   //SIrve para empezar a preguntarle al servidor si hay nuevos matches
   public getNewMatches() {
     if (this.subscription == null) {
       //alert("ENTROOOO, LA PUSEEEEE, la metii yuju");
       this.subscription = this.obtenerNuevosMatch.subscribe(() => {
-        if(this.escriviendo === false){
+        if (this.escriviendo === false) {
           this.emitEvent('update lista match', this.token.getUser());
           console.log('Ha sido hemitido evento para actualizar lista de match');
         }
-        
-        
       });
     } else {
       console.log('Ya existe suscripcion');

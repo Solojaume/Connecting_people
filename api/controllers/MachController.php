@@ -56,6 +56,7 @@ class MachController extends ApiController
         if ($u == true) {
             $match = $this->findModel($match_id);
             $match->match_estado_u1 = 2;
+            $match-> match_deshecho = 1;
             if ($match->match_id_usu2 === $u->id){
                 $match->match_estado_u1 = 1;
                 $match->match_estado_u2 = 2;

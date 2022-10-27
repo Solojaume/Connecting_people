@@ -114,6 +114,7 @@ export class ChatComponent implements OnInit {
   cargarChat(chat: any) {
     console.log('Se ha cambiado el chat a:', chat);
     this.typeofUsuario2 =
+      typeof this.socketService.chatUsar !== 'undefined' &&
       typeof this.socketService.chatUsar.match_id_usu2 !== 'undefined';
 
     if (chat != 'blanco') {
@@ -150,25 +151,24 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  open(nombre:string="una putita") {
+  open(nombre: string = 'una putita') {
     let modal = this._modalService.open(ModalAutofocusComponent);
     modal.componentInstance.tittle = 'Deshacer match';
-    modal.componentInstance.strong1 = "¿Estas seguro de que quieres deshacer tu match con";
-    modal.componentInstance.spanStrong = '"'+nombre+'"';
-    modal.componentInstance.textoNormal = "Al deshacer el match te desaparecera la combersación. \n";
-    modal.componentInstance.strong2 = "?";
+    modal.componentInstance.strong1 =
+      '¿Estas seguro de que quieres deshacer tu match con';
+    modal.componentInstance.spanStrong = '"' + nombre + '"';
+    modal.componentInstance.textoNormal =
+      'Al deshacer el match te desaparecera la combersación. Esta operación puede llegar a tardar hasta 10 minutos, si no se hacen efectivos recarga la pagina \n';
+    modal.componentInstance.strong2 = '?';
     console.log('let Modal', modal);
-    modal.closed.subscribe((closed)=>{
+    modal.closed.subscribe((closed) => {
       console.log('CLOSED modal:', closed);
       let match_id = this.socketService.chatUsar.match_id;
-  
-      this.matchService.deshacerPost(match_id).subscribe((x)=>{
 
-      });
+      this.matchService.deshacerPost(match_id).subscribe((x) => {});
     });
-    modal.dismissed.subscribe((dismis)=>{
+    modal.dismissed.subscribe((dismis) => {
       console.log('Dismis modal:', dismis);
     });
-
   }
 }
