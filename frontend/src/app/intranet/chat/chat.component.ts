@@ -20,6 +20,7 @@ import {
 import { formatDate } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalAutofocusComponent } from 'src/app/core/shared/components/modals/modal-autofocus/modal-autofocus.component';
+import { MatchService } from 'src/app/core/shared/services/match/match.service';
 
 @Component({
   selector: 'app-chat',
@@ -41,7 +42,8 @@ export class ChatComponent implements OnInit {
     private cookies: CookieService,
     public socketService: WebSocketIOService,
     @Inject(LOCALE_ID) public locale: string,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private matchService: MatchService
   ) {}
   public typeofUsuario2!: boolean;
   public claseQueUsaImput: string = 'form-control';
@@ -158,6 +160,11 @@ export class ChatComponent implements OnInit {
     console.log('let Modal', modal);
     modal.closed.subscribe((closed)=>{
       console.log('CLOSED modal:', closed);
+      let match_id = this.socketService.chatUsar.match_id;
+  
+      this.matchService.deshacerPost(match_id).subscribe((x)=>{
+
+      });
     });
     modal.dismissed.subscribe((dismis)=>{
       console.log('Dismis modal:', dismis);

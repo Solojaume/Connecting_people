@@ -226,6 +226,8 @@ export class WebSocketIOService extends Socket {
         } else {
           this.matches = user.matches;
           this.mensajes = user.mensajes;
+          this.chatUsar= this.matches[0];
+          this.chatUsar.match_position = 0;
         }
 
         this.mensajes_count = user.mensajes_count;

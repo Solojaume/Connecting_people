@@ -15,7 +15,7 @@ use yii\filters\VerbFilter;
  */
 class MachController extends ApiController
 {
-    public $modelClass='app\models\Mach';
+    public $modelClass = 'app\models\Mach';
 
     /**
      * @inheritDoc
@@ -29,17 +29,43 @@ class MachController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
-                        'get_new_match_users_list' => ['POST'], 
-                        'get-matches'=> ['POST'],
-                        'like-dislike'=>['POST']
+                        'get_new_match_users_list' => ['POST'],
+                        'get-matches' => ['POST'],
+                        'like-dislike' => ['POST'],
+                        'deshacer' => ['POST']
                     ],
-                    
-                ],'authenticator' => [//token
+
+                ], 'authenticator' => [ //token
                     'class' => HttpBearerAuth::className(),
                     'except' => ['get_new_match_users_list'],
                 ]
             ]
         );
+    }
+
+    /**
+     * Borrar match
+     */
+    public function actionDeshacer()
+    {
+        $params = json_decode(file_get_contents("php://input"), false);
+
+        $u = UsuarioController::getUserWhithAuthToken("o");
+        $match_id = $params->match_id ?? " ";
+       
+        if ($u == true) {
+            $match = $this->findModel($match_id);
+            $match->match_estado_u1 = 2;
+            if ($match->match_id_usu2 === $u->id){
+                $match->match_estado_u1 = 1;
+                $match->match_estado_u2 = 2;
+            }
+            if($match->save()){
+                return $match;
+            }
+            return ["error"=>"Ha habido un error al deshacer match"];
+
+        }
     }
 
     /**
@@ -144,50 +170,53 @@ class MachController extends ApiController
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
-    public function actionGet_new_match_users_list(){
-        
+    public function actionGet_new_match_users_list()
+    {
+
         $m = new Mach();
         $m = $m->getUsersNoMostrados();
         $c = 0;
-  
+
         //return ["status"=>"error"];
         return $m;
     }
-    
-    public function actionGetMatches(){
-        $u=UsuarioController::getUserWhithAuthToken()["id"];
+
+    public function actionGetMatches()
+    {
+        $u = UsuarioController::getUserWhithAuthToken()["id"];
         return Mach::getUserMatches($u);
     }
 
-    public function actionLikeDislike(){
-        $params=json_decode(file_get_contents("php://input"), false);
+    public function actionLikeDislike()
+    {
+        $params = json_decode(file_get_contents("php://input"), false);
 
-        $u=UsuarioController::getUserWhithAuthToken("o");
-        $post=$params->usuario_id??" ";
-        $estado=isset($params->estado)?$params->estado:0;
-        $u2=isset($post)?\app\models\Usuario::findOne(["id"=>$post]):" ";
-        
-     
-        if($m=Mach::findOne(["match_id_usu1"=>$u2->id,"match_id_usu2"=>$u->id])){
+        $u = UsuarioController::getUserWhithAuthToken("o");
+        $post = $params->usuario_id ?? " ";
+        $estado = isset($params->estado) ? $params->estado : 0;
+        $u2 = isset($post) ? \app\models\Usuario::findOne(["id" => $post]) : " ";
+
+
+        if ($m = Mach::findOne(["match_id_usu1" => $u2->id, "match_id_usu2" => $u->id])) {
             $now = date("Y-m-d H:i:s");
-            $now = date("Y-m-d H:i:s",strtotime($now)); 
-            $m->match_estado_u2=$estado;
-            $m->match_fecha=$now;
+            $now = date("Y-m-d H:i:s", strtotime($now));
+            $m->match_estado_u2 = $estado;
+            $m->match_fecha = $now;
         }
-       
-        if($m==null){
-            $m=new Mach();
+
+        if ($m == null) {
+            $m = new Mach();
             //$m->match_id=count(Mach::find()->asArray()->all());
-            $m->match_id_usu1=$u->id;
-            $m->match_id_usu2=$u2->id;
-            $m->match_estado_u1=$estado;
-            $m->match_estado_u2=0;
+            $m->match_id_usu1 = $u->id;
+            $m->match_id_usu2 = $u2->id;
+            $m->match_estado_u1 = $estado;
+            $m->match_estado_u2 = 0;
         }
-        
-       if( $m->save()&&$u->validateAuthToken($u->token)){
-           return ["status"=>"ok"];
+
+        if ($m->save() && $u->validateAuthToken($u->token)) {
+            return ["status" => "ok"];
+        } else {
+            return ["error" => "Session caducada"];
         }
-       else{return["error"=>"Session caducada"];}
     }
 }
-     

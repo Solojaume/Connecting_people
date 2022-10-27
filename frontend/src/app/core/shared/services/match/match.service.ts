@@ -30,6 +30,11 @@ export class MatchService {
     }));
   }
 
+  deshacerPost(match_id:number){
+    return this.http.post(this.apiBase+"mach/deshacer",JSON.stringify({
+      match_id: match_id     
+    }));
+  }
 
 }
 
