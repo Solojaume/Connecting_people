@@ -5,7 +5,6 @@
  * ----------------------------------------
  */
 import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 import { Injectable, EventEmitter, Output } from '@angular/core';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
@@ -13,8 +12,8 @@ import { Match } from 'src/app/core/models/chat/Match';
 import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
 import { Observable } from 'rxjs';
-import { interval, take } from 'rxjs';
-import { Router } from '@angular/router';
+import { interval, } from 'rxjs';
+
 
 const config: SocketIoConfig = {
   url: environment.serverSocket,
