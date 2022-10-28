@@ -1,8 +1,10 @@
+/*
 @import "~bootstrap/scss/functions";
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/forms";
+*/
 .chat-messages2 {
   height: calc(20 * 1.18em);
 
@@ -50,7 +52,9 @@
   flex-direction: row-reverse;
   margin-left: auto;
 }
-.input-group > .form-control-error, .input-group > .form-select, .input-group > .form-floating {
+.input-group > .form-control-error,
+.input-group > .form-select,
+.input-group > .form-floating {
   position: relative;
   flex: 1 1 auto;
   width: 1%;
