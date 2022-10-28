@@ -8,7 +8,7 @@ use stdClass;
 use yii\console\Controller;
 use Workerman\Worker;
 
-require_once 'C:\xampp1\htdocs\connectingpeople\api\vendor\autoload.php';
+require_once '../vendor/autoload.php';
 
 
 class ChatController extends Controller
