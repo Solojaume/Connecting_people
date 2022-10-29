@@ -7,8 +7,8 @@ use app\models\Mensajes;
 use stdClass;
 use yii\console\Controller;
 use Workerman\Worker;
-
-require_once '../vendor/autoload.php';
+//require '../vendor/autoload.php';
+//require_once 'C:\xampp\htdocs\connectingpeople\api\vendor\autoload.php';
 
 
 class ChatController extends Controller
@@ -43,6 +43,7 @@ class ChatController extends Controller
                 $u = $men["autenticacion"];
 
                 if ($men["autenticacion"] == true) {
+                    /*
                     echo "\n !in_array(token,usocket_by_token):";
                     var_dump(!self::in_array($token, $usocket_by_token));
                     echo "\nid:" . $u['id'];
@@ -51,6 +52,7 @@ class ChatController extends Controller
 
                     echo "Autenticacion:";
                     var_dump($u);
+                    */
 
                     if (!in_array($token, $usocket_by_token) && !in_array("id_" . $u["id"], $usocket_by_id)) {
                         echo "primer if";
@@ -95,24 +97,24 @@ class ChatController extends Controller
             $socket->on("update lista match", function ($object) use ($socket) {
                 $usocket_by_id = &$GLOBALS["usocket_by_id"];
                 $usocket_by_token = &$GLOBALS["usocket_by_token"];
-                echo("\n\n Bienvenido");
+                /*echo("\n\n Bienvenido");
                 echo("\n PRE OBJECT");
                 var_dump($object);
                // echo("\n Token".$object["token_usu"]);
-                echo("\n PRE auth");
+                echo("\n PRE auth");*/
                
                 if (!isset($usocket_by_token[$object["token"]])) {
-                    echo("\n Usuario no encontrado");
+                    //echo("\n Usuario no encontrado");
                     $socket->disconnect();
                 }
-                echo("\n PrE Obtenido matches");
+                //echo("\n PrE Obtenido matches");
                 $devolver = CommandsMatchController::getChatsYMatches($object["token"]);
-                echo("\n Obtenido matches");
+                //echo("\n Obtenido matches");
                 unset($object["token_usu"]);
                 
                 $devolver["mensajes_count"] = 0;
-                echo "\n  devolver  en actualizar match:";
-                var_dump($devolver);
+                //echo "\n  devolver  en actualizar match:";
+                //var_dump($devolver);
                 $socket->emit('update chats', $devolver);
                 
             });
@@ -121,7 +123,7 @@ class ChatController extends Controller
             $socket->on('typing', function ($object) use ($socket) {
                 $usocket_by_id = &$GLOBALS["usocket_by_id"];
                 $usocket_by_token = &$GLOBALS["usocket_by_token"];
-                echo "\n\n\n\nTyping";
+                //echo "\n\n\n\nTyping";
 
                 if (!isset($usocket_by_token[$object["token_usu"]])) {
                     $socket->disconnect();
@@ -175,47 +177,50 @@ class ChatController extends Controller
 
             // When the client emits 'new message', this listens and executes
             $socket->on('send private message', function ($res) use ($socket) {
-                echo "\n\n\n ENTRA EN SEND";
+                //echo "\n\n\n ENTRA EN SEND";
                 $usocket_by_token = $GLOBALS["usocket_by_token"];
                 $usocket_by_id = $GLOBALS["usocket_by_id"];
                 $users = &$GLOBALS["users"];
-                echo "\n Mensajes:";
+                /*echo "\n Mensajes:";
                 var_dump($res);
                 echo "Users en 'Send private message':";
                 var_dump($users);
+                */
                 $token = &$res["token"];
-                echo "\n isset(usocket_by_token[token]):";
-                var_dump(isset($usocket_by_token[$token]));
+                //echo "\n isset(usocket_by_token[token]):";
+                //var_dump(isset($usocket_by_token[$token]));
 
 
                 $mensaje = $res["mensage"];
                 if (isset($usocket_by_token[$token])) {
                     unset($token);
-                    echo "\nDentro del if de send";
+                    //echo "\nDentro del if de send";
 
                     $mensajeBd = new Mensajes();
-                    echo "\n Post MensajeBd";
+                    //echo "\n Post MensajeBd";
                     $mensajeBd->mensaje_contenido = $mensaje["chat_message"];
-                    echo "\nPost MensajeBd->mensaje_contenido";
+                    //echo "\nPost MensajeBd->mensaje_contenido";
                     $mensajeBd->entregado = 0;
-                    echo "\nPost MensajeBd->estado";
+                    //echo "\nPost MensajeBd->estado";
                     $mensajeBd->mensajes_usuario_id = $mensaje["chat_user"];
-                    echo "\nPost MensajeBd->mensajes_usuario_id";
+                    //echo "\nPost MensajeBd->mensajes_usuario_id";
                     $mensajeBd->mensajes_match_id = $mensaje["match_id"];
-                    echo "\nPost MensajeBd->mensajes_match_id";
+                    //echo "\nPost MensajeBd->mensajes_match_id";
                     if (isset($usocket_by_id["id_" . $res["usu_2"]])) {
                         $socket2 = $usocket_by_id["id_" . $res["usu_2"]];
                         $socket2->emit("receive private message", $mensaje);
-                        echo "\nRecived";
+                        //echo "\nRecived";
                         $mensajeBd->entregado = 1;
                     }
+                    /*
                     echo "\nMensajeBd";
                     var_dump($mensajeBd);
                     echo "\nModel->save:";
+                    */
                     if ($mensajeBd->save()) {
-                        echo "\nGUARDADOOO WIIIIIIIIIIIIIIIIIIIIIIII";
+                        //echo "\nGUARDADOOO WIIIIIIIIIIIIIIIIIIIIIIII";
                     }
-                    var_dump($mensajeBd->save());
+                    //var_dump($mensajeBd->save());
                 }
                 //echo "\n¡¡¡SALE DE SEND!!!\n\n\n";
             });
