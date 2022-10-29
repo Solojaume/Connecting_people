@@ -29,6 +29,7 @@
   .chat-messages2 {
     height: 13.8em;
     max-height: 70%;
+    width: 100%;
   }
 }
 
@@ -37,6 +38,7 @@
   .chat-messages2 {
     height: 17em;
     max-height: 100%;
+    width: 100%;
   }
 }
 
@@ -44,24 +46,26 @@
   .chat-messages2 {
     height: 13.8em;
     max-height: 30.35em;
+    width: 100%;
   }
 }
 @media (max-height: 500px) {
   .chat-messages2 {
     height: 13.8em;
     max-height: 15.35em;
+    width: 100%;
   }
 }
-@media (max-height: 750px) {
+@media (max-height: 740px) {
   .chat-messages2 {
-    height: 26.5em;
+    height: 26em;
     //max-height: 15.35em;
   }
 }
 
 @media (min-width: 1400px) {
   .chat-messages2 {
-    height: 27em;
+    height: 26.5em;
     
   }
 }

@@ -189,11 +189,12 @@ $cuaternario-l: #fa0da590;
 html,
 body {
   height: 100%;
-  width: 100%;
+  width: 100% !important;
 }
 
 body {
   margin: 0;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
+  width: 100% ;
 
 }
