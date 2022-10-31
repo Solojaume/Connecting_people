@@ -5,6 +5,7 @@ import { ChatRoutingModule } from './chat-routing.module';
 import { SharedModule } from 'src/app/core/shared/shared.module';
 import { ServicesModule } from 'src/app/core/shared/services/services.module';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -17,7 +18,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     ChatRoutingModule,
     SharedModule,
     ServicesModule,
-    ScrollingModule
+    ScrollingModule,
+    NgbDropdownModule,
   ],
   exports:[
     ChatComponent

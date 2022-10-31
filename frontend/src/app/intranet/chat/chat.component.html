@@ -6,123 +6,110 @@
           <div class="px-4 d-none ">
             <div class="d-flex align-items-center">
               <div class="flex-grow-1">
-                <input
-                  type="text"
-                  class="form-control my-3"
-                  placeholder="Search..."
-                />
+                <input type="text" class="form-control my-3" placeholder="Search..." />
               </div>
             </div>
           </div>
 
-          <app-desplegable
-            class=""
-            [tipo_objeto]="'match'"
-            [lista_objetos]="socketService.matches_public"
-            (chatEvent)="cargarChat($event)"
-          ></app-desplegable>
-          <app-desplegable
-            class="m-2"
-            [tipo_objeto]="'chats'"
-            [lista_objetos]="socketService.chats"
-            (chatEvent)="cargarChat($event)"
-          ></app-desplegable>
+          <app-desplegable class="" [tipo_objeto]="'match'" [lista_objetos]="socketService.matches_public"
+            (chatEvent)="cargarChat($event)"></app-desplegable>
+          <app-desplegable class="m-2" [tipo_objeto]="'chats'" [lista_objetos]="socketService.chats"
+            (chatEvent)="cargarChat($event)"></app-desplegable>
 
-		  <hr class="d-block d-lg-none mt-1 mb-0">
+          <hr class="d-block d-lg-none mt-1 mb-0">
         </div>
         <div class="col-12 col-lg-9 col-xl-9">
           <div class="py-2 px-4 border-bottom d-none d-lg-block" *ngIf="typeofUsuario2">
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
-                <app-imagenes
-                  [config]="config"
-                  [imagenes]="socketService.chatUsar.match_id_usu2.fotos" 
-                ></app-imagenes>
+                <app-imagenes [config]="config" [imagenes]="socketService.chatUsar.match_id_usu2.fotos"></app-imagenes>
               </div>
               <div class="flex-grow-1 pl-3 m-2">
                 <strong>{{
                   socketService.chatUsar.match_id_usu2.nombre
-                }}</strong>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                  }}</strong>
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Conectado'
-                  "
-                >
+                  ">
                   <em>Online</em>
                 </div>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Escriviendo'
-                  "
-                >
+                  ">
                   <em>Typing ...</em>
                 </div>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Desconectado'
-                  "
-                >
+                  ">
                   <em>Offline </em>
                 </div>
               </div>
-              <div>
-                <button class="btn btn-light border btn-lg px-3 d-none ">
+              <div class="row ">
+                <button class="btn btn-primary border btn-lg px-3 col">
                   Review
                 </button>
-                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
-                  Deshacer Match
-                </button>
+
+                <div class="d-inline-block col" ngbDropdown #myDrop="ngbDropdown">
+                  <button type="button" class="btn btn-light border btn-lg col ml-1 me-2" id="dropdownManual"
+                    (focus)="myDrop.open()">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                    <button ngbDropdownItem (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                      Deshacer Match
+                    </button>
+
+                  </div>
+                </div>
+
+
               </div>
             </div>
           </div>
           <div class="py-2 px-4 border-bottom d-lg-none" *ngIf="typeofUsuario2">
             <div class="d-flex align-items-center py-1">
               <div class="position-relative">
-                <app-imagenes
-                  [config]="config"
-                  [imagenes]="socketService.chatUsar.match_id_usu2.fotos"
-                ></app-imagenes>
+                <app-imagenes [config]="config" [imagenes]="socketService.chatUsar.match_id_usu2.fotos"></app-imagenes>
               </div>
               <div class="flex-grow-1 pl-3 m-2">
                 <strong>{{
                   socketService.chatUsar.match_id_usu2.nombre
-                }}</strong>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                  }}</strong>
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Conectado'
-                  "
-                >
+                  ">
                   <em>Online</em>
                 </div>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Escriviendo'
-                  "
-                >
+                  ">
                   <em>Typing ...</em>
                 </div>
-                <div
-                  class="text-muted small"
-                  *ngIf="
+                <div class="text-muted small" *ngIf="
                     socketService.chatUsar.estado_conexion_u2 === 'Desconectado'
-                  "
-                >
+                  ">
                   <em>Offline</em>
                 </div>
               </div>
-              <div>
-                <button class="btn btn-light border btn-lg px-3 d-none">
+              <div class="row ">
+                <button class="btn btn-primary border btn-lg px-3 col">
                   Review
                 </button>
-                <button class="btn btn-light border btn-xs btn-sm btn-lg px-3 d-block" 
-                (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
-                  Deshacer Match
-                </button>
+
+                <div class="d-inline-block col" ngbDropdown #myDrop="ngbDropdown">
+                  <button type="button" class="btn btn-light border btn-lg col ml-1 me-2" id="dropdownManual"
+                    (focus)="myDrop.open()">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                    <button ngbDropdownItem (click)="open(socketService.chatUsar.match_id_usu2.nombre)">
+                      Deshacer Match
+                    </button>
+
+                  </div>
+                </div>
+
+
               </div>
             </div>
           </div>
@@ -141,23 +128,13 @@
             <div class="chat-messages2" *ngIf="!typeofUsuario2">
 
             </div>
-            <cdk-virtual-scroll-viewport
-              itemSize="100"
-              cdkScrollable
-              class="chat-messages2 p-4"
-              *ngIf="typeofUsuario2"
-            >
-              <app-mensaje
-                *ngFor="
+            <cdk-virtual-scroll-viewport itemSize="100" cdkScrollable class="chat-messages2 p-4" *ngIf="typeofUsuario2">
+              <app-mensaje *ngFor="
                   let chatMessage of socketService.mensajes[
                     socketService.chatUsar.match_position
                   ]
-                "
-                class="position-relative ml-1y"
-                [mensaje]="chatMessage"
-                [u2]="socketService.chatUsar.match_id_usu2"
-                (imprimido)="scrollEnd()"
-              >
+                " class="position-relative ml-1y" [mensaje]="chatMessage" [u2]="socketService.chatUsar.match_id_usu2"
+                (imprimido)="scrollEnd()">
               </app-mensaje>
             </cdk-virtual-scroll-viewport>
           </div>
@@ -165,16 +142,13 @@
           <form (ngSubmit)="sendMessage()" [formGroup]="formularioEnvio" *ngIf="typeofUsuario2">
             <div class="flex-grow-0 py-3 px-4 border-top">
               <div class="input-group">
-                <input
-                  type="text"
-                  [ngClass]="claseQueUsaImput"
-                  formControlName="message"
-                  placeholder="Escribe tu mensaje"
-                />
+                <input type="text" [ngClass]="claseQueUsaImput" formControlName="message"
+                  placeholder="Escribe tu mensaje" />
                 <button type="submit" class="btn btn-primary">Send</button>
-                
+
               </div>
-              <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir más de 1000 caracteres</div>
+              <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'">No puedes escribir
+                más de 1000 caracteres</div>
               <div class="text-danger" *ngIf="mensajeVacio===true">No se puede enviar un mensaje vacio</div>
 
             </div>
