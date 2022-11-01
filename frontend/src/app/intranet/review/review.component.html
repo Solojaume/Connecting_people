@@ -9,7 +9,8 @@
       <p class="mleft-1"><b>Puntuación {{aspecto.puntuaciones_review[0].puntuaciones_review_aspecto_id.aspecto_nombre}}
           del usuario:</b> </p>
 
-      <ngb-rating [(rate)]="aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion" [max]="currentRate[0].max" [readonly]="readonly" class="mleft-1">
+      <ngb-rating [(rate)]="aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion" [max]="currentRate[0].max"
+       [readonly]="readonly" class="mleft-1" (rateChange)="modificarPuntuacionesAvanzadas()">
         <ng-template let-fill="fill" let-index="index">
           <i class="bi-heart-fill mleft-1">
             <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
