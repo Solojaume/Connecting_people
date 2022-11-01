@@ -60,7 +60,7 @@ class Aspecto extends \yii\db\ActiveRecord
         return self::findOne('aspecto_id='.$id);
     }
 
-    public function getTodosAspectos()
+    public static function getTodosAspectos()
     {
        return self::find()->asArray()->all();
     }
