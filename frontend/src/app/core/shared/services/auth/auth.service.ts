@@ -17,7 +17,9 @@ export class AuthService {
     //Defino las caveceras de la peticion
   
     let rest =this.http.post<UsuarioAPP>(
-      this.apiBase+"usuario/login",JSON.stringify({email:email1, password:password1
+      this.apiBase+"usuario/login",JSON.stringify({
+        email:email1, 
+        password:password1
       }));
     //console.log(rest);
     return rest;
