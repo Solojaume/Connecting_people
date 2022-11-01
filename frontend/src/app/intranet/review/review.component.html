@@ -1,8 +1,57 @@
 <div class="content" id="body">
   <div class="container p-0">
-    <div class="card">
-      <h1>PENEEEEEEEEEEEE</h1>
-        
+    <div class="card ">
+      <button class="btn btn-primary border btn-lg m-1 col-1 col-xs-2 col-sm-2 col-lg-2" routerLink="/intranet/chat">
+        <i class="bi bi-arrow-left d-lg-none"></i>
+        <span class="d-none d-lg-block text-center">Volver a chat</span>
+      </button>
+
+      <p class="mleft-1"><b>Puntuación {{aspecto.puntuaciones_review[0].puntuaciones_review_aspecto_id.aspecto_nombre}}
+          del usuario:</b> </p>
+
+      <ngb-rating [(rate)]="aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion" [max]="currentRate[0].max" [readonly]="readonly" class="mleft-1">
+        <ng-template let-fill="fill" let-index="index">
+          <i class="bi-heart-fill mleft-1">
+            <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
+          </i>
+        </ng-template>
+      </ngb-rating>
+      <pre class="mleft-3">Rate: <b>{{aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion}}</b></pre>
+      <div class="row flex-row-reverse ">
+        <span class="col-2" *ngIf="tipo_review==='avanzado'" (click)="cambiar('simple')">
+          Hacer review simple
+          <i class="bi bi-caret-up-fill pequeño"></i>
+        </span>
+        <span class="col-2" *ngIf="tipo_review==='simple'" (click)="cambiar('avanzado')">
+          Hacer review avanzada
+          <i class="bi bi-caret-down-fill pequeño"></i>
+        </span>
+      </div>
+      <div class="reviewAvanzada" *ngIf="tipo_review==='simple'"></div>
+      <div class="reviewAvanzada" *ngIf="tipo_review==='avanzado'">
+        <div class="row" *ngFor="let o of aspecto.puntuaciones_review; let i = index;" >
+          <p class="mleft-1" *ngIf="i!==0"><b>Puntuación
+              {{o.puntuaciones_review_aspecto_id.aspecto_nombre}} del usuario:</b> 
+            </p>
+
+          <ngb-rating [(rate)]="o.puntuaciones_review_puntuacion" [max]="o.puntuaciones_review_aspecto_id.puntuacion_maxima"
+           *ngIf="i!=0" class="mleft-1" (rateChange)="calcularMedia()">
+            <ng-template let-fill="fill" let-index="index" >
+              <i class="bi-heart-fill mleft-1" >
+                <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
+              </i>
+            </ng-template>
+          </ngb-rating>
+          <pre class="mleft-3" *ngIf="i!=0" >Rate: <b>{{o.puntuaciones_review_puntuacion}}</b></pre>
+        </div>
+      </div>
+      <div class="row flex-row-reverse mr-2">
+        <button class=" btn btn-success btn-lg col-1 col-xs-2 col-sm-2 col-lg-3 m-1 mder-1 "
+          routerLink="/intranet/chat">
+          <i class="bi bi-folder-check d-lg-none"></i>
+          <span class="d-none d-lg-block text-center">Guardar review y volver</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

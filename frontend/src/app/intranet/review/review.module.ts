@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/core/shared/shared.module';
 import { ServicesModule } from 'src/app/core/shared/services/services.module';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReviewComponent } from './review.component';
 import { ReviewRoutingModule } from './review-routing.module';
 
@@ -21,7 +21,8 @@ import { ReviewRoutingModule } from './review-routing.module';
     SharedModule,
     ServicesModule,
     ScrollingModule,
-    NgbDropdownModule
+    
+    NgbRatingModule
   ],
   exports:[
     ReviewComponent

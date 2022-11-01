@@ -130,6 +130,7 @@ $cuaternario-l: #fa0da590;
   @include color($color: #ff0000);
 }
 
+
 .text-success {
   color: $secondary !important;
 }
@@ -184,6 +185,13 @@ $cuaternario-l: #fa0da590;
   &:hover {
     @include btn-modular($bc: $secondary, $back: $primary, $c: $white);
   }
+}
+.btn-success {
+  @include button-variant($background:#18f584, $border:#18f584);
+  margin-right: 1em;
+}
+.btn-danger{
+  @include button-variant($background:#f50045,$border:#f50045);
 }
 
 html,
