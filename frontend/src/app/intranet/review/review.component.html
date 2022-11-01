@@ -1,7 +1,7 @@
 <div class="content" id="body">
   <div class="container p-0">
     <div class="card ">
-      <button class="btn btn-primary border btn-lg m-1 col-1 col-xs-2 col-sm-2 col-lg-2" routerLink="/intranet/chat">
+      <button class="btn btn-primary border btn-lg m-1 col-1 col-xs-2 col-sm-2 col-lg-2 arriba" routerLink="/intranet/chat">
         <i class="bi bi-arrow-left d-lg-none"></i>
         <span class="d-none d-lg-block text-center">Volver a chat</span>
       </button>
@@ -19,11 +19,11 @@
       </ngb-rating>
       <pre class="mleft-3">Rate: <b>{{aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion}}</b></pre>
       <div class="row flex-row-reverse ">
-        <span class="col-2" *ngIf="tipo_review==='avanzado'" (click)="cambiar('simple')">
+        <span class="col-2  col-xs-6 col-sm-6 col-md-4 col-lg-3" *ngIf="tipo_review==='avanzado'" (click)="cambiar('simple')">
           Hacer review simple
           <i class="bi bi-caret-up-fill pequeño"></i>
         </span>
-        <span class="col-2" *ngIf="tipo_review==='simple'" (click)="cambiar('avanzado')">
+        <span class="col-2 col-xs-6 col-sm-6 col-md-4 col-lg-3" *ngIf="tipo_review==='simple'" (click)="cambiar('avanzado')">
           Hacer review avanzada
           <i class="bi bi-caret-down-fill pequeño"></i>
         </span>
@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="row flex-row-reverse mr-2">
-        <button class=" btn btn-success btn-lg col-1 col-xs-2 col-sm-2 col-lg-3 m-1 mder-1 "
+        <button class=" btn btn-success btn-lg col-1 col-xs-2 col-sm-2 col-lg-3 m-1 mder-1  abajo"
           routerLink="/intranet/chat">
           <i class="bi bi-folder-check d-lg-none"></i>
           <span class="d-none d-lg-block text-center">Guardar review y volver</span>

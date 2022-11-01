@@ -32,29 +32,42 @@ p {
     margin-left: 15%;
 }
 
-i {
-    position: relative;
-    display: inline-block;
-    font-size: 2.5rem;
-    padding-right: 0.1rem;
-    color: #d3d3d3;
+@mixin iStyle($font_size:2.5rem,$color) {
+    i {
+        position: relative;
+        display: inline-block;
+        font-size: $font_size;
+        padding-right: 0.1rem;
+        color: $color;
 
-    &.pequeño {
-        font-size: 1.5rem;
-        color: black;
+        &.pequeño {
+            font-size: 1.5rem;
+            color: black;
+        }
     }
 }
 
-@mixin reviewAvanzada($heigth:21em){
+
+
+@include iStyle($color:#d3d3d3);
+button{
+    &.arriba{@include iStyle($font_size:1.5rem,$color:white);}
+    &.abajo{
+        @include iStyle($font_size:1.5rem,$color:black);
+    }
+}
+@mixin reviewAvanzada($heigth: 20em) {
     height: $heigth;
 
 }
 
 @include media-breakpoint-up(xs) {
+
     .reviewAvanzada2 {
         @include reviewAvanzada();
         //height: 25em;
     }
+
 }
 
 @include media-breakpoint-up(sm) {
@@ -63,6 +76,7 @@ i {
         //height: 25em;
     }
 }
+
 @include media-breakpoint-up(md) {
     .reviewAvanzada {
         @include reviewAvanzada();
