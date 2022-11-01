@@ -146,7 +146,7 @@ class AspectoController extends ApiController
 
     }
 
-    public function actionGetAspectos(Type $var = null)
+    public function actionGetAspectos($var = null)
     {
         if ($this->request->isPost) {
             $u=self::getUserWhithAuthToken();
@@ -154,7 +154,7 @@ class AspectoController extends ApiController
             if(isset($u['error'])){
                 return $u['error'];
             }
-            else {
+            else {  
                 return Aspecto::getTodosAspectos();                
             }
         }
