@@ -39,9 +39,8 @@ export class ReviewComponent implements OnInit {
       puntuacion = (puntuacion*aspectoGeneral.puntuacion_maxima)/aspecto.puntuacion_maxima;
       suma_puntuaciones= suma_puntuaciones+puntuacion;
     }
-    let media=suma_puntuaciones/contador;
-    this.aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion = media;
-    alert(media);
+    this.aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion = suma_puntuaciones/contador;
+    
   }
 
 }
