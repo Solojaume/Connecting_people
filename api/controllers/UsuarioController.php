@@ -575,7 +575,7 @@ class UsuarioController extends ApiController
 
     public function actionRecuperar($var = null)
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET'||$_SERVER['REQUEST_METHOD'] === 'POST'){
+        if($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'POST'){
            // echo"holiwis";
             $t_a=$_GET["token_activacion"] ?? " ";
             $s_a=isset($_GET["sub_action"]) ?$_GET["sub_action"]:$var["sub_action"];

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Review } from 'src/app/core/models/review.model';
+import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { AspectoService } from 'src/app/core/shared/services/hacer_review/aspecto.service';
+import { ReviewService } from 'src/app/core/shared/services/hacer_review/review.service';
 
 @Component({
   selector: 'app-review',
@@ -8,7 +11,11 @@ import { AspectoService } from 'src/app/core/shared/services/hacer_review/aspect
 })
 export class ReviewComponent implements OnInit {
 
-  constructor(public aspecto: AspectoService) { }
+  constructor(
+    public aspecto: AspectoService,
+    private reviewService:ReviewService, 
+    private websocket:WebSocketIOService,
+    ) { }
   tipo_review = 'simple';
   currentRate: Array<atributo> = [{ puntuacion: 1, max: 5 }, { puntuacion: 1, max: 1 }];
   readonly: boolean = false;
@@ -52,6 +59,19 @@ export class ReviewComponent implements OnInit {
       this.aspecto.puntuaciones_review[index].puntuaciones_review_puntuacion = puntuacion;
     }
 
+  }
+ 
+  guardar(){  
+    let review:Review={
+      review_id:0,
+      review_descripcion:"Holaaa",
+      review_usuario_id:this.websocket.chatUsar.match_id_usu2.id,
+      puntuaciones_review:this.aspecto.puntuaciones_review
+    }
+    this.aspecto.generarPuntuacionesReview();
+    this.reviewService.crearReview(review).subscribe((response)=>{
+     console.log(response)
+    });
   }
 }
 

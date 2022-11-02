@@ -9,12 +9,13 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\PuntuacionesReview;
 use app\helpers\HelperArray;
+
 /**
  * ReviewController implements the CRUD actions for Review model.
  */
 class ReviewController extends ApiController
 {
-    public $modelClass='app\models\Review';
+    public $modelClass = 'app\models\Review';
 
     /**
      * @inheritDoc
@@ -28,7 +29,7 @@ class ReviewController extends ApiController
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
-                        'getReviewsByUserId'=>['POST'],
+                        'getReviewsByUserId' => ['POST'],
                         'createReview' => ['POST']
                     ],
                 ],
@@ -74,60 +75,57 @@ class ReviewController extends ApiController
     public function actionGetReviewsByUserId($id)
     {
         if ($this->request->isPost) {
-            $u=self::getUserWhithAuthToken();
-            if(isset($u['error'])){
+            $u = self::getUserWhithAuthToken();
+            if (isset($u['error'])) {
                 return $u['error'];
             }
-            $usuario = isset($_POST["usuario"])?$_POST["usuario"]:null;
+            $usuario = isset($_POST["usuario"]) ? $_POST["usuario"] : null;
             // var_dump($usuario);
-            if (!$usuario==null) {
+            if (!$usuario == null) {
                 $rev = new Review();
                 $rev = $rev->getReviewByUserID($usuario);
-                for ($i=0; $i < count($rev); $i++) { 
+                for ($i = 0; $i < count($rev); $i++) {
                     $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
                     $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
                 }
-                return $rev;    
-            }else{
-                return ["error"=>"No hay usuario en la peticion"];
-            }    
+                return $rev;
+            } else {
+                return ["error" => "No hay usuario en la peticion"];
+            }
         }
-        return ["error"=>"UPPS, Algo ha salido mal"];
-        
+        return ["error" => "UPPS, Algo ha salido mal"];
     }
-    public static function getReviewsByUserId($id){
+    public static function getReviewsByUserId($id)
+    {
         $rev = new Review();
         $rev = $rev->getReviewByUserID($id);
-        for ($i=0; $i < count($rev); $i++) { 
+        for ($i = 0; $i < count($rev); $i++) {
             $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
             $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
         }
-        return $rev; 
+        return $rev;
     }
 
     public static function getReviewsByUserIdWithAuthToken()
     {
-       $u=self::getUserWhithAuthToken();
-        if(isset($u['error'])){
+        $u = self::getUserWhithAuthToken();
+        if (isset($u['error'])) {
             return $u["error"];
         }
-            
-            // var_dump($usuario);
-        if (!$u==null) {
+
+        // var_dump($usuario);
+        if (!$u == null) {
             $rev = new Review();
             $rev = $rev->getReviewByUserID($u["id"]);
-            for ($i=0; $i < count($rev); $i++) { 
+            for ($i = 0; $i < count($rev); $i++) {
                 $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
                 $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
             }
-           
-            return $rev;    
-        }else{
-             return ["error"=>"No hay usuario en la peticion"];
-        }    
-        
 
-        
+            return $rev;
+        } else {
+            return ["error" => "No hay usuario en la peticion"];
+        }
     }
     /**
      * Creates a new Review model.
@@ -140,83 +138,102 @@ class ReviewController extends ApiController
         //La vista indica si el usuario a realizado una puntuacion simple o avanzada
         //TE VAS A CAGAR CUANDO TE TOQUE IMPLEMENTAR EN ANGULAR, Denada Guapo :)
         //var_dump($this->request->isPost);
-        if ($this->request->isPost) {
-            $vista=isset($_GET["vista"])?$_GET["vista"]:"simple";
-            $u=self::getUserWhithAuthToken();
-            if(isset($u['error'])){
+        $params = json_decode(file_get_contents("php://input"), false);
+        //echo "\nEntra\n";
+        //echo"Params sin decodificar:\n";
+        //var_dump(file_get_contents("php://input"));
+        //echo"\n\n\n";
+        if ($params) {
+            //var_dump($params);
+
+            $vista = isset($params->vista) ? $params->vista : "simple";
+            $u = self::getUserWhithAuthToken();
+            if (isset($u['error'])) {
                 return $u['error'];
             }
-            //var_dump($vista);
-            //die();
-            //var_dump($vista);
+            //echo" ";
             switch ($vista) {
                 case "simple":
-                   // echo"simp";
-                   $model = new Review();
-                   $id=0;
-                    if($model->load($this->request->post(),'')&&$model->save()){
-                        $id=$model->review_id;
+                    //echo"simp\n";
+                    $modal = new Review;
+                    $modal->review_id = $params->review_id;
+                    $modal->review_usuario_id = $params->review_usuario_id;
+                    $modal->review_descripcion = $params->review_descripcion;
+                    //var_dump($modal);
+                    //var_dump($modal->save());
+                    if ($modal->save()) {
+                        //echo "Entra en el if\n";
+                        $id = $modal->review_id;
                         $aspectos = new \app\models\Aspecto();
-                        $aspectos=$aspectos->getTodosAspectos();
-                       
-                        foreach ($aspectos as $key) {
-                            $model = new \app\models\PuntuacionesReview();
-                            $model-> puntuaciones_review_aspecto_id=$key["aspecto_id"];
-                            $model-> puntuaciones_review_review_id=$id;
-                            $punt=isset($_POST["review_puntuacion_review"])?$_POST["review_puntuacion_review"]:"";
-                            if ($punt>=$key["puntuacion_minima"]&&$punt<=$key["puntuacion_maxima"]) {
-                                $model->puntuaciones_review_puntuacion=$punt;
+                        $aspectos = $aspectos->getTodosAspectos();
+                        $puntuaciones = $params->puntuaciones_review;
+                        $guardada = 0;
+                        for ($i = 0; $i < count($puntuaciones); $i++) {
+                            $key = $puntuaciones[$i];
+                            $punt = new \app\models\PuntuacionesReview();
+                            $aspecto =  $key->puntuaciones_review_aspecto_id;
+                            $punt->puntuaciones_review_aspecto_id = $aspecto->aspecto_id;
+                            $punt->puntuaciones_review_review_id = $modal->review_id;
+                            $punt->puntuaciones_review_id = 0;
+                            if (
+                                $key->puntuaciones_review_puntuacion>= $aspecto->puntuacion_minima &&
+                                $key->puntuaciones_review_puntuacion <= $aspecto->puntuacion_maxima
+                            ) {
+                                $punt->puntuaciones_review_puntuacion = $key->puntuaciones_review_puntuacion;
+                                $punt->puntuaciones_review_review_id =$modal->review_id;
+                                //echo "\nHemos creado la puntuacion correctamente";
                             }
                             
-                            if ($model->save()) {
-                                return ["status"=>"Se ha guardado correctamente"];
-                            }
+                            if ($punt->save()) {
+                                $guardada = $guardada+1;
+                               // echo "Se ha guardado";
+                                //return ["status" => "Se ha guardado correctamente"];
+                            } 
                         }
+                        if($guardada>0){
+                            return ["status" => "Se ha guardado correctamente"];
+                        }
+                        
                     }
                     break;
                 case "avanzada":
                     //echo "h";
                     $model = new Review();
-                    $id=0;
-                    if($model->load($this->request->post(),'')&&$model->save()){
+                    $id = 0;
+                    if ($model->load($this->request->post(), '') && $model->save()) {
                         //$id=$model->review_id;
-                        return ["review_id"=>$model->review_id];
+                        return ["review_id" => $model->review_id];
                     }
-                    if(isset($_POST["review_puntuacion_review"])) {
-                        $puntuaciones=$_POST["review_puntuacion_review"];
-                        $puntuaciones = substr($puntuaciones,2,strlen($puntuaciones)-2);
-                       // $puntuaciones=explode('"',);
-                      // settype($puntuaciones,"array");
+                    if (isset($_POST["review_puntuacion_review"])) {
+                        $puntuaciones = $_POST["review_puntuacion_review"];
+                        $puntuaciones = substr($puntuaciones, 2, strlen($puntuaciones) - 2);
+                        // $puntuaciones=explode('"',);
+                        // settype($puntuaciones,"array");
                         var_dump($puntuaciones);
-                        die();
                         foreach ($puntuaciones as $key) {
-                            $key["puntuaciones_review_review_id"]=$id;
+                            $key["puntuaciones_review_review_id"] = $id;
                             /**
                              * {{"puntuaciones_review_aspecto_id" : 0, "puntuaciones_review_puntuacion" : 4, "puntuaciones_review_review_id": },{"puntuaciones_review_aspecto_id" : 0, "puntuaciones_review_puntuacion" : 4, "puntuaciones_review_review_id": }}
                              */
                             var_dump(PuntuacionesReviewController::actionCreateR($key));
-                            die();
+                            //die();
                             if (PuntuacionesReviewController::actionCreate($key)) {
-                                return ["status"=> "Se guardo correctamente"];
+                                return ["status" => "Se guardo correctamente"];
                             };
                         }
-                    }    
-                        
+                    }
+
                     break;
                 default:
-                    return["error"=>"Se derramo una copa de vino sobre el programa y no se va"];
+                    return ["error" => "Se derramo una copa de vino sobre el programa y no se va"];
                     break;
             }
-
+        } else {
+            return ["error" => "Algo ha salido mal, jo"];
         }
-        else{
-            return ["error"=>"Algo ha salido mal, jo"];
-
-        }	
-        
     }
 
-        
+
 
     /**
      * Updates an existing Review model.
@@ -251,7 +268,7 @@ class ReviewController extends ApiController
 
         return $this->redirect(['index']);
     }
-   
+
 
     /**
      * Finds the Review model based on its primary key value.

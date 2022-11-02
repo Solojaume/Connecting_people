@@ -33,7 +33,7 @@ class PuntuacionesReview extends \yii\db\ActiveRecord
         return [
             [['puntuaciones_review_aspecto_id', 'puntuaciones_review_puntuacion', 'puntuaciones_review_review_id'], 'required'],
             [['puntuaciones_review_id', 'puntuaciones_review_aspecto_id', 'puntuaciones_review_puntuacion', 'puntuaciones_review_review_id'], 'integer'],
-            [['puntuaciones_review_id'], 'unique'],
+            //[['puntuaciones_review_id'], 'unique'],
             [['puntuaciones_review_review_id'], 'exist', 'skipOnError' => true, 'targetClass' => Review::className(), 'targetAttribute' => ['puntuaciones_review_review_id' => 'review_id']],
             [['puntuaciones_review_aspecto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Aspecto::className(), 'targetAttribute' => ['puntuaciones_review_aspecto_id' => 'aspecto_id']],
         ];
@@ -91,7 +91,7 @@ class PuntuacionesReview extends \yii\db\ActiveRecord
     public function beforeSave($insert=null)
     {
         if ($this->isNewRecord) {
-            $this->puntuaciones_review_id=count(PuntuacionesReview::find()->asArray()->all());
+            $this->puntuaciones_review_id=count(PuntuacionesReview::find()->asArray()->all())+1;
         }
         return parent::beforeSave($insert);
     }

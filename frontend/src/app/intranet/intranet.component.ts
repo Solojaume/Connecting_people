@@ -10,6 +10,7 @@ import { ImagenesService } from '../core/shared/services/imagenes/imagenes.servi
 import { Imagen } from '../core/models/imagen';
 import { ImagenClass } from '../core/models/imagenClass';
 import { environment } from 'src/environments/environment';
+import { AspectoService } from '../core/shared/services/hacer_review/aspecto.service';
 
 @Component({
   selector: 'app-intranet',
@@ -26,9 +27,10 @@ export class IntranetComponent implements OnInit,OnDestroy {
     public webSocketService:WebSocketService,
     public socketService:WebSocketIOService,
     private imagenService:ImagenesService, 
-    
+    private aspectoS:AspectoService
   ) {
 
+    aspectoS.obtenerAspetos();
    }
   ngOnDestroy(): void {
     //this.socketService.closeSubscription();

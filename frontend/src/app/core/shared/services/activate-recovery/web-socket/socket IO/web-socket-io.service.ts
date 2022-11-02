@@ -13,7 +13,6 @@ import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
 import { Observable } from 'rxjs';
 import { interval, } from 'rxjs';
-import { AspectoService } from '../../../hacer_review/aspecto.service';
 
 
 const config: SocketIoConfig = {
@@ -56,8 +55,7 @@ export class WebSocketIOService extends Socket {
   /**
    * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
    */
-  constructor(private token: TokenStorageService, 
-    private aspectoS:AspectoService) {
+  constructor(private token: TokenStorageService) {
     /**
      *  En nuestro "super" declaramos la configuración inicial de conexión la cual hemos declarado en nuestro
      *  "environment.serverSocket",
@@ -66,7 +64,7 @@ export class WebSocketIOService extends Socket {
 
     super(config);
 
-    aspectoS.obtenerAspetos();
+
     //Mostramos url a la que nos conectamos
     console.log(environment.serverSocket);
 
