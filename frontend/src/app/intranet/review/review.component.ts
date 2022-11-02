@@ -1,27 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Review } from 'src/app/core/models/review.model';
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { AspectoService } from 'src/app/core/shared/services/hacer_review/aspecto.service';
 import { ReviewService } from 'src/app/core/shared/services/hacer_review/review.service';
+import { TokenStorageService } from 'src/app/core/shared/services/token-storage/token-storage.service';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss']
 })
-export class ReviewComponent implements OnInit {
+export class ReviewComponent implements OnDestroy {
 
   constructor(
     public aspecto: AspectoService,
     private reviewService:ReviewService, 
     private websocket:WebSocketIOService,
+    private token:TokenStorageService
     ) { }
+  ngOnDestroy(): void {
+    this.websocket.emitEvent('update lista match', this.token.getUser());
+
+  }
   tipo_review = 'simple';
   currentRate: Array<atributo> = [{ puntuacion: 1, max: 5 }, { puntuacion: 1, max: 1 }];
   readonly: boolean = false;
-  ngOnInit(): void {
-
-  }
+ 
   cambiar(tipo: string) {
     this.tipo_review = tipo;
     switch (tipo) {
@@ -50,7 +54,6 @@ export class ReviewComponent implements OnInit {
   }
 
   modificarPuntuacionesAvanzadas() {
-    let suma_puntuaciones = 0;
     let puntuacion_gen = this.aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion;
     let aspectoGeneral = this.aspecto.aspectos[0];
     for (let index = 1; index < this.aspecto.puntuaciones_review.length; index++) {
