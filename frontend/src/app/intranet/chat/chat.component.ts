@@ -44,7 +44,7 @@ export class ChatComponent implements OnInit {
     @Inject(LOCALE_ID) public locale: string,
     private _modalService: NgbModal,
     private matchService: MatchService
-  ) {}
+  ) { }
   public typeofUsuario2!: boolean;
   public claseQueUsaImput: string = 'form-control';
   public mensajeVacio: boolean = false;
@@ -165,7 +165,7 @@ export class ChatComponent implements OnInit {
       console.log('CLOSED modal:', closed);
       let match_id = this.socketService.chatUsar.match_id;
 
-      this.matchService.deshacerPost(match_id).subscribe((x) => {});
+      this.matchService.deshacerPost(match_id).subscribe((x) => { });
     });
     modal.dismissed.subscribe((dismis) => {
       console.log('Dismis modal:', dismis);

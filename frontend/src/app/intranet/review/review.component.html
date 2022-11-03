@@ -46,6 +46,16 @@
           <pre class="mleft-3" *ngIf="i!=0" >Rate: <b>{{o.puntuaciones_review_puntuacion}}</b></pre>
         </div>
       </div>
+      <form [formGroup]="formularioEnvio" >
+        <div class="flex-grow-0 py-3 px-4 border-top">
+          <textarea type="text" [ngClass]="claseQueUsaImput" rows="2" formControlName="comentario"
+              placeholder="Escribe tu comentario" ></textarea>
+          <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'&&mensajeVacio===false">No puedes escribir
+            más de 240 caracteres</div>
+          <div class="text-danger" *ngIf="mensajeVacio===true">No se puede enviar un mensaje vacio</div>
+
+        </div>
+      </form>
       <div class="row flex-row-reverse mr-2">
         <button class=" btn btn-success btn-lg col-1 col-xs-2 col-sm-2 col-lg-3 m-1 mder-1  abajo"
           routerLink="/intranet/chat" (click)="guardar()">

@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Review } from 'src/app/core/models/review.model';
 import { WebSocketIOService } from 'src/app/core/shared/services/activate-recovery/web-socket/socket IO/web-socket-io.service';
 import { AspectoService } from 'src/app/core/shared/services/hacer_review/aspecto.service';
@@ -10,22 +11,41 @@ import { TokenStorageService } from 'src/app/core/shared/services/token-storage/
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss']
 })
-export class ReviewComponent implements OnDestroy {
-
+export class ReviewComponent implements OnInit, OnDestroy {
+  public claseQueUsaImput: string = 'form-control';
+  public mensajeVacio:boolean =false;
   constructor(
     public aspecto: AspectoService,
     private reviewService:ReviewService, 
     private websocket:WebSocketIOService,
     private token:TokenStorageService
     ) { }
+    
+  ngOnInit(): void {
+    this.formularioEnvio.valueChanges.subscribe((x) => {
+      // console.log('x:', x.message);
+      let y = '' + x.comentario;
+      //alert(y);
+      if (y.length <= 240 && y.length > 0) {
+        this.claseQueUsaImput = 'form-control';
+      }else if( y.length==0){
+        this.mensajeVacio = true;
+        this.claseQueUsaImput = 'form-control form-control-error';
+      } else {
+        this.claseQueUsaImput = 'form-control form-control-error';
+      }
+    });
+  }
   ngOnDestroy(): void {
     this.websocket.emitEvent('update lista match', this.token.getUser());
-
   }
   tipo_review = 'simple';
   currentRate: Array<atributo> = [{ puntuacion: 1, max: 5 }, { puntuacion: 1, max: 1 }];
   readonly: boolean = false;
- 
+  formularioEnvio = new FormGroup({
+    comentario: new FormControl(''),
+  });
+  
   cambiar(tipo: string) {
     this.tipo_review = tipo;
     switch (tipo) {
@@ -67,7 +87,7 @@ export class ReviewComponent implements OnDestroy {
   guardar(){  
     let review:Review={
       review_id:0,
-      review_descripcion:"Holaaa",
+      review_descripcion:this.formularioEnvio.value.comentario,
       review_usuario_id:this.websocket.chatUsar.match_id_usu2.id,
       puntuaciones_review:this.aspecto.puntuaciones_review
     }
