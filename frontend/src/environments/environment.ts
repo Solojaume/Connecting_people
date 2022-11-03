@@ -1,12 +1,12 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-var dominio_base="192.168.1.58";
+
 export const environment = {
   production: false,
-  serverSocket: 'ws://'+dominio_base+':3000',
-  apiBase:"http://"+dominio_base+"/connectingpeople/api/web/",
-  imagenesBase:"http://"+dominio_base+"/connectingpeople/api/imagenes/",
+  serverSocket: 'ws://192.168.1.58:3000',
+  apiBase:"http://localhost/connectingpeople/api/web/",
+  imagenesBase:"http://localhost/connectingpeople/api/imagenes/",
   intervalo_tiempo_reescaneo_chat_match:10000
 };
 
