@@ -11,10 +11,16 @@ use Workerman\Worker;
 //require_once 'C:\xampp\htdocs\connectingpeople\api\vendor\autoload.php';
 
 
-class ChatController extends Controller
+class ChatController extends WebsocketController
 {
-    public function actionStart($host = "127.0.0.1", $port = 3000, $protocol = null)
-    {
+    public function actionStart()
+    { 
+        $port = $GLOBALS["base_socket_io_port"];
+        echo "port";
+        var_dump($port);
+        $host = $GLOBALS["base_socket_io_host"];
+        echo "host";
+        var_dump($host);
         $io = new SocketIOSustituto(
             $port,
             [
