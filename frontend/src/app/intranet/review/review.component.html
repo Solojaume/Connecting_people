@@ -1,7 +1,8 @@
 <div class="content" id="body">
   <div class="container p-0">
     <div class="card ">
-      <button class="btn btn-primary border btn-lg m-1 col-1 col-xs-2 col-sm-2 col-lg-2 arriba" routerLink="/intranet/chat">
+      <button class="btn btn-primary border btn-lg m-1 col-2 col-xs-2 col-sm-2 col-lg-2 arriba"
+        routerLink="/intranet/chat">
         <i class="bi bi-arrow-left d-lg-none"></i>
         <span class="d-none d-lg-block text-center">Volver a chat</span>
       </button>
@@ -10,7 +11,7 @@
           del usuario:</b> </p>
 
       <ngb-rating [(rate)]="aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion" [max]="currentRate[0].max"
-       [readonly]="readonly" class="mleft-1" (rateChange)="modificarPuntuacionesAvanzadas()">
+        [readonly]="readonly" class="mleft-1" (rateChange)="modificarPuntuacionesAvanzadas()">
         <ng-template let-fill="fill" let-index="index">
           <i class="bi-heart-fill mleft-1">
             <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
@@ -19,45 +20,49 @@
       </ngb-rating>
       <pre class="mleft-3">Rate: <b>{{aspecto.puntuaciones_review[0].puntuaciones_review_puntuacion}}</b></pre>
       <div class="row flex-row-reverse ">
-        <span class="col-2  col-xs-6 col-sm-6 col-md-4 col-lg-3" *ngIf="tipo_review==='avanzado'" (click)="cambiar('simple')">
+        <span class="col-8 col-sm-12 col-md-4 col-lg-3 col-xl-2 col-xxl-2" *ngIf="tipo_review==='avanzado'"
+          (click)="cambiar('simple')">
           Hacer review simple
           <i class="bi bi-caret-up-fill pequeño"></i>
         </span>
-        <span class="col-2 col-xs-6 col-sm-6 col-md-4 col-lg-3" *ngIf="tipo_review==='simple'" (click)="cambiar('avanzado')">
+        <span class="col-8 col-sm-12 col-md-4 col-lg-3 col-xl-2 col-xxl-2" *ngIf="tipo_review==='simple'"
+          (click)="cambiar('avanzado')">
           Hacer review avanzada
           <i class="bi bi-caret-down-fill pequeño"></i>
         </span>
       </div>
-      <div class="reviewAvanzada" *ngIf="tipo_review==='simple'"></div>
-      <div class="reviewAvanzada" *ngIf="tipo_review==='avanzado'">
-        <div class="row" *ngFor="let o of aspecto.puntuaciones_review; let i = index;" >
+      <div class="reviewAvanzada2" *ngIf="tipo_review==='simple'"></div>
+      <div class="reviewAvanzada3" *ngIf="tipo_review==='avanzado'">
+        <div class="row" *ngFor="let o of aspecto.puntuaciones_review; let i = index;">
           <p class="mleft-1" *ngIf="i!==0"><b>Puntuación
-              {{o.puntuaciones_review_aspecto_id.aspecto_nombre}} del usuario:</b> 
-            </p>
+              {{o.puntuaciones_review_aspecto_id.aspecto_nombre}} del usuario:</b>
+          </p>
 
-          <ngb-rating [(rate)]="o.puntuaciones_review_puntuacion" [max]="o.puntuaciones_review_aspecto_id.puntuacion_maxima"
-           *ngIf="i!=0" class="mleft-1" (rateChange)="calcularMedia()">
-            <ng-template let-fill="fill" let-index="index" >
-              <i class="bi-heart-fill mleft-1" >
+          <ngb-rating [(rate)]="o.puntuaciones_review_puntuacion"
+            [max]="o.puntuaciones_review_aspecto_id.puntuacion_maxima" *ngIf="i!=0" class="mleft-1"
+            (rateChange)="calcularMedia()">
+            <ng-template let-fill="fill" let-index="index">
+              <i class="bi-heart-fill mleft-1">
                 <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
               </i>
             </ng-template>
           </ngb-rating>
-          <pre class="mleft-3" *ngIf="i!=0" >Rate: <b>{{o.puntuaciones_review_puntuacion}}</b></pre>
+          <pre class="mleft-3" *ngIf="i!=0">Rate: <b>{{o.puntuaciones_review_puntuacion}}</b></pre>
         </div>
       </div>
-      <form [formGroup]="formularioEnvio" >
+      <form [formGroup]="formularioEnvio">
         <div class="flex-grow-0 py-3 px-4 border-top">
           <textarea type="text" [ngClass]="claseQueUsaImput" rows="2" formControlName="comentario"
-              placeholder="Escribe tu comentario" ></textarea>
-          <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'&&mensajeVacio===false">No puedes escribir
+            placeholder="Escribe tu comentario"></textarea>
+          <div class="text-danger" *ngIf="claseQueUsaImput==='form-control form-control-error'&&mensajeVacio===false">No
+            puedes escribir
             más de 240 caracteres</div>
           <div class="text-danger" *ngIf="mensajeVacio===true">No se puede enviar un mensaje vacio</div>
 
         </div>
       </form>
       <div class="row flex-row-reverse mr-2">
-        <button class=" btn btn-success btn-lg col-1 col-xs-2 col-sm-2 col-lg-3 m-1 mder-1  abajo"
+        <button class=" btn btn-success btn-lg col-2  col-sm-2 col-lg-3 col-xl-2 col-xxl-2  m-1 mder-1  abajo"
           routerLink="/intranet/chat" (click)="guardar()">
           <i class="bi bi-folder-check d-lg-none"></i>
           <span class="d-none d-lg-block text-center">Guardar review y volver</span>

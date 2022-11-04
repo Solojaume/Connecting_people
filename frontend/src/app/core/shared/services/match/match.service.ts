@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { Match } from '../../../models/match.model';
 import { SliderButtonService } from '../slider-button/slider-button.service';
 
@@ -10,7 +11,7 @@ export class MatchService {
   private apiBase!:string;
 
   constructor(private http:HttpClient) { 
-    this.apiBase = "http://localhost/connectingpeople/api/web/";
+    this.apiBase = environment.apiBase;
   }
 
   getNewMatchUsers(){

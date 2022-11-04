@@ -32,7 +32,7 @@ p {
     margin-left: 15%;
 }
 
-@mixin iStyle($font_size:2.5rem,$color) {
+@mixin iStyle($font_size:2.5rem,$color:#d3d3d3) {
     i {
         position: relative;
         display: inline-block;
@@ -56,19 +56,31 @@ button{
         @include iStyle($font_size:1.5rem,$color:black);
     }
 }
+
 @mixin reviewAvanzada($heigth: 13em) {
     height: $heigth;
-
 }
 
 
 @include media-breakpoint-up(xs) {
 
     .reviewAvanzada2 {
-        @include reviewAvanzada();
+        @include reviewAvanzada($heigth:9em);
+        //height: 25em;
+    }
+    
+    .reviewAvanzada3 {
+        @include reviewAvanzada($heigth:14em);
         //height: 25em;
     }
 
+    @include iStyle($font_size:1.5rem,$color:#d3d3d3);
+    button{
+        &.arriba{@include iStyle($font_size:1rem,$color:white);}
+        &.abajo{
+            @include iStyle($font_size:1.5rem,$color:black);
+        }
+    }
 }
 
 @include media-breakpoint-up(sm) {
