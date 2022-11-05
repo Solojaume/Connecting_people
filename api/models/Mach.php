@@ -5,6 +5,8 @@ namespace app\models;
 use app\controllers\ReviewController;
 use Yii;
 
+use app\models\Helper;
+
 /**
  * This is the model class for table "mach".
  *
