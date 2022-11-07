@@ -99,9 +99,13 @@ class ReviewController extends ApiController
     {
         $rev = new Review();
         $rev = $rev->getReviewByUserID($id);
+        //echo"Review";
+        //var_dump($rev);
+        //die();
         for ($i = 0; $i < count($rev); $i++) {
-            $rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
+            //$rev[$i]["puntuacion_media"] = PuntuacionesReviewController::getMediaPuntuaciones($rev[$i]["review_id"]);
             $rev[$i]["puntuaciones_review"] = PuntuacionesReviewController::getPuntuaciones($rev[$i]["review_id"]);
+            $rev[$i]["puntuacion_media"] = $rev[$i]["puntuaciones_review"][0]??1;
         }
         return $rev;
     }
