@@ -65,7 +65,7 @@ class PuntuacionesReview extends \yii\db\ActiveRecord
     //Sirve para obtener todas las puntuaciones de una review
     public function getPuntuacionesReview( $review = null)
     {
-        return self::find("puntuaciones_review_review_id=".$review)->asArray()->all();
+        return self::find()->where("puntuaciones_review_review_id=:review",["review"=>$review])->all();
     }
 
     public function getCountPuntuaciones( $review = null)
