@@ -20,7 +20,7 @@ export class ReviewsComponent implements OnInit {
   public sizeDisplay: string = 'phone' || 'web';
 
   ngOnInit(): void {
-    console.log('Review', this.reviews);
+    console.log('Reviews:', this.reviews);
     this.mediaQuery();
   }
   public mediaQuery() {

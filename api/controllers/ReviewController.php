@@ -156,7 +156,7 @@ class ReviewController extends ApiController
                 case "simple":
                     //echo"simp\n";
                     $modal = new Review;
-                    $modal->review_id = $params->review_id;
+                    $modal->review_id = $modal->review_id=count(Review::find()->asArray()->all())+1;
                     $modal->review_usuario_id = $params->review_usuario_id;
                     $modal->review_descripcion = $params->review_descripcion;
                     //var_dump($modal);
@@ -174,7 +174,7 @@ class ReviewController extends ApiController
                             $aspecto =  $key->puntuaciones_review_aspecto_id;
                             $punt->puntuaciones_review_aspecto_id = $aspecto->aspecto_id;
                             $punt->puntuaciones_review_review_id = $modal->review_id;
-                            $punt->puntuaciones_review_id = 0;
+                            $punt->puntuaciones_review_id = count(PuntuacionesReview::find()->asArray()->all())+1;
                             if (
                                 $key->puntuaciones_review_puntuacion>= $aspecto->puntuacion_minima &&
                                 $key->puntuaciones_review_puntuacion <= $aspecto->puntuacion_maxima

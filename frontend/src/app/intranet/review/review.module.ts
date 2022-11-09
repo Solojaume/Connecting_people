@@ -21,7 +21,6 @@ import { ReviewRoutingModule } from './review-routing.module';
     SharedModule,
     ServicesModule,
     ScrollingModule,
-    
     NgbRatingModule
   ],
   exports:[

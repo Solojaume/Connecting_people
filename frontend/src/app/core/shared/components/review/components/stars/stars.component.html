@@ -1,7 +1,8 @@
-<div class="row  ms-1 white-text">
-    <div *ngFor="let in of counter(max) ;let i = index" class="col">
-        <i *ngIf="puntuacion>in;" class="bi bi-star-fill"></i>
-        <i *ngIf="condicion(in)" class="bi bi-star "></i>
-    </div>
-   
-</div>
+<ngb-rating [(rate)]="puntuacion" [max]="max"
+        [readonly]="true" class="mleft-1 white-text" >
+    <ng-template let-fill="fill" let-index="index">
+        <i class="bi-heart-fill mleft-1">
+          <i *ngIf="fill > 0" class="bi-heart-fill filled" [style.width.%]="fill"></i>
+        </i>
+    </ng-template>
+</ngb-rating>
