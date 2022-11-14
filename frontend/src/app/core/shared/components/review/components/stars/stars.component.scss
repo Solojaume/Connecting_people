@@ -1,6 +1,17 @@
-.fill{
-    color:#333;
-}
-.filled{
-    color:white;
+i {
+    position: relative;
+    display: inline-block;
+    font-size: 1rem;
+    padding-right: 0.1rem;
+    color: white;
+
+    
+    .filled {
+        color: #333;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+    }
 }

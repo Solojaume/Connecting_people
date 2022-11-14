@@ -1,21 +1,21 @@
 <div class="align-items-center ">
     <div class="flex-grow-1 rounded bg-primary bg-opacity-10 ">
         <div class="row m-1">
-            <b class="white-text">Puntuación total:</b>
+            <span class="white-text fw-semibold">Puntuación total:</span>
         </div>
              
-        <app-stars class="mleft-2" [puntuacion]="datos.punt" [max]="aspectos.aspectos[0].puntuacion_maxima"></app-stars>
+        <app-stars class="mleft-2" [puntuacion]="datos.puntuaciones_review[0].puntuaciones_review_puntuacion" [max]="aspectos.aspectos[0].puntuacion_maxima"></app-stars>
         <app-comentario [comentario]="datos.review_descripcion"></app-comentario>
-        <div class="row m-1 secondary-text mbottom-1" *ngIf="mostrar_ver_puntuaciones_review==true">
+        <div class="row m-1 secondary-text mbottom-1 mt-1" *ngIf="mostrar_ver_puntuaciones_review==true">
             <div *ngIf="ver_mas===false && ver_menos===true">
-                <b (click)="mas()" id="mas">Ver más</b>
+                <b (click)="mas()" id="mas" class="fw-bold">Ver más</b>
             </div>
             <div *ngIf="ver_mas===true && ver_menos===false">
-                <b (click)="menos()" id="menos">Ver menos</b>
+                <b (click)="menos()" id="menos" class="fw-bold">Ver menos</b>
             </div>
         </div>
         <div *ngIf="ver_mas===true && ver_menos===false">
-            <app-puntuaciones-review [puntuaciones]="datos.puntuaciones_review"></app-puntuaciones-review>
+            <app-puntuaciones-review [puntuaciones]="datos.puntuaciones_review" ></app-puntuaciones-review>
         </div>
          
         

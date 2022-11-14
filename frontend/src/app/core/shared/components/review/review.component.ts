@@ -15,13 +15,15 @@ export class ReviewComponent implements OnInit,OnChanges {
   constructor(public aspectos:AspectoService) { }
   ngOnChanges(changes: SimpleChanges): void {
     this.mostrar_ver_puntuaciones_review = typeof this.datos.puntuaciones_review == null|| this.datos.puntuaciones_review.length>0;
+    console.log("Review:",this.datos);
+
   }
 
   ngOnInit(): void {
     this.mostrar_ver_puntuaciones_review = typeof this.datos.puntuaciones_review == null || this.datos.puntuaciones_review.length>0;
     console.log("Review:",this.datos);
-    this.ver_mas=true;
-    this.ver_menos=false;
+    this.ver_mas=false;
+    this.ver_menos=true;
   }
   
   menos():void{
