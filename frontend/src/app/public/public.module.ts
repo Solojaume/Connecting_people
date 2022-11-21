@@ -10,6 +10,7 @@ import { RecoveryComponent } from './recovery/recovery.component';
     CommonModule,
     PublicRoutingModule,
     SharedModule, 
+    
   ],
   exports:[
     PublicComponent,

@@ -1,26 +1,75 @@
+/*
 @import "~bootstrap/scss/functions";
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/forms";
+*/
 .chat-messages2 {
   height: calc(20 * 1.18em);
-
   margin-left: 1.5em;
   margin-top: 6px;
+}
+
+@media (min-width: 100px) {
+  .chat-messages2 {
+    height: 13.8em;
+    max-height: 70%;
+  }
+}
+@media (min-width: 500px) {
+  .chat-messages2 {
+    height: 13.8em;
+    max-height: 70%;
+  }
+}
+
+
+@media (min-width: 750px) {
+  .chat-messages2 {
+    height: 13.8em;
+    max-height: 70%;
+    width: 100%;
+  }
+}
+
+
+@media (min-width: 978px) {
+  .chat-messages2 {
+    height: 17em;
+    max-height: 100%;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .chat-messages2 {
+    height: 13.8em;
+    max-height: 30.35em;
+    width: 100%;
+  }
 }
 @media (max-height: 500px) {
   .chat-messages2 {
     height: 13.8em;
     max-height: 15.35em;
+    width: 100%;
   }
 }
-@media (min-height: 1000px) {
+@media (max-height: 740px) {
   .chat-messages2 {
-    height: calc(25 * 1.45em);
-    font-size: 1.65em;
+    height: 26em;
+    //max-height: 15.35em;
   }
 }
+
+@media (min-width: 1400px) {
+  .chat-messages2 {
+    height: 26.5em;
+    
+  }
+}
+
 .chat-online {
   color: #34ce57;
 }
@@ -50,7 +99,9 @@
   flex-direction: row-reverse;
   margin-left: auto;
 }
-.input-group > .form-control-error, .input-group > .form-select, .input-group > .form-floating {
+.input-group > .form-control-error,
+.input-group > .form-select,
+.input-group > .form-floating {
   position: relative;
   flex: 1 1 auto;
   width: 1%;

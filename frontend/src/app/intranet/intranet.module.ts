@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { IntranetComponent } from './intranet.component';
 import { IntranetRoutingModule } from './intranet-routing.module';
 import { SharedModule } from '../core/shared/shared.module';
-import { WebSocketService } from '../core/shared/services/activate-recovery/web-socket/web-socket.service';
 import { ServicesModule } from '../core/shared/services/services.module';
 import { RouterLinkActive } from '@angular/router';
 

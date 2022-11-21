@@ -1,0 +1,155 @@
+@import "~bootstrap/scss/functions";
+// 3. Include remainder of required Bootstrap stylesheets
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+p {
+    font-size: 1em;
+    font-weight: 15px;
+    margin-top: 1em;
+    margin-bottom: -0.5em;
+
+}
+
+.mder-1 {
+    margin-right: 1em !important;
+}
+
+.mleft-1 {
+    margin-left: 1em;
+}
+
+.mleft-2 {
+    margin-left: 2em;
+}
+
+.mleft-3 {
+    margin-left: 15em;
+}
+
+.mauto-1 {
+    margin-left: 15%;
+    margin-left: 15%;
+}
+
+@mixin iStyle($font_size:2.5rem,$color:#d3d3d3) {
+    i {
+        position: relative;
+        display: inline-block;
+        font-size: $font_size;
+        padding-right: 0.1rem;
+        color: $color;
+
+        &.pequeño {
+            font-size: 1.5rem;
+            color: black;
+        }
+    }
+}
+
+
+
+@include iStyle($color:#d3d3d3);
+button{
+    &.arriba{@include iStyle($font_size:1.5rem,$color:white);}
+    &.abajo{
+        @include iStyle($font_size:1.5rem,$color:black);
+    }
+}
+
+@mixin reviewAvanzada($heigth: 13em) {
+    height: $heigth;
+}
+
+
+@include media-breakpoint-up(xs) {
+
+    .reviewAvanzada2 {
+        @include reviewAvanzada($heigth:9em);
+        //height: 25em;
+    }
+    
+    .reviewAvanzada3 {
+        @include reviewAvanzada($heigth:14em);
+        //height: 25em;
+    }
+
+    @include iStyle($font_size:1.5rem,$color:#d3d3d3);
+    button{
+        &.arriba{@include iStyle($font_size:1rem,$color:white);}
+        &.abajo{
+            @include iStyle($font_size:1.5rem,$color:black);
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .reviewAvanzada {
+        @include reviewAvanzada();
+        //height: 25em;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .reviewAvanzada {
+        @include reviewAvanzada();
+        //height: 25em;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .reviewAvanzada {
+        @include reviewAvanzada();
+        //height: 25em;
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    .reviewAvanzada {
+        @include reviewAvanzada();
+        //height: 25em;
+    }
+}
+
+@include media-breakpoint-up(xxl) {
+    .reviewAvanzada {
+        @include reviewAvanzada();
+        //height: 25em;
+    }
+}
+
+.filled {
+    color: red;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
+
+.form-control-error {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  
+    &:focus {
+      border: 5px solid red;
+      box-shadow: 5px rgba(255, 0, 0, 0.663);
+      transition: border-color 0s ease-in-out, box-shadow 0s ease-in-out;
+    }
+  }
+ng-template {
+    text-align: center;
+
+}

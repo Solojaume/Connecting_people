@@ -17,6 +17,10 @@ const routes: Routes = [
         path:'personal',loadChildren: () => import('./personal/personal.module')
         .then(mod=>mod.PersonalModule),
       },
+      {
+        path:'review',loadChildren: () => import('./review/review.module')
+        .then(mod=>mod.ReviewModule),
+      },
     ]
   }                         
 ];

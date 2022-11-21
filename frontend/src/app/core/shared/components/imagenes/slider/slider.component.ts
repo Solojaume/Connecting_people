@@ -47,13 +47,11 @@ export class SliderComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     console.log('LikeDislike hecho');
     console.log('slider imagenes:', this.config);
-  }
-
-  ngOnInit(): void {
-    console.log('Slider Cargado');
     try {
       if (this.config[this.imagenPosition - 1] == null) {
         this.classButtonAtras = 'd-none';
+      }else{
+        this.classButtonAdelantar = '';
       }
     } catch (error) {
       this.classButtonAtras = 'd-none';
@@ -61,6 +59,30 @@ export class SliderComponent implements OnInit {
     try {
       if (this.config[this.imagenPosition + 1].img.imagen_src == '') {
         this.classButtonAdelantar = 'd-none';
+      }else{
+        this.classButtonAdelantar = '';
+      }
+    } catch (error) {
+      this.classButtonAdelantar = 'd-none';
+    }
+  }
+
+  ngOnInit(): void {
+    console.log('Slider Cargado');
+    try {
+      if (this.config[this.imagenPosition - 1] == null) {
+        this.classButtonAtras = 'd-none';
+      }else{
+        this.classButtonAdelantar = '';
+      }
+    } catch (error) {
+      this.classButtonAtras = 'd-none';
+    }
+    try {
+      if (this.config[this.imagenPosition + 1].img.imagen_src == '') {
+        this.classButtonAdelantar = 'd-none';
+      }else{
+        this.classButtonAdelantar = '';
       }
     } catch (error) {
       this.classButtonAdelantar = 'd-none';

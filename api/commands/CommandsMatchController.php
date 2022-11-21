@@ -54,24 +54,24 @@ class CommandsMatchController extends WebsocketController
     public static function getChatsYMatchesById($id)
     {
         $matchesBd = self::getMatchesById($id);
-        echo "\nMatches obtenidos";
+        //echo "\nMatches obtenidos";
         $u = $matchesBd["autenticacion"];
         $matchesBd = $matchesBd["matches"];
         $matchesDevolver = [];
         $chatsDevolver = [];
         if ($u && isset($matchesBd)) {
-            echo "\nDentro del if";
+            //echo "\nDentro del if";
             foreach ($matchesBd as $match) {
-                echo "\nEmpieza foreach";
+                //echo "\nEmpieza foreach";
 
                 $mensajes = Mensajes::getMensajesByMatch($match["match_id"]);
                 if ($match["match_id_usu1"] == $u->id) {
-                    echo "\nEntra en el primer if";
+                    //echo "\nEntra en el primer if";
                     $u2 = Usuario::findIdentity($match["match_id_usu2"]);
                     $match["match_id_usu1"] = ["id" => $u->id, "nombre" => $u->nombre, "edad" => Helper::calcularEdad($u->timestamp_nacimiento)];
                     $match["match_id_usu2"] = ["id" => $u2->id, "nombre" => $u2->nombre, "edad" => Helper::calcularEdad($u2->timestamp_nacimiento)];
                 } else if ($match["match_id_usu2"] == $u->id) {
-                    echo "\nEntra en el else if";
+                   //echo "\nEntra en el else if";
                     $u2 = Usuario::findIdentity($match["match_id_usu1"]);
                     $match["match_id_usu1"] = ["id" => $u->id, "nombre" => $u->nombre, "edad" => Helper::calcularEdad($u->timestamp_nacimiento)];
                     $match["match_id_usu2"] = ["id" => $u2->id, "nombre" => $u2->nombre, "edad" => Helper::calcularEdad($u2->timestamp_nacimiento)];
@@ -82,11 +82,11 @@ class CommandsMatchController extends WebsocketController
 
                 //return ["Autentication"=>$u,"Matches"=>$matchesDevolver,"Chats"=>$chatsDevolver];
                 if (sizeof($mensajes) > 0) {
-                    echo "\nCHAT DEVOLVER AÑADIDO";
+                    //echo "\nCHAT DEVOLVER AÑADIDO";
                     $match["mensajes"] = $mensajes;
                     $chatsDevolver[] = $match;
                 } else {
-                    echo "\nMatch DEVOLVER AÑADIDO";
+                    //echo "\nMatch DEVOLVER AÑADIDO";
                     $matchesDevolver[] = $match;
                 }
             }

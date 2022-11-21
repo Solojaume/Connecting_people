@@ -60,13 +60,11 @@ class PuntuacionesReviewController extends ApiController
     }
     static function getPuntuaciones($review){
         $p = new PuntuacionesReview();
-        
         if($p=$p->getPuntuacionesReview($review)){
-            for ($i=0; $i < count($p) ; $i++) { 
-                $pr=PuntuacionesReview::findOne("puntuaciones_review_id".$p[$i]["puntuaciones_review_id"]);
-                //var_dump($pr->getPuntuacionReviewAspecto()->asArray()->all()[0]['aspecto_nombre']);
-                //die();
-                $p[$i]["puntuaciones_review_aspecto_id"] = $pr->getPuntuacionReviewAspecto()->asArray()->all()[0]['aspecto_nombre'];
+            for ($i = 0; $i < count($p) ; $i++) { 
+                $pr = $p[$i];
+                $p[$i]->puntuaciones_review_aspecto_id = $pr->getPuntuacionReviewAspecto()->asArray()->all()[0];
+                
             }
             return $p;
         }

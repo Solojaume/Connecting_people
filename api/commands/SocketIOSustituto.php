@@ -4,7 +4,7 @@ namespace app\commands;
 use yii\console\Controller;
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;
-require_once 'C:\xampp1\htdocs\connectingpeople\api\vendor\autoload.php';
+//require_once 'C:\xampp\htdocs\connectingpeople\api\vendor\autoload.php';
 
 
 class SocketIOSustituto extends SocketIO{

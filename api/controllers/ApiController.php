@@ -15,8 +15,6 @@ class ApiController extends \yii\rest\ActiveController
     public $enableCsrfValidation = false;
     public $authenable = true;//en los controladores que no queramos el token se pone en false
     public $modelClass="d";
-    public $frontendUrlBase = "localhost:4200";
-
     public $ApiImagesUrl = "";
     public $ApiUrl = "";
     public $UrlBaseFrontend = "";
@@ -48,7 +46,7 @@ class ApiController extends \yii\rest\ActiveController
         $behaviors['corsFilter'] = [
             'class' => Cors::className(),
             'cors' => [
-                'Origin' => ['localhost:*/*'],
+                'Origin' => [$this->UrlBaseFrontend],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'HEAD', 'OPTIONS', 'DELETE'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => $this->authenable,

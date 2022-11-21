@@ -5,7 +5,6 @@
  * ----------------------------------------
  */
 import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 import { Injectable, EventEmitter, Output } from '@angular/core';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { TokenStorageService } from '../../../token-storage/token-storage.service';
@@ -13,8 +12,8 @@ import { Match } from 'src/app/core/models/chat/Match';
 import { UsuarioChat } from 'src/app/core/models/chat/usuario_chat';
 import { MensajeModel } from 'src/app/core/models/mensaje.model';
 import { Observable } from 'rxjs';
-import { interval, take } from 'rxjs';
-import { Router } from '@angular/router';
+import { interval, } from 'rxjs';
+
 
 const config: SocketIoConfig = {
   url: environment.serverSocket,
@@ -52,6 +51,7 @@ export class WebSocketIOService extends Socket {
   public subscription!: any;
   public pagina_Actual: string = 'match';
   public hay_cambios: boolean = false;
+  private logueado: boolean = false;
   /**
    * En nuestro constructor injectamos el "CookieService" para luego hacer uso de sus metodos.
    */
@@ -63,6 +63,7 @@ export class WebSocketIOService extends Socket {
      */
 
     super(config);
+
 
     //Mostramos url a la que nos conectamos
     console.log(environment.serverSocket);
@@ -85,10 +86,6 @@ export class WebSocketIOService extends Socket {
     // Conectar
     this.ioSocket.on('connect', (cookieService = this.token) => {
       let v = cookieService.getUser();
-      console.log('usuario:', v);
-      console.log('usuario nombre:', v.nombre);
-      console.log('usuario token:', v.token);
-
       if (typeof v.token) {
         console.log('Conectado');
         this.ioSocket.emit('new user', v.token);
@@ -110,7 +107,7 @@ export class WebSocketIOService extends Socket {
         this.mensajes = user.mensajes;
         this.matches = user.matches;
         this.mensajes_count = user.mensajes_count;
-
+        this.logueado = true;
         this.modify_conection_status();
         //this.getNewMatches();
       }
@@ -185,7 +182,7 @@ export class WebSocketIOService extends Socket {
         try {
           ultimoMatchIdAntiguo = oldMatches[oldMatches.length - 1].match_id;
           ultimoMatchIdNuevo = this.matches[this.matches.length - 1].match_id;
-        } catch (error) {}
+        } catch (error) { }
 
         if (oldMatches.length === this.matches.length) {
           for (let index = 0; index < oldMatches.length; index++) {
@@ -244,12 +241,23 @@ export class WebSocketIOService extends Socket {
       this.usuarios = [];
       this.matches = [];
       this.setAutenticadoFalse();
+      this.logueado = false;
+      this.usuarios = [];
+     
+      //alert("se desconecto");
       console.log('you have been disconnected');
+      this.modify_conection_status();
     });
 
     // reconexión
-    this.ioSocket.on('reconnect', () => {
-      console.log('you have been reconnected');
+    this.ioSocket.on('reconnect', (cookieService = this.token) => {
+      if (this.logueado === false) {
+        let v = token.getUser();
+        if (typeof v.token) {
+          console.log('Conectado');
+          this.ioSocket.emit('new user', v.token);
+        }
+      }
     });
 
     // La escucha de errores de reconexión se intentará varias veces
@@ -266,7 +274,7 @@ export class WebSocketIOService extends Socket {
       //this.router.navigateByUrl('/');
     });
 
-    this.ioSocket.on('', (err: any) => {});
+    this.ioSocket.on('', (err: any) => { });
   }
 
   /**
@@ -317,7 +325,7 @@ export class WebSocketIOService extends Socket {
 
       console.log('Match sin modificar:', match);
       let match_usu2 = match['match_id_usu2'];
-
+      console.log("Match2", match_usu2);
       //Parte 3
       if (this.get_if_user_is_conected(match_usu2)) {
         match['estado_conexion_u2'] = 'Conectado';
@@ -390,6 +398,7 @@ export class WebSocketIOService extends Socket {
    * @returns
    */
   get_if_user_is_conected(usu: UsuarioChat) {
+    console.log("USUARIOS:::::", this.usuarios)
     for (let index = 0; index < this.usuarios.length; index++) {
       let usuario = this.usuarios[index];
       if (usu.id == usuario.id && usu.edad == usuario.edad) {
@@ -414,17 +423,22 @@ export class WebSocketIOService extends Socket {
   //SIrve para empezar a preguntarle al servidor si hay nuevos matches
   public getNewMatches() {
     if (this.subscription == null) {
-      //alert("ENTROOOO, LA PUSEEEEE, la metii yuju");
+
       this.subscription = this.obtenerNuevosMatch.subscribe(() => {
-        if (this.escriviendo === false) {
+        if (this.escriviendo === false && this.logueado === true) {
           this.emitEvent('update lista match', this.token.getUser());
-          console.log('Ha sido hemitido evento para actualizar lista de match');
+        } else {
+          let v = this.token.getUser();
+          if (typeof v.token) {
+            this.ioSocket.emit('new user', v.token);
+          }
         }
       });
     } else {
       console.log('Ya existe suscripcion');
     }
   }
+
   private setAutenticadoTrue() {
     window.sessionStorage.removeItem(AUTH_KEY);
     window.sessionStorage.setItem(AUTH_KEY, 'true');
@@ -438,10 +452,15 @@ export class WebSocketIOService extends Socket {
   public getAutenticado() {
     return window.sessionStorage.getItem(AUTH_KEY);
   }
+
   marcadoParaCerrar = false;
+
+  /**
+   * ___________________ Close Subscrition _______________________
+   * Sirve para cerrar la subscripción encargada de consultar los nuevos matches
+   */
   public closeSubscription() {
     if (this.marcadoParaCerrar === true) {
-      console.log('Subscription:', this.subscription);
       this.subscription.unsubscribe();
       this.marcadoParaCerrar = false;
     } else {

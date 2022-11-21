@@ -10,12 +10,23 @@
     <img class="d-block w-100" [src]="configAvanzada.img.imagen_src" alt="First slide"/>
     <div class="carousel-caption d-block" >
         <div class="d-flex">
-            <span class="h3 ml-1 col-9">
+            <span class="h3 ml-1 col-9" *ngIf="configAvanzada.img.imagen_src !=='http://localhost/connectingpeople/api/imagenes/null.png'">
                 <span class="fw-bold"*ngIf="
                 configAvanzada.config.username">
                     {{configAvanzada.config.username}}
                 </span>
                 <span class="fw-lighter m-2"*ngIf=" 
+                configAvanzada.config.edad">
+                    {{configAvanzada.config.edad}}
+                </span>
+                
+            </span>
+            <span class="h3 ml-1 col-9" *ngIf="configAvanzada.img.imagen_src =='http://localhost/connectingpeople/api/imagenes/null.png'">
+                <span class="fw-bold text-dark"*ngIf="
+                configAvanzada.config.username">
+                    {{configAvanzada.config.username}}
+                </span>
+                <span class="fw-lighter m-2 text-dark" *ngIf=" 
                 configAvanzada.config.edad">
                     {{configAvanzada.config.edad}}
                 </span>

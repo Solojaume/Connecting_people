@@ -33,8 +33,7 @@ class Review extends \yii\db\ActiveRecord
         return [
             [['review_descripcion', 'review_usuario_id'], 'required'],
             [['review_id', 'review_usuario_id'], 'integer'],
-            [['review_descripcion'], 'string', 'max' => 11],
-            [['review_id'], 'unique'],
+            [['review_descripcion'], 'string', 'max' => 240],
             [['review_usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['review_usuario_id' => 'id']],
         ];
     }
@@ -42,8 +41,9 @@ class Review extends \yii\db\ActiveRecord
     public function beforeSave($insert = null)
     {
         if ($this->isNewRecord) {
-            $this->review_id=count(Review::find()->asArray()->all());
+            $this->review_id=count(Review::find()->asArray()->all())+1;
         }
+       
         return parent::beforeSave($insert);
     }
 
