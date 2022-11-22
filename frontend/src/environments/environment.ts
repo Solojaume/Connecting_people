@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  serverSocket: 'ws://localhost:3000',
-  apiBase:"http://localhost/connectingpeople/api/web/",
-  imagenesBase:"http://localhost/connectingpeople/api/imagenes/",
+  serverSocket: 'ws://connectingpeople.local:3000',
+  apiBase:"https://connectingpeople.local/web/",
+  imagenesBase:"https://connectingpeople.local/imagenes/",
   intervalo_tiempo_reescaneo_chat_match:10000
 };
 
