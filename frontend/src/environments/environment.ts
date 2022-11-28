@@ -7,6 +7,10 @@ export const environment = {
   serverSocket: 'ws://localhost:3000',
   apiBase:"http://localhost/connectingpeople/api/web/",
   imagenesBase:"http://localhost/connectingpeople/api/imagenes/",
+
+  //serverSocket: 'ws://connectingpeople.duckdns.org:3000',
+ // apiBase:"http://connectingpeople.duckdns.org/connectingpeople/api/web/",
+  //imagenesBase:"http://connectingpeople.duckdns.org/connectingpeople/api/imagenes/",
   intervalo_tiempo_reescaneo_chat_match:10000
 };
 
