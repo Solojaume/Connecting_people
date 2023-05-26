@@ -225,8 +225,6 @@ INSERT INTO `usuario` (`id`, `email`, `password`, `nombre`, `rol`, `timestamp_na
 (3, '3@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Timestamp', 0, '1970-01-01 10:49:30', '7c52baf8e5631fea91ecca24edd7ddb495fa5b4b9cd6da96d098cf7cfdac6601', '2022-11-15 15:38:23', '3e9a169a3dc9f108639f8b4e24cc194241f8635c3e8b18817ee5b49718f67f0a', '2022-08-30 18:02:31', 1, '', '', '', '', NULL),
 (4, '4@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '4', 0, '2022-09-24 11:33:18', 'a77174ef71a77827eeec280dd77c309e22b5566c90c217b045a17ad3627f87a0', '2022-11-02 10:32:47', 'd250978db4f11f3be8bb545066479504e7798b9b949f57c7b78a6f11b6618c61', '2022-08-30 18:06:36', 1, '', '', '', '', NULL),
 (5, '5@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '5', 0, '2001-10-04 18:07:58', '5', '2022-11-30 10:46:15', 'b8e0fd766f71a97b3817e40f874c6bfc753de500b9122f82352fd4af3b63225f', '2022-08-30 18:07:58', 1, '', '', '', '', NULL),
-(6, 'jaumeperez@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'jaume', 0, '1999-10-19 14:13:59', '0fc1dc46e22e6373230eaf0354267ed6618645f288bf20a2ac7684c29d62e503', '2022-10-14 14:29:42', '1399d4172b2dd61fefebf761d43855b4d7fa2d0916ff7c97cf0c927593a14693', '2022-08-30 18:14:03', 1, '', '', '', '', NULL),
-(7, 'paula.sjsj@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Paula', 0, '1999-12-24 18:15:37', '', '2022-08-30 16:55:11', '', '2022-08-30 17:15:37', 1, NULL, NULL, '', '', NULL);
 
 --
 -- Disparadores `usuario`
